@@ -1,0 +1,72 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Default focus styles for accessibility */
+  *:focus-visible {
+    @apply outline-2 outline-offset-2 outline-gold-accent;
+  }
+
+  /* Remove default button styling */
+  button {
+    @apply cursor-pointer;
+  }
+}
+
+@layer components {
+  /* Card hover effect */
+  .card-hover {
+    @apply transition-all duration-300 ease-out;
+  }
+  .card-hover:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+  }
+
+  /* Image hover zoom inside cards */
+  .image-hover-zoom {
+    @apply transition-transform duration-[600ms] ease-out;
+  }
+  .image-hover-zoom:hover {
+    transform: scale(1.04);
+  }
+
+  /* Skeleton loading animation */
+  .skeleton {
+    @apply animate-pulse rounded-card bg-border;
+  }
+
+  /* Staggered fade-in for grid items */
+  .stagger-fade-in {
+    opacity: 0;
+    animation: fade-in-up 0.5s ease forwards;
+  }
+}
+
+@layer utilities {
+  /* Max content width container */
+  .container-content {
+    @apply mx-auto w-full max-w-content px-4 sm:px-6;
+  }
+}
+
+/* Scrollbar styling (subtle) */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #faf8f5;
+}
+::-webkit-scrollbar-thumb {
+  background: #ede9e3;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #c9a96e;
+}

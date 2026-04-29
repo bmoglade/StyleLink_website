@@ -40,3 +40,11 @@ out/
 errors.json
 
 gradle/wrapper/gradle-wrapper.properties
+
+# Website (Next.js)
+website/node_modules/
+website/.next/
+website/out/
+website/.env*.local
+website/.vercel
+website/*.tsbuildinfo
