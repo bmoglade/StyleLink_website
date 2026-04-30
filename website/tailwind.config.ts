@@ -26,8 +26,8 @@ const config: Config = {
         "platform-other": "#666666",
       },
       fontFamily: {
-        display: ["var(--font-playfair-display)", "serif"],
-        body: ["var(--font-dm-sans)", "sans-serif"],
+        display: ['"Playfair Display"', "Georgia", "serif"],
+        body: ['"DM Sans"', "system-ui", "sans-serif"],
       },
       maxWidth: {
         content: "1100px",

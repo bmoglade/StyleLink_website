@@ -1,20 +1,16 @@
 import type { Metadata } from "next";
-import { Playfair_Display, DM_Sans } from "next/font/google";
+import localFont from "next/font/local";
 import { siteConfig } from "@/lib/config";
 import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
 import "./globals.css";
 
-const playfairDisplay = Playfair_Display({
-  subsets: ["latin"],
-  variable: "--font-playfair-display",
-  display: "swap",
-});
-
-const dmSans = DM_Sans({
-  subsets: ["latin"],
-  variable: "--font-dm-sans",
-  display: "swap",
-});
+/**
+ * Font Loading Strategy
+ * =====================
+ * Using CSS @import as fallback because corporate networks often block
+ * Google Fonts API calls via SSL inspection (self-signed cert in chain).
+ * Fonts are loaded via <link> tags in the head instead of next/font/google.
+ */
 
 export const metadata: Metadata = {
   title: {
@@ -43,10 +39,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html
-      lang="en"
-      className={`${playfairDisplay.variable} ${dmSans.variable}`}
-    >
+    <html lang="en">
+      <head>
+        {/* Google Fonts loaded via link tags — works behind corporate proxies */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap"
+          rel="stylesheet"
+        />
+      </head>
       <body className="font-body bg-background text-text-primary antialiased">
         {children}
         <GoogleAnalytics />
