@@ -61,23 +61,37 @@ async function getCreatorData(username: string) {
 
   if (creatorError || !creator) return null;
 
-  // Fetch published outfits with their in-stock products
+  // Fetch published outfits
   const { data: outfits, error: outfitsError } = await supabase
     .from("outfits")
-    .select(
-      `
-      *,
-      products (*)
-    `
-    )
+    .select("*")
     .eq("creator_id", creator.id)
     .eq("is_published", true)
     .order("created_at", { ascending: false });
 
   if (outfitsError) return null;
 
+  // Fetch all products for these outfits separately
+  const outfitIds = (outfits || []).map((o) => o.id);
+  let products: any[] = [];
+
+  if (outfitIds.length > 0) {
+    const { data: productsData } = await supabase
+      .from("products")
+      .select("*")
+      .in("outfit_id", outfitIds)
+      .order("display_order", { ascending: true });
+
+    products = productsData || [];
+  }
+
+  // Combine outfits with their products
+  const outfitsWithProducts: OutfitWithProducts[] = (outfits || []).map((outfit) => ({
+    ...outfit,
+    products: products.filter((p) => p.outfit_id === outfit.id),
+  }));
+
   // Calculate stats (only count in-stock products)
-  const outfitsWithProducts = (outfits || []) as OutfitWithProducts[];
   const totalProducts = outfitsWithProducts.reduce(
     (sum, outfit) => sum + outfit.products.filter((p) => p.in_stock).length,
     0
