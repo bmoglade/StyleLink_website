@@ -124,6 +124,10 @@ export default async function CreatorStorefrontPage({ params }: PageProps) {
     notFound();
   }
 
+  // Debug: Log what we're passing to the client
+  console.log("DEBUG passing outfits count:", data.outfits.length);
+  console.log("DEBUG first outfit products count:", data.outfits[0]?.products?.length);
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
@@ -131,6 +135,14 @@ export default async function CreatorStorefrontPage({ params }: PageProps) {
         <div className="container-content">
           {/* Creator Profile Header */}
           <CreatorProfileHeader creator={data.creator} />
+
+          {/* Debug: Show raw data to verify it reaches the browser */}
+          <details className="mb-4 border border-border p-2 text-xs">
+            <summary className="cursor-pointer text-text-secondary">Debug: Raw Data</summary>
+            <pre className="mt-2 overflow-auto max-h-40">
+              {JSON.stringify(data.outfits, null, 2)}
+            </pre>
+          </details>
 
           {/* Outfit Grid with Category Filter */}
           <StorefrontContent outfits={data.outfits} />
