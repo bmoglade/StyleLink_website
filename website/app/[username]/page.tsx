@@ -69,6 +69,9 @@ async function getCreatorData(username: string) {
     .eq("is_published", true)
     .order("created_at", { ascending: false });
 
+  console.log("DEBUG outfits:", JSON.stringify(outfits, null, 2));
+  console.log("DEBUG outfitsError:", outfitsError);
+
   if (outfitsError) return null;
 
   // Fetch all products for these outfits separately
@@ -76,11 +79,14 @@ async function getCreatorData(username: string) {
   let products: any[] = [];
 
   if (outfitIds.length > 0) {
-    const { data: productsData } = await supabase
+    const { data: productsData, error: productsError } = await supabase
       .from("products")
       .select("*")
       .in("outfit_id", outfitIds)
       .order("display_order", { ascending: true });
+
+    console.log("DEBUG products:", JSON.stringify(productsData, null, 2));
+    console.log("DEBUG productsError:", productsError);
 
     products = productsData || [];
   }
