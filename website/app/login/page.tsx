@@ -40,8 +40,8 @@ export default function LoginPage() {
         return;
       }
 
-      router.push("/dashboard");
-      router.refresh();
+      // Force a full page reload to ensure cookies are picked up by middleware
+      window.location.href = "/dashboard";
     } catch {
       setError("Something went wrong. Please try again.");
     } finally {

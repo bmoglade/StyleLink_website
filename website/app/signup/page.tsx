@@ -123,8 +123,8 @@ export default function SignupPage() {
         return;
       }
 
-      router.push("/dashboard");
-      router.refresh();
+      // Force full page reload to ensure cookies are set properly
+      window.location.href = "/dashboard";
     } catch {
       setError("Something went wrong. Please try again.");
     } finally {

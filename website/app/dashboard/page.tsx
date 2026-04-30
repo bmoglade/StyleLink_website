@@ -22,13 +22,13 @@ async function getDashboardData() {
   if (!user) redirect("/login");
 
   // Get creator profile
-  const { data: creator } = await supabase
+  const { data: creator, error: creatorError } = await supabase
     .from("creators")
     .select("*")
     .eq("auth_id", user.id)
     .single();
 
-  if (!creator) redirect("/signup?step=username");
+  if (!creator || creatorError) redirect("/signup");
 
   // Get outfits
   const { data: outfits } = await supabase
