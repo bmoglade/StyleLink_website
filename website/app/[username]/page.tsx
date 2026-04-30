@@ -69,9 +69,6 @@ async function getCreatorData(username: string) {
     .eq("is_published", true)
     .order("created_at", { ascending: false });
 
-  console.log("DEBUG outfits:", JSON.stringify(outfits, null, 2));
-  console.log("DEBUG outfitsError:", outfitsError);
-
   if (outfitsError) return null;
 
   // Fetch all products for these outfits separately
@@ -84,9 +81,6 @@ async function getCreatorData(username: string) {
       .select("*")
       .in("outfit_id", outfitIds)
       .order("display_order", { ascending: true });
-
-    console.log("DEBUG products:", JSON.stringify(productsData, null, 2));
-    console.log("DEBUG productsError:", productsError);
 
     products = productsData || [];
   }
@@ -124,10 +118,6 @@ export default async function CreatorStorefrontPage({ params }: PageProps) {
     notFound();
   }
 
-  // Debug: Log what we're passing to the client
-  console.log("DEBUG passing outfits count:", data.outfits.length);
-  console.log("DEBUG first outfit products count:", data.outfits[0]?.products?.length);
-
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
@@ -135,14 +125,6 @@ export default async function CreatorStorefrontPage({ params }: PageProps) {
         <div className="container-content">
           {/* Creator Profile Header */}
           <CreatorProfileHeader creator={data.creator} />
-
-          {/* Debug: Show raw data to verify it reaches the browser */}
-          <details className="mb-4 border border-border p-2 text-xs">
-            <summary className="cursor-pointer text-text-secondary">Debug: Raw Data</summary>
-            <pre className="mt-2 overflow-auto max-h-40">
-              {JSON.stringify(data.outfits, null, 2)}
-            </pre>
-          </details>
 
           {/* Outfit Grid with Category Filter */}
           <StorefrontContent outfits={data.outfits} />
