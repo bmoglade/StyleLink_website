@@ -7,6 +7,11 @@ import { createServerClient } from "@supabase/ssr";
  * ==========
  * Protects /dashboard routes — redirects to /login if not authenticated.
  * Also refreshes the auth session on every request.
+ *
+ * NOTE: Uses getSession() instead of getUser() because getUser() makes
+ * a network call to Supabase which fails behind corporate proxies
+ * (SSL interception / self-signed cert issue). getSession() reads
+ * from the cookie directly — no network call needed.
  */
 export async function middleware(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
@@ -32,10 +37,12 @@ export async function middleware(request: NextRequest) {
     }
   );
 
-  // Refresh session
+  // Get session from cookie (no network call — works behind corporate proxy)
   const {
-    data: { user },
-  } = await supabase.auth.getUser();
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  const user = session?.user || null;
 
   // Protect dashboard routes
   if (request.nextUrl.pathname.startsWith("/dashboard")) {
