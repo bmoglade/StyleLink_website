@@ -44,7 +44,7 @@
 
   /* Staggered fade-in for grid items */
   .stagger-fade-in {
-    opacity: 0;
+
     animation: fade-in-up 0.5s ease forwards;
   }
 }
