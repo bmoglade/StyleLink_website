@@ -17,7 +17,7 @@ export function GoogleAnalytics() {
   const measurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 
   // Don't load GA in development or if no ID is configured
-  if (!measurementId) return null;
+  if (!measurementId || measurementId === "G-XXXXXXXXXX") return null;
 
   return (
     <>
