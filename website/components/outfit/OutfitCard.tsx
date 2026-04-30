@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { ProductGrid } from "./ProductGrid";
 import { CategoryBadge } from "@/components/ui/Badge";
 import { calculateTotalPrice, getStaggerDelay } from "@/lib/utils";
@@ -17,6 +16,7 @@ interface OutfitCardProps {
  * Mobile: stacked layout
  *
  * Only shows if at least 1 product is in stock.
+ * Uses <img> instead of next/image to avoid domain config issues with Supabase storage.
  */
 export function OutfitCard({ outfit, index }: OutfitCardProps) {
   const inStockProducts = outfit.products.filter((p) => p.in_stock);
@@ -36,12 +36,11 @@ export function OutfitCard({ outfit, index }: OutfitCardProps) {
       <div className="flex flex-col md:flex-row">
         {/* Outfit Image — Left Panel */}
         <div className="relative h-64 w-full overflow-hidden md:h-auto md:w-72 flex-shrink-0">
-          <Image
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
             src={outfit.image_url}
             alt={outfit.title}
-            fill
-            sizes="(max-width: 768px) 100vw, 288px"
-            className="object-cover image-hover-zoom"
+            className="h-full w-full object-cover image-hover-zoom"
           />
         </div>
 

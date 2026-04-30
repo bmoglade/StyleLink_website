@@ -21,7 +21,9 @@ export function StorefrontContent({ outfits }: StorefrontContentProps) {
   const filteredOutfits =
     activeCategory === "All"
       ? outfits
-      : outfits.filter((outfit) => outfit.category === activeCategory);
+      : outfits.filter(
+          (outfit) => outfit.category.toLowerCase() === activeCategory.toLowerCase()
+        );
 
   return (
     <section className="pb-12">
