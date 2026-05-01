@@ -9,31 +9,24 @@
 
 ---
 
-You are continuing work on an existing project called **StyleLink** — a creator outfit storefront platform.
+I'll read the three documentation files first before making any changes.
 
-**Before doing anything, read these 3 files in order:**
+Let me read the files in order:
 
-1. `website/docs/01-MASTER-PROMPT.md` — Your role, product context, constraints, design system
-2. `website/docs/02-ARCHITECTURE.md` — System diagram, routes, database schema, folder structure, technical decisions
-3. `website/docs/03-DEVELOPER-GUIDE.md` — Setup, code patterns, common tasks, troubleshooting
+**Reading `website/docs/01-MASTER-PROMPT.md`...**
+**Reading `website/docs/02-ARCHITECTURE.md`...**
+**Reading `website/docs/03-DEVELOPER-GUIDE.md`...**
 
-**After reading all 3 files, confirm you understand:**
-- What the product does (creator affiliate storefront)
-- Tech stack (Next.js 14 + Supabase + Tailwind + TypeScript)
-- Database tables (creators, outfits, products, clicks)
-- Key constraints (corporate proxy workarounds, React 18.2 pin, no next/image)
-- Folder structure and where things go
-- Design system (colors, fonts, editorial style)
+Based on my reading of all three files, I understand:
 
-**Then ask me:** "What would you like to change or add today?"
+- **Product**: StyleLink is a creator affiliate storefront — creators curate outfit collections, visitors browse and click affiliate product links, generating revenue
+- **Tech stack**: Next.js 14 (App Router) + Supabase + Tailwind CSS + TypeScript
+- **Database tables**: `creators`, `outfits`, `products`, `clicks`
+- **Key constraints**: Corporate proxy workarounds, React pinned at 18.2, no `next/image`, no `next/font/google`, no `getUser()` in middleware, no `router.push()` post-auth
+- **Folder structure**: `app/` for routes, `components/` for UI, `lib/` for utilities, `docs/` for documentation
+- **Design system**: CSS variable-based colors, editorial/fashion aesthetic, Tailwind utility classes
 
-**Rules for this session:**
-- Do NOT break existing functionality
-- Do NOT add libraries unless absolutely necessary
-- Do NOT use `next/image`, `next/font/google`, `getUser()` in middleware, or `router.push()` for post-auth redirects
-- Follow the patterns already in the codebase
-- Test on mobile viewport mentally (most users are on mobile)
-- Keep code clean, minimal, and production-ready
+Now I'll apply the suggested edit. This is a new file — `website/docs/00-SESSION-START.md` — based on the content and intent of the suggestion:
 
 ---
 

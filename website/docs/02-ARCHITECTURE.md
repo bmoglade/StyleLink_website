@@ -1,4 +1,4 @@
-# StyleLink — Architecture Document (Updated)
+olve this # StyleLink — Architecture Document (Updated)
 
 > Last updated after Phase 1 completion.
 > This reflects the ACTUAL built system, including all changes made during development.
@@ -51,21 +51,21 @@ External:
 
 ## Route Map
 
-| Route | Type | Auth | Description |
-|---|---|---|---|
-| `/` | SSR | Public | Homepage with value props |
-| `/[username]` | SSR | Public | Creator storefront (MOST IMPORTANT PAGE) |
-| `/login` | Client | Public | Email + Google login |
-| `/signup` | Client | Public | Signup + username setup |
-| `/auth/callback` | Route Handler | Public | OAuth callback |
-| `/dashboard` | SSR | Protected | Stats + outfit list |
-| `/dashboard/outfits/new` | Client | Protected | Create outfit form |
-| `/dashboard/outfits/[id]/edit` | Client | Protected | Edit outfit form |
-| `/dashboard/settings` | Client | Protected | Profile settings |
-| `/go/[productId]` | Route Handler | Public | Click tracking + redirect |
-| `/privacy` | SSR | Public | Privacy policy |
-| `/terms` | SSR | Public | Terms of service |
-| `/disclosure` | SSR | Public | Affiliate disclosure |
+| Route                          | Type          | Auth      | Description                              |
+| ------------------------------ | ------------- | --------- | ---------------------------------------- |
+| `/`                            | SSR           | Public    | Homepage with value props                |
+| `/[username]`                  | SSR           | Public    | Creator storefront (MOST IMPORTANT PAGE) |
+| `/login`                       | Client        | Public    | Email + Google login                     |
+| `/signup`                      | Client        | Public    | Signup + username setup                  |
+| `/auth/callback`               | Route Handler | Public    | OAuth callback                           |
+| `/dashboard`                   | SSR           | Protected | Stats + outfit list                      |
+| `/dashboard/outfits/new`       | Client        | Protected | Create outfit form                       |
+| `/dashboard/outfits/[id]/edit` | Client        | Protected | Edit outfit form                         |
+| `/dashboard/settings`          | Client        | Protected | Profile settings                         |
+| `/go/[productId]`              | Route Handler | Public    | Click tracking + redirect                |
+| `/privacy`                     | SSR           | Public    | Privacy policy                           |
+| `/terms`                       | SSR           | Public    | Terms of service                         |
+| `/disclosure`                  | SSR           | Public    | Affiliate disclosure                     |
 
 ---
 
@@ -147,6 +147,8 @@ creators (
   profile_image_url TEXT,
   instagram_handle TEXT,
   youtube_handle TEXT,
+  facebook_handle TEXT,       -- Added in migration 002
+  pinterest_handle TEXT,      -- Added in migration 002
   created_at TIMESTAMPTZ
 )
 
@@ -169,7 +171,8 @@ products (
   name TEXT,
   platform TEXT,          -- "Amazon", "Flipkart", "Myntra", "Nykaa", "Ajio", "Meesho", "Other"
   affiliate_url TEXT,
-  price TEXT,             -- Stored as string (e.g., "₹1,499")
+  price TEXT,             -- Stored as string (e.g., "₹1,499") — currently not displayed
+  image_url TEXT,         -- Optional product image (Added in migration 002)
   display_order INTEGER,
   in_stock BOOLEAN,       -- false = hidden from public storefront
   created_at TIMESTAMPTZ
@@ -208,7 +211,7 @@ website/
 ├── app/
 │   ├── [username]/              ← Public storefront (SSR)
 │   │   ├── page.tsx             ← Server component: fetches data
-│   │   ├── StorefrontContent.tsx← Client component: category filter
+│   │   ├── StorefrontContent.tsx← Client component: category filter + ad layout
 │   │   └── not-found.tsx        ← 404 for invalid usernames
 │   ├── auth/callback/route.ts   ← OAuth redirect handler
 │   ├── dashboard/
@@ -232,9 +235,10 @@ website/
 │   │   ├── CategoryFilter.tsx   ← Filter pills (client)
 │   │   └── CreatorProfileHeader.tsx
 │   ├── layout/
-│   │   ├── Header.tsx
+│   │   ├── Header.tsx           ← Session-aware (shows Dashboard link if logged in)
+│   │   ├── AuthHeader.tsx       ← Minimal header for login/signup pages
 │   │   ├── Footer.tsx
-│   │   └── DashboardSidebar.tsx (client)
+│   │   └── DashboardSidebar.tsx ← Client: nav + storefront link + logout
 │   ├── outfit/
 │   │   ├── OutfitCard.tsx       ← Main card (image + products)
 │   │   ├── OutfitGrid.tsx       ← List of cards
@@ -243,6 +247,7 @@ website/
 │   └── ui/
 │       ├── Badge.tsx            ← Platform + Category badges
 │       ├── Button.tsx
+│       ├── CopyLinkInput.tsx    ← Client: copyable URL input + button
 │       ├── Input.tsx
 │       ├── Select.tsx
 │       ├── Skeleton.tsx
@@ -270,15 +275,15 @@ website/
 
 ## Key Technical Decisions
 
-| Decision | Rationale |
-|---|---|
-| `<img>` over `next/image` | Corporate proxy blocks server-side image optimization |
-| `getSession()` over `getUser()` in middleware | `getUser()` makes network call that fails behind SSL proxy |
-| Separate queries for outfits + products | Nested Supabase select (`outfits.select("*, products(*)")`) fails with RLS |
-| `window.location.href` for post-login redirect | `router.push()` doesn't trigger full page reload needed for cookie sync |
-| React 18.2.0 (pinned) | React 18.3.x incompatible with Next.js 14.2 App Router |
-| Fonts via `<link>` tags | `next/font/google` fails behind corporate proxy |
-| `NODE_TLS_REJECT_UNAUTHORIZED=0` in dev | Required for local development behind corporate SSL inspection |
+| Decision                                       | Rationale                                                                  |
+| ---------------------------------------------- | -------------------------------------------------------------------------- |
+| `<img>` over `next/image`                      | Corporate proxy blocks server-side image optimization                      |
+| `getSession()` over `getUser()` in middleware  | `getUser()` makes network call that fails behind SSL proxy                 |
+| Separate queries for outfits + products        | Nested Supabase select (`outfits.select("*, products(*)")`) fails with RLS |
+| `window.location.href` for post-login redirect | `router.push()` doesn't trigger full page reload needed for cookie sync    |
+| React 18.2.0 (pinned)                          | React 18.3.x incompatible with Next.js 14.2 App Router                     |
+| Fonts via `<link>` tags                        | `next/font/google` fails behind corporate proxy                            |
+| `NODE_TLS_REJECT_UNAUTHORIZED=0` in dev        | Required for local development behind corporate SSL inspection             |
 
 ---
 
@@ -328,6 +333,7 @@ Protected Routes:
 ## Deployment
 
 ### Local Development
+
 ```bash
 cd website
 $env:NODE_TLS_REJECT_UNAUTHORIZED=0  # Windows (if behind corporate proxy)
@@ -336,6 +342,7 @@ pnpm dev
 ```
 
 ### Production (Vercel)
+
 ```
 1. Push to GitHub
 2. Connect repo to Vercel
