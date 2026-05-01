@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { createClient } from "@/lib/supabase";
@@ -17,10 +18,27 @@ const navItems = [
  * ============================
  * Left sidebar for creator dashboard.
  * Highlights active route.
- * Includes logout button.
+ * Includes: storefront link (always visible), logout button.
+ * Storefront link fetches username on mount.
  */
 export function DashboardSidebar() {
   const pathname = usePathname();
+  const [username, setUsername] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchUsername() {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      const { data: creator } = await supabase
+        .from("creators")
+        .select("username")
+        .eq("auth_id", user.id)
+        .single();
+      if (creator) setUsername(creator.username);
+    }
+    fetchUsername();
+  }, []);
 
   const handleLogout = async () => {
     const supabase = createClient();
@@ -63,18 +81,31 @@ export function DashboardSidebar() {
               </li>
             );
           })}
+
+          {/* Storefront link — always visible in nav */}
+          {username && (
+            <li>
+              <a
+                href={`/${username}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-text-secondary hover:bg-background hover:text-text-primary transition-colors duration-200"
+              >
+                <span>🌐</span>
+                My Storefront
+              </a>
+            </li>
+          )}
         </ul>
       </nav>
 
       {/* Bottom actions */}
-      <div className="border-t border-border px-4 py-4 space-y-3">
-        <Link
-          href="/dashboard/settings"
-          className="flex items-center gap-2 text-xs text-text-secondary hover:text-gold-accent transition-colors"
-        >
-          <span>👤</span>
-          View your storefront →
-        </Link>
+      <div className="border-t border-border px-4 py-4 space-y-2">
+        {username && (
+          <div className="px-3 py-1.5 text-[10px] text-text-secondary bg-background border border-border truncate">
+            {siteConfig.url}/{username}
+          </div>
+        )}
         <button
           onClick={handleLogout}
           className="flex w-full items-center gap-2 px-3 py-2 text-xs font-medium text-red-600 hover:bg-red-50 transition-colors"

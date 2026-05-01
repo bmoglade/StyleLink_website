@@ -73,8 +73,14 @@ export default function NewOutfitPage() {
         maxWidthOrHeight: 400,
         useWebWorker: true,
       });
-      updateProduct(index, "image_file", compressed);
-      updateProduct(index, "image_url", URL.createObjectURL(compressed));
+      // Update both fields at once to avoid state batching issues
+      const updated = [...products];
+      updated[index] = {
+        ...updated[index],
+        image_file: compressed,
+        image_url: URL.createObjectURL(compressed),
+      };
+      setProducts(updated);
       setError("");
     } catch {
       setError("Failed to process product image");
@@ -221,12 +227,15 @@ export default function NewOutfitPage() {
 
         // Upload product image if provided
         if (p.image_file) {
-          const prodFileExt = (p.image_file as File).name.split(".").pop();
+          const prodFile = p.image_file as File;
+          const prodFileExt = prodFile.name?.split(".").pop() || prodFile.type?.split("/").pop() || "jpg";
           const prodFileName = `${creator.id}/products/${outfit.id}_${i}_${Date.now()}.${prodFileExt}`;
 
           const { error: prodUploadError } = await supabase.storage
             .from("outfit-images")
-            .upload(prodFileName, p.image_file as File);
+            .upload(prodFileName, prodFile, {
+              contentType: prodFile.type || "image/jpeg",
+            });
 
           if (!prodUploadError) {
             const { data: { publicUrl: prodUrl } } = supabase.storage
@@ -311,7 +320,13 @@ export default function NewOutfitPage() {
                 </button>
               </div>
 
-        <div className="mt-8 flex items-center justify-center gap-4">
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+          <a
+            href="/dashboard"
+            className="border border-border px-4 py-2 text-sm font-medium text-text-primary hover:bg-background transition-colors"
+          >
+            ← Overview
+          </a>
           <a
             href={publishedUrl}
             target="_blank"
@@ -332,11 +347,11 @@ export default function NewOutfitPage() {
             className="bg-gold-accent px-4 py-2 text-sm font-medium text-white hover:opacity-90 transition-opacity"
                       >
             Create Another
-                      </button>
-                  </div>
-                </div>
-  );
-}
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto max-w-2xl">

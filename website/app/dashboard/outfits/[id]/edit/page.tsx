@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
+import Link from "next/link";
 import { createClient } from "@/lib/supabase";
 import { siteConfig } from "@/lib/config";
 import { Button } from "@/components/ui/Button";
@@ -44,14 +45,27 @@ export default function EditOutfitPage() {
   const [isPublished, setIsPublished] = useState(true);
   const [products, setProducts] = useState<ProductFormData[]>([]);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isPageLoading, setIsPageLoading] = useState(true);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [creatorUsername, setCreatorUsername] = useState("");
 
   // Load existing outfit data
   useEffect(() => {
     async function loadOutfit() {
       const supabase = createClient();
+
+      // Get creator username for links
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+      const { data: creator } = await supabase
+        .from("creators")
+          .select("username")
+        .eq("auth_id", user.id)
+        .single();
+        if (creator) setCreatorUsername(creator.username);
+      }
 
       const { data: outfit, error: outfitError } = await supabase
         .from("outfits")
@@ -79,8 +93,8 @@ export default function EditOutfitPage() {
       setIsPublished(outfit.is_published);
 
       const existingProducts: ProductFormData[] = (productsData || []).map((p: any) => ({
-          id: p.id,
-          name: p.name,
+        id: p.id,
+        name: p.name,
           platform: p.platform,
           affiliate_url: p.affiliate_url,
         price: p.price || "",
@@ -129,8 +143,14 @@ export default function EditOutfitPage() {
         maxWidthOrHeight: 400,
         useWebWorker: true,
       });
-      updateProduct(index, "image_file", compressed);
-      updateProduct(index, "image_url", URL.createObjectURL(compressed));
+      // Update both fields at once to avoid state batching issues
+      const updated = [...products];
+      updated[index] = {
+        ...updated[index],
+        image_file: compressed,
+        image_url: URL.createObjectURL(compressed),
+      };
+      setProducts(updated);
       setError("");
     } catch {
       setError("Failed to process product image");
@@ -167,6 +187,7 @@ export default function EditOutfitPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setSuccess("");
     setIsLoading(true);
 
     // Validate
@@ -192,7 +213,7 @@ export default function EditOutfitPage() {
         .single();
       if (!creator) { setError("Creator not found"); setIsLoading(false); return; }
 
-      // Handle image upload if new image
+      // Handle outfit image upload if new image
       let finalImageUrl = existingImageUrl;
       if (imageFile) {
         const fileExt = imageFile.name.split(".").pop();
@@ -230,14 +251,17 @@ export default function EditOutfitPage() {
         const p = products[i];
         let productImageUrl: string | null = p.image_url || null;
 
-        // Upload new product image if file exists (not just a URL from existing)
+        // Upload new product image if file exists
         if (p.image_file) {
-          const prodFileExt = (p.image_file as File).name.split(".").pop();
+          const prodFile = p.image_file as File;
+          const prodFileExt = prodFile.name?.split(".").pop() || prodFile.type?.split("/").pop() || "jpg";
           const prodFileName = `${creator.id}/products/${outfitId}_${i}_${Date.now()}.${prodFileExt}`;
 
           const { error: prodUploadError } = await supabase.storage
             .from("outfit-images")
-            .upload(prodFileName, p.image_file as File);
+            .upload(prodFileName, prodFile, {
+              contentType: prodFile.type || "image/jpeg",
+            });
 
           if (!prodUploadError) {
             const { data: { publicUrl: prodUrl } } = supabase.storage
@@ -247,7 +271,7 @@ export default function EditOutfitPage() {
           }
         }
 
-        // If image_url is a blob URL (from previous edit session), clear it
+        // If image_url is still a blob URL (upload didn't happen or failed), clear it
         if (productImageUrl && productImageUrl.startsWith("blob:")) {
           productImageUrl = null;
         }
@@ -265,8 +289,10 @@ export default function EditOutfitPage() {
       }
 
       await supabase.from("products").insert(productRows);
-      router.push(`/${creator.username}`);
-      router.refresh();
+
+      // Stay on page and show success message with navigation options
+      setSuccess("Outfit saved successfully!");
+      setCreatorUsername(creator.username);
     } catch {
       setError("Something went wrong");
     } finally {
@@ -281,8 +307,7 @@ export default function EditOutfitPage() {
     try {
       const supabase = createClient();
       await supabase.from("outfits").delete().eq("id", outfitId);
-      router.push("/dashboard");
-      router.refresh();
+      window.location.href = "/dashboard";
     } catch {
       setError("Failed to delete outfit");
     } finally {
@@ -327,6 +352,31 @@ export default function EditOutfitPage() {
         </Button>
       </div>
 
+      {/* Success message with navigation */}
+      {success && (
+        <div className="mt-4 border border-green-200 bg-green-50 p-4">
+          <p className="text-sm font-medium text-green-700">{success}</p>
+          <div className="mt-3 flex items-center gap-3">
+            <Link
+              href="/dashboard"
+              className="text-xs font-medium text-green-700 underline hover:text-green-900"
+                >
+              ← Back to Overview
+            </Link>
+            {creatorUsername && (
+              <a
+                href={`/${creatorUsername}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs font-medium text-green-700 underline hover:text-green-900"
+              >
+                View Storefront →
+              </a>
+            )}
+          </div>
+        </div>
+            )}
+
       <form onSubmit={handleSubmit} className="mt-8 space-y-6">
         {/* Title */}
         <Input
@@ -336,8 +386,8 @@ export default function EditOutfitPage() {
           placeholder="Navy Corporate Chic"
           maxLength={siteConfig.maxOutfitTitleLength}
           helperText={`${title.length}/${siteConfig.maxOutfitTitleLength}`}
-          required
-        />
+                    required
+                  />
 
         {/* Category */}
         <Select
@@ -346,8 +396,8 @@ export default function EditOutfitPage() {
           onChange={(e) => setCategory(e.target.value)}
           options={categoryOptions}
           placeholder="Select a category"
-          required
-        />
+                    required
+                  />
 
         {/* Image */}
         <div>
@@ -427,8 +477,8 @@ export default function EditOutfitPage() {
                         Remove
                       </button>
                     )}
-                  </div>
                 </div>
+    </div>
 
                 {/* Product Image */}
                 <div>
@@ -446,8 +496,9 @@ export default function EditOutfitPage() {
                         <button
                           type="button"
                           onClick={() => {
-                            updateProduct(index, "image_file", null);
-                            updateProduct(index, "image_url", "");
+                            const updated = [...products];
+                            updated[index] = { ...updated[index], image_file: null, image_url: "" };
+                            setProducts(updated);
                           }}
                           className="absolute -right-1 -top-1 bg-red-600 h-4 w-4 flex items-center justify-center text-[8px] text-white rounded-full"
                         >
@@ -524,9 +575,11 @@ export default function EditOutfitPage() {
           <Button type="submit" variant="primary" size="lg" isLoading={isLoading}>
             Save Changes
           </Button>
-          <Button type="button" variant="ghost" size="lg" onClick={() => router.back()}>
-            Cancel
-          </Button>
+          <Link href="/dashboard">
+            <Button type="button" variant="ghost" size="lg">
+              ← Overview
+            </Button>
+          </Link>
         </div>
       </form>
     </div>
