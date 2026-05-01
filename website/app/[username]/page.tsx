@@ -122,11 +122,13 @@ export default async function CreatorStorefrontPage({ params }: PageProps) {
     <div className="min-h-screen flex flex-col">
       <Header />
       <main className="flex-1">
+        {/* Profile header uses normal width */}
         <div className="container-content">
-          {/* Creator Profile Header */}
           <CreatorProfileHeader creator={data.creator} />
+        </div>
 
-          {/* Outfit Grid with Category Filter */}
+        {/* Outfit grid uses wider container to accommodate ad gutters */}
+        <div className="container-storefront">
           <StorefrontContent outfits={data.outfits} />
         </div>
       </main>

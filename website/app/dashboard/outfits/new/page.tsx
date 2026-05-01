@@ -7,7 +7,6 @@ import { siteConfig } from "@/lib/config";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Select } from "@/components/ui/Select";
-import { Toggle } from "@/components/ui/Toggle";
 import { sanitizeText, isValidUrl } from "@/lib/utils";
 import imageCompression from "browser-image-compression";
 import type { ProductFormData } from "@/lib/types";
@@ -17,6 +16,8 @@ import type { ProductFormData } from "@/lib/types";
  * ======================
  * Route: /dashboard/outfits/new
  * Form with: title, category, image upload, products (1-15).
+ * Each product has: name, platform, affiliate_url, optional product image.
+ * Price and in-stock toggle removed for this phase.
  */
 
 const emptyProduct: ProductFormData = {
@@ -24,6 +25,8 @@ const emptyProduct: ProductFormData = {
   platform: "Amazon",
   affiliate_url: "",
   price: "",
+  image_file: null,
+  image_url: "",
   in_stock: true,
 };
 
@@ -37,6 +40,7 @@ export default function NewOutfitPage() {
   const [products, setProducts] = useState<ProductFormData[]>([{ ...emptyProduct }]);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [publishedUrl, setPublishedUrl] = useState<string | null>(null);
 
   const addProduct = () => {
     if (products.length >= siteConfig.maxProductsPerOutfit) return;
@@ -48,10 +52,33 @@ export default function NewOutfitPage() {
     setProducts(products.filter((_, i) => i !== index));
   };
 
-  const updateProduct = (index: number, field: keyof ProductFormData, value: string | boolean) => {
+  const updateProduct = (index: number, field: keyof ProductFormData, value: string | boolean | File | null) => {
     const updated = [...products];
     updated[index] = { ...updated[index], [field]: value };
     setProducts(updated);
+  };
+
+  const handleProductImageChange = async (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+      setError("Product image must be JPG, PNG, or WEBP");
+      return;
+    }
+
+    try {
+      const compressed = await imageCompression(file, {
+        maxSizeMB: 0.3,
+        maxWidthOrHeight: 400,
+        useWebWorker: true,
+      });
+      updateProduct(index, "image_file", compressed);
+      updateProduct(index, "image_url", URL.createObjectURL(compressed));
+      setError("");
+    } catch {
+      setError("Failed to process product image");
+    }
   };
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -117,11 +144,6 @@ export default function NewOutfitPage() {
       }
       if (!p.affiliate_url.trim() || !isValidUrl(p.affiliate_url)) {
         setError(`Product ${i + 1}: Valid URL is required`);
-        setIsLoading(false);
-        return;
-      }
-      if (!p.price.trim()) {
-        setError(`Product ${i + 1}: Price is required`);
         setIsLoading(false);
         return;
       }
@@ -191,16 +213,40 @@ export default function NewOutfitPage() {
         return;
       }
 
-      // Insert products
-      const productRows = products.map((p, index) => ({
-        outfit_id: outfit.id,
-        name: sanitizeText(p.name),
-        platform: p.platform,
-        affiliate_url: p.affiliate_url.trim(),
-        price: sanitizeText(p.price),
-        display_order: index,
-        in_stock: p.in_stock,
-      }));
+      // Upload product images and insert products
+      const productRows = [];
+      for (let i = 0; i < products.length; i++) {
+        const p = products[i];
+        let productImageUrl: string | null = null;
+
+        // Upload product image if provided
+        if (p.image_file) {
+          const prodFileExt = (p.image_file as File).name.split(".").pop();
+          const prodFileName = `${creator.id}/products/${outfit.id}_${i}_${Date.now()}.${prodFileExt}`;
+
+          const { error: prodUploadError } = await supabase.storage
+            .from("outfit-images")
+            .upload(prodFileName, p.image_file as File);
+
+          if (!prodUploadError) {
+            const { data: { publicUrl: prodUrl } } = supabase.storage
+              .from("outfit-images")
+              .getPublicUrl(prodFileName);
+            productImageUrl = prodUrl;
+          }
+        }
+
+        productRows.push({
+          outfit_id: outfit.id,
+          name: sanitizeText(p.name),
+          platform: p.platform,
+          affiliate_url: p.affiliate_url.trim(),
+          price: p.price ? sanitizeText(p.price) : "",
+          image_url: productImageUrl,
+          display_order: i,
+          in_stock: true,
+        });
+      }
 
       const { error: productsError } = await supabase
         .from("products")
@@ -212,13 +258,19 @@ export default function NewOutfitPage() {
         return;
       }
 
-      // Success — redirect to storefront
-      router.push(`/${creator.username}`);
-      router.refresh();
+      // Success — show the published URL
+      const outfitPageUrl = `${siteConfig.url}/${creator.username}`;
+      setPublishedUrl(outfitPageUrl);
     } catch {
       setError("Something went wrong. Please try again.");
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const copyUrl = () => {
+    if (publishedUrl) {
+      navigator.clipboard.writeText(publishedUrl);
     }
   };
 
@@ -230,6 +282,61 @@ export default function NewOutfitPage() {
     value: p,
     label: p,
   }));
+
+  // Success state — show link
+  if (publishedUrl) {
+    return (
+      <div className="mx-auto max-w-2xl text-center py-12">
+        <div className="text-4xl mb-4">✅</div>
+        <h2 className="font-display text-2xl font-bold text-primary-dark">
+          Outfit Published!
+        </h2>
+        <p className="mt-2 text-sm text-text-secondary">
+          Your outfit is live. Share this link in your bio, reels, or ads:
+        </p>
+
+        {/* Copyable URL */}
+        <div className="mt-6 flex items-center gap-2 border border-border bg-background p-3 mx-auto max-w-md">
+          <input
+            type="text"
+            value={publishedUrl}
+            readOnly
+            className="flex-1 bg-transparent text-sm text-text-primary outline-none"
+          />
+          <button
+            onClick={copyUrl}
+            className="bg-primary-dark px-3 py-1.5 text-xs font-medium text-white hover:bg-[#333] transition-colors"
+          >
+            Copy
+                </button>
+              </div>
+
+        <div className="mt-8 flex items-center justify-center gap-4">
+          <a
+            href={publishedUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="border border-border px-4 py-2 text-sm font-medium text-text-primary hover:bg-background transition-colors"
+              >
+            View Storefront →
+          </a>
+                      <button
+            onClick={() => {
+              setPublishedUrl(null);
+              setTitle("");
+              setCategory("");
+              setImageFile(null);
+              setImagePreview(null);
+              setProducts([{ ...emptyProduct }]);
+            }}
+            className="bg-gold-accent px-4 py-2 text-sm font-medium text-white hover:opacity-90 transition-opacity"
+                      >
+            Create Another
+                      </button>
+                  </div>
+                </div>
+  );
+}
 
   return (
     <div className="mx-auto max-w-2xl">
@@ -326,22 +433,55 @@ export default function NewOutfitPage() {
                   <span className="text-xs font-medium text-text-secondary">
                     Product {index + 1}
                   </span>
+                  {products.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => removeProduct(index)}
+                      className="text-xs text-red-600 hover:underline"
+                    >
+                      Remove
+                    </button>
+                  )}
+                </div>
+
+                {/* Product Image Upload */}
+                <div>
+                  <label className="mb-1 block text-xs font-medium text-text-secondary">
+                    Product Image (optional)
+                  </label>
                   <div className="flex items-center gap-3">
-                    <Toggle
-                      enabled={product.in_stock}
-                      onChange={(val) => updateProduct(index, "in_stock", val)}
-                      label={product.in_stock ? "In Stock" : "Out of Stock"}
-                      size="sm"
-                    />
-                    {products.length > 1 && (
-                      <button
-                        type="button"
-                        onClick={() => removeProduct(index)}
-                        className="text-xs text-red-600 hover:underline"
-                      >
-                        Remove
-                      </button>
+                    {product.image_url ? (
+                      <div className="relative h-16 w-16 border border-border overflow-hidden">
+                        <img
+                          src={product.image_url}
+                          alt="Product"
+                          className="h-full w-full object-cover"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => {
+                            updateProduct(index, "image_file", null);
+                            updateProduct(index, "image_url", "");
+                          }}
+                          className="absolute -right-1 -top-1 bg-red-600 h-4 w-4 flex items-center justify-center text-[8px] text-white rounded-full"
+                        >
+                          ×
+                        </button>
+                      </div>
+                    ) : (
+                      <label className="flex h-16 w-16 cursor-pointer items-center justify-center border border-dashed border-border bg-background text-text-secondary hover:border-gold-accent transition-colors">
+                        <span className="text-lg">+</span>
+                        <input
+                          type="file"
+                          accept="image/jpeg,image/png,image/webp"
+                          onChange={(e) => handleProductImageChange(index, e)}
+                          className="hidden"
+                        />
+                      </label>
                     )}
+                    <span className="text-[10px] text-text-secondary">
+                      Square image recommended
+                    </span>
                   </div>
                 </div>
 
@@ -371,13 +511,6 @@ export default function NewOutfitPage() {
                     type="url"
                     required
                   />
-                  <Input
-                    label="Price"
-                    value={product.price}
-                    onChange={(e) => updateProduct(index, "price", e.target.value)}
-                    placeholder="₹1,499"
-                    required
-                  />
                 </div>
               </div>
             ))}
@@ -386,10 +519,15 @@ export default function NewOutfitPage() {
 
         {/* Publish Toggle */}
         <div className="flex items-center gap-4 border border-border bg-surface p-4">
-          <Toggle
-            enabled={isPublished}
-            onChange={setIsPublished}
-          />
+          <label className="relative inline-flex cursor-pointer items-center">
+            <input
+              type="checkbox"
+              checked={isPublished}
+              onChange={(e) => setIsPublished(e.target.checked)}
+              className="peer sr-only"
+            />
+            <div className="h-5 w-9 rounded-full bg-border peer-checked:bg-gold-accent transition-colors after:absolute after:left-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-full after:bg-white after:transition-all peer-checked:after:translate-x-full" />
+          </label>
           <div>
             <p className="text-sm font-medium text-text-primary">
               {isPublished ? "Publish" : "Save as Draft"}
@@ -432,3 +570,4 @@ export default function NewOutfitPage() {
     </div>
   );
 }
+

@@ -13,7 +13,7 @@ import imageCompression from "browser-image-compression";
  * Creator Profile Settings Page
  * =============================
  * Route: /dashboard/settings
- * Edit: display name, username, bio, social handles, profile photo.
+ * Edit: display name, username, bio, social handles (Instagram, YouTube, Facebook, Pinterest), profile photo.
  */
 export default function SettingsPage() {
   const router = useRouter();
@@ -23,6 +23,8 @@ export default function SettingsPage() {
   const [bio, setBio] = useState("");
   const [instagramHandle, setInstagramHandle] = useState("");
   const [youtubeHandle, setYoutubeHandle] = useState("");
+  const [facebookHandle, setFacebookHandle] = useState("");
+  const [pinterestHandle, setPinterestHandle] = useState("");
   const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null);
   const [profileImageFile, setProfileImageFile] = useState<File | null>(null);
   const [profileImagePreview, setProfileImagePreview] = useState<string | null>(null);
@@ -51,6 +53,8 @@ export default function SettingsPage() {
         setBio(creator.bio || "");
         setInstagramHandle(creator.instagram_handle || "");
         setYoutubeHandle(creator.youtube_handle || "");
+        setFacebookHandle(creator.facebook_handle || "");
+        setPinterestHandle(creator.pinterest_handle || "");
         setProfileImageUrl(creator.profile_image_url);
         setProfileImagePreview(creator.profile_image_url);
       }
@@ -163,6 +167,8 @@ export default function SettingsPage() {
           bio: sanitizeText(bio),
           instagram_handle: sanitizeText(instagramHandle) || null,
           youtube_handle: sanitizeText(youtubeHandle) || null,
+          facebook_handle: sanitizeText(facebookHandle) || null,
+          pinterest_handle: sanitizeText(pinterestHandle) || null,
           profile_image_url: finalImageUrl,
         })
         .eq("id", creator.id);
@@ -292,20 +298,37 @@ export default function SettingsPage() {
         </div>
 
         {/* Social Handles */}
-        <Input
-          label="Instagram Handle"
-          value={instagramHandle}
-          onChange={(e) => setInstagramHandle(e.target.value)}
-          placeholder="priya_styles"
-          helperText="Without the @ symbol"
-        />
-        <Input
-          label="YouTube Handle"
-          value={youtubeHandle}
-          onChange={(e) => setYoutubeHandle(e.target.value)}
-          placeholder="PriyaStyles"
-          helperText="Your YouTube channel name"
-        />
+        <div className="space-y-4">
+          <p className="text-sm font-medium text-text-primary">Social Handles</p>
+          <Input
+            label="Instagram"
+            value={instagramHandle}
+            onChange={(e) => setInstagramHandle(e.target.value)}
+            placeholder="priya_styles"
+            helperText="Without the @ symbol"
+          />
+          <Input
+            label="YouTube"
+            value={youtubeHandle}
+            onChange={(e) => setYoutubeHandle(e.target.value)}
+            placeholder="PriyaStyles"
+            helperText="Your YouTube channel name"
+          />
+          <Input
+            label="Facebook"
+            value={facebookHandle}
+            onChange={(e) => setFacebookHandle(e.target.value)}
+            placeholder="priya.styles"
+            helperText="Your Facebook page name"
+          />
+          <Input
+            label="Pinterest"
+            value={pinterestHandle}
+            onChange={(e) => setPinterestHandle(e.target.value)}
+            placeholder="priyastyles"
+            helperText="Your Pinterest username"
+          />
+        </div>
 
         {/* Messages */}
         {error && (

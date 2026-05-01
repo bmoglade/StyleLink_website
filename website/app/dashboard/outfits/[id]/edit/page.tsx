@@ -17,6 +17,8 @@ import type { ProductFormData } from "@/lib/types";
  * ================
  * Route: /dashboard/outfits/[id]/edit
  * Pre-fills form with existing outfit data.
+ * Note: In-stock toggle is available on edit (to manage existing products).
+ * Product images can be updated. Price is optional.
  */
 
 const emptyProduct: ProductFormData = {
@@ -24,6 +26,8 @@ const emptyProduct: ProductFormData = {
   platform: "Amazon",
   affiliate_url: "",
   price: "",
+  image_file: null,
+  image_url: "",
   in_stock: true,
 };
 
@@ -51,7 +55,7 @@ export default function EditOutfitPage() {
 
       const { data: outfit, error: outfitError } = await supabase
         .from("outfits")
-        .select("*, products(*)")
+        .select("*")
         .eq("id", outfitId)
         .single();
 
@@ -61,20 +65,27 @@ export default function EditOutfitPage() {
         return;
       }
 
+      // Fetch products separately (RLS compatibility)
+      const { data: productsData } = await supabase
+        .from("products")
+        .select("*")
+        .eq("outfit_id", outfitId)
+        .order("display_order", { ascending: true });
+
       setTitle(outfit.title);
       setCategory(outfit.category);
       setExistingImageUrl(outfit.image_url);
       setImagePreview(outfit.image_url);
       setIsPublished(outfit.is_published);
 
-      const existingProducts: ProductFormData[] = (outfit.products || [])
-        .sort((a: any, b: any) => a.display_order - b.display_order)
-        .map((p: any) => ({
+      const existingProducts: ProductFormData[] = (productsData || []).map((p: any) => ({
           id: p.id,
           name: p.name,
           platform: p.platform,
           affiliate_url: p.affiliate_url,
-          price: p.price,
+        price: p.price || "",
+        image_url: p.image_url || "",
+        image_file: null,
           in_stock: p.in_stock,
         }));
 
@@ -97,10 +108,33 @@ export default function EditOutfitPage() {
     setProducts(products.filter((_, i) => i !== index));
   };
 
-  const updateProduct = (index: number, field: keyof ProductFormData, value: string | boolean) => {
+  const updateProduct = (index: number, field: keyof ProductFormData, value: string | boolean | File | null) => {
     const updated = [...products];
     updated[index] = { ...updated[index], [field]: value };
     setProducts(updated);
+  };
+
+  const handleProductImageChange = async (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+      setError("Product image must be JPG, PNG, or WEBP");
+      return;
+    }
+
+    try {
+      const compressed = await imageCompression(file, {
+        maxSizeMB: 0.3,
+        maxWidthOrHeight: 400,
+        useWebWorker: true,
+      });
+      updateProduct(index, "image_file", compressed);
+      updateProduct(index, "image_url", URL.createObjectURL(compressed));
+      setError("");
+    } catch {
+      setError("Failed to process product image");
+    }
   };
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -116,7 +150,6 @@ export default function EditOutfitPage() {
       setError(`Image must be under ${siteConfig.maxImageSizeMB}MB`);
       return;
     }
-
     try {
       const compressed = await imageCompression(file, {
         maxSizeMB: siteConfig.targetImageSizeKB / 1024,
@@ -145,7 +178,6 @@ export default function EditOutfitPage() {
       const p = products[i];
       if (!p.name.trim()) { setError(`Product ${i+1}: Name required`); setIsLoading(false); return; }
       if (!p.affiliate_url.trim() || !isValidUrl(p.affiliate_url)) { setError(`Product ${i+1}: Valid URL required`); setIsLoading(false); return; }
-      if (!p.price.trim()) { setError(`Product ${i+1}: Price required`); setIsLoading(false); return; }
     }
 
     try {
@@ -192,18 +224,47 @@ export default function EditOutfitPage() {
       // Delete existing products and re-insert
       await supabase.from("products").delete().eq("outfit_id", outfitId);
 
-      const productRows = products.map((p, index) => ({
-        outfit_id: outfitId,
-        name: sanitizeText(p.name),
-        platform: p.platform,
-        affiliate_url: p.affiliate_url.trim(),
-        price: sanitizeText(p.price),
-        display_order: index,
-        in_stock: p.in_stock,
-      }));
+      // Upload product images and insert products
+      const productRows = [];
+      for (let i = 0; i < products.length; i++) {
+        const p = products[i];
+        let productImageUrl: string | null = p.image_url || null;
+
+        // Upload new product image if file exists (not just a URL from existing)
+        if (p.image_file) {
+          const prodFileExt = (p.image_file as File).name.split(".").pop();
+          const prodFileName = `${creator.id}/products/${outfitId}_${i}_${Date.now()}.${prodFileExt}`;
+
+          const { error: prodUploadError } = await supabase.storage
+            .from("outfit-images")
+            .upload(prodFileName, p.image_file as File);
+
+          if (!prodUploadError) {
+            const { data: { publicUrl: prodUrl } } = supabase.storage
+              .from("outfit-images")
+              .getPublicUrl(prodFileName);
+            productImageUrl = prodUrl;
+          }
+        }
+
+        // If image_url is a blob URL (from previous edit session), clear it
+        if (productImageUrl && productImageUrl.startsWith("blob:")) {
+          productImageUrl = null;
+        }
+
+        productRows.push({
+          outfit_id: outfitId,
+          name: sanitizeText(p.name),
+          platform: p.platform,
+          affiliate_url: p.affiliate_url.trim(),
+          price: p.price ? sanitizeText(p.price) : "",
+          image_url: productImageUrl,
+          display_order: i,
+          in_stock: p.in_stock,
+        });
+      }
 
       await supabase.from("products").insert(productRows);
-
       router.push(`/${creator.username}`);
       router.refresh();
     } catch {
@@ -368,6 +429,48 @@ export default function EditOutfitPage() {
                     )}
                   </div>
                 </div>
+
+                {/* Product Image */}
+                <div>
+                  <label className="mb-1 block text-xs font-medium text-text-secondary">
+                    Product Image (optional)
+                  </label>
+        <div className="flex items-center gap-3">
+                    {product.image_url ? (
+                      <div className="relative h-16 w-16 border border-border overflow-hidden">
+                        <img
+                          src={product.image_url}
+                          alt="Product"
+                          className="h-full w-full object-cover"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => {
+                            updateProduct(index, "image_file", null);
+                            updateProduct(index, "image_url", "");
+                          }}
+                          className="absolute -right-1 -top-1 bg-red-600 h-4 w-4 flex items-center justify-center text-[8px] text-white rounded-full"
+                        >
+                          ×
+                        </button>
+        </div>
+                    ) : (
+                      <label className="flex h-16 w-16 cursor-pointer items-center justify-center border border-dashed border-border bg-background text-text-secondary hover:border-gold-accent transition-colors">
+                        <span className="text-lg">+</span>
+                        <input
+                          type="file"
+                          accept="image/jpeg,image/png,image/webp"
+                          onChange={(e) => handleProductImageChange(index, e)}
+                          className="hidden"
+                        />
+                      </label>
+                    )}
+                    <span className="text-[10px] text-text-secondary">
+                      Square image recommended
+                    </span>
+    </div>
+                </div>
+
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                   <Input
                     label="Product Name"
@@ -388,13 +491,6 @@ export default function EditOutfitPage() {
                     onChange={(e) => updateProduct(index, "affiliate_url", e.target.value)}
                     placeholder="https://amzn.to/abc123"
                     type="url"
-                    required
-                  />
-                  <Input
-                    label="Price"
-                    value={product.price}
-                    onChange={(e) => updateProduct(index, "price", e.target.value)}
-                    placeholder="₹1,499"
                     required
                   />
                 </div>
@@ -436,3 +532,4 @@ export default function EditOutfitPage() {
     </div>
   );
 }
+

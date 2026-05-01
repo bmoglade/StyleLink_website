@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { createClient } from "@/lib/supabase";
 import { siteConfig } from "@/lib/config";
 import { cn } from "@/lib/utils";
 
@@ -16,9 +17,16 @@ const navItems = [
  * ============================
  * Left sidebar for creator dashboard.
  * Highlights active route.
+ * Includes logout button.
  */
 export function DashboardSidebar() {
   const pathname = usePathname();
+
+  const handleLogout = async () => {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    window.location.href = "/login";
+  };
 
   return (
     <aside className="flex h-full w-64 flex-col border-r border-border bg-surface">
@@ -58,8 +66,8 @@ export function DashboardSidebar() {
         </ul>
       </nav>
 
-      {/* View Storefront Link */}
-      <div className="border-t border-border px-4 py-4">
+      {/* Bottom actions */}
+      <div className="border-t border-border px-4 py-4 space-y-3">
         <Link
           href="/dashboard/settings"
           className="flex items-center gap-2 text-xs text-text-secondary hover:text-gold-accent transition-colors"
@@ -67,6 +75,13 @@ export function DashboardSidebar() {
           <span>👤</span>
           View your storefront →
         </Link>
+        <button
+          onClick={handleLogout}
+          className="flex w-full items-center gap-2 px-3 py-2 text-xs font-medium text-red-600 hover:bg-red-50 transition-colors"
+        >
+          <span>🚪</span>
+          Log Out
+        </button>
       </div>
     </aside>
   );

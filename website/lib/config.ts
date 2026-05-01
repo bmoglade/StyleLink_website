@@ -4,6 +4,16 @@
  * Change values here to rebrand the entire platform.
  * This is the SINGLE SOURCE OF TRUTH for all branding.
  *
+ * HOW TO REBRAND:
+ * 1. Change `name` → site name everywhere (header, footer, SEO, emails)
+ * 2. Change `tagline` → subtitle on homepage + SEO
+ * 3. Change `description` → meta descriptions + OG tags
+ *
+ * HOW TO CHANGE COLORS:
+ * Colors are defined as CSS custom properties in `app/globals.css` (:root section).
+ * Change the hex values there → entire site theme updates instantly.
+ * No need to touch any component files.
+ *
  * For production deployment:
  * 1. Update `name`, `tagline`, `description` as needed
  * 2. Set NEXT_PUBLIC_APP_URL in environment variables
@@ -11,7 +21,7 @@
  */
 
 export const siteConfig = {
-  // Brand
+  // Brand — Change these to rebrand the entire platform
   name: "StyleLink",
   tagline: "Shop Creator Looks",
   description:
@@ -34,6 +44,7 @@ export const siteConfig = {
   targetImageSizeKB: 500,
 
   // Categories available for outfits
+  // To add a new category: just add a string to this array
   categories: [
     "All",
     "Office",
@@ -45,6 +56,7 @@ export const siteConfig = {
   ] as const,
 
   // Supported e-commerce platforms
+  // To add a new platform: add here AND add color entry in platformColors below
   platforms: [
     "Amazon",
     "Flipkart",
@@ -58,12 +70,13 @@ export const siteConfig = {
 
 /**
  * Platform badge styling configuration
- * Used for rendering colored badges next to products
+ * Used for rendering colored badges next to products.
+ *
+ * NOTE: Product card colors (bg, border, hover, button) are in globals.css as CSS variables.
+ * These platform badge colors are separate — they represent the e-commerce brand identity.
+ * When the team decides on per-platform card theming, update globals.css variables.
  */
-export const platformColors: Record<
-  string,
-  { bg: string; text: string }
-> = {
+export const platformColors: Record<string, { bg: string; text: string }> = {
   Amazon: { bg: "#FF9900", text: "#000000" },
   Flipkart: { bg: "#2874F0", text: "#FFFFFF" },
   Myntra: { bg: "#FF3F6C", text: "#FFFFFF" },

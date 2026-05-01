@@ -8,6 +8,7 @@
 ## Quick Start (New Developer)
 
 ### Prerequisites
+
 - Node.js v18+ installed
 - pnpm (`npm install -g pnpm`)
 - Supabase account (free tier)
@@ -55,11 +56,13 @@ pnpm dev
 ### If Behind Corporate Proxy (SSL Interception)
 
 Add to `.env.local`:
+
 ```
 NODE_TLS_REJECT_UNAUTHORIZED=0
 ```
 
 Start with:
+
 ```bash
 # Windows PowerShell
 $env:NODE_TLS_REJECT_UNAUTHORIZED=0
@@ -75,13 +78,13 @@ NODE_TLS_REJECT_UNAUTHORIZED=0 pnpm dev
 
 ### Configuration Files
 
-| File | Purpose | When to Edit |
-|---|---|---|
-| `lib/config.ts` | Brand name, limits, categories, platform colors | Rebranding, adding categories/platforms |
-| `.env.local` | Supabase keys, GA ID, app URL | Per-environment setup |
-| `next.config.mjs` | Image domains, redirects | Adding new image sources |
-| `tailwind.config.ts` | Colors, fonts, animations | Design system changes |
-| `middleware.ts` | Route protection, session refresh | Adding new protected routes |
+| File                 | Purpose                                         | When to Edit                            |
+| -------------------- | ----------------------------------------------- | --------------------------------------- |
+| `lib/config.ts`      | Brand name, limits, categories, platform colors | Rebranding, adding categories/platforms |
+| `.env.local`         | Supabase keys, GA ID, app URL                   | Per-environment setup                   |
+| `next.config.mjs`    | Image domains, redirects                        | Adding new image sources                |
+| `tailwind.config.ts` | Colors, fonts, animations                       | Design system changes                   |
+| `middleware.ts`      | Route protection, session refresh               | Adding new protected routes             |
 
 ### Adding a New Feature — Checklist
 
@@ -102,6 +105,21 @@ NODE_TLS_REJECT_UNAUTHORIZED=0 pnpm dev
 
 1. Edit `lib/config.ts` → Change `name` and `tagline`
 2. Done. Everything reads from this file.
+
+### Change the Color Theme
+
+1. Edit `app/globals.css` → Change the CSS variables in `:root { ... }`
+2. All colors across the entire site update instantly.
+3. Key variables:
+   - `--color-background` — page background
+   - `--color-surface` — card/panel backgrounds
+   - `--color-gold-accent` — primary CTA/accent color
+   - `--color-primary-dark` — dark text/buttons
+   - `--color-product-card-bg` — product card background
+   - `--color-product-card-border` — product card border
+   - `--color-product-card-hover` — product card hover accent
+   - `--color-shop-btn-bg` — "Shop This Item" button background
+   - `--color-shop-btn-text` — "Shop This Item" button text
 
 ### Add a New Category
 
@@ -143,13 +161,15 @@ import { createServerSupabaseClient } from "@/lib/supabase-server";
 
 export default async function SomePage() {
   const supabase = createServerSupabaseClient();
-  
+
   // Use getSession() not getUser() (proxy compatibility)
-  const { data: { session } } = await supabase.auth.getSession();
-  
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
   // Fetch data
   const { data } = await supabase.from("table").select("*");
-  
+
   return <div>{/* render data */}</div>;
 }
 ```
@@ -165,12 +185,12 @@ import { createClient } from "@/lib/supabase";
 
 export function Interactive() {
   const [data, setData] = useState(null);
-  
+
   const handleAction = async () => {
     const supabase = createClient();
     // ... client-side operations
   };
-  
+
   return <button onClick={handleAction}>Do Something</button>;
 }
 ```
@@ -181,8 +201,8 @@ export function Interactive() {
 // ALWAYS use window.location.href for post-login/signup redirects
 // DO NOT use router.push() — cookies won't sync properly
 
-window.location.href = "/dashboard";  // ✅ Correct
-router.push("/dashboard");            // ❌ Will cause redirect loop
+window.location.href = "/dashboard"; // ✅ Correct
+router.push("/dashboard"); // ❌ Will cause redirect loop
 ```
 
 ### Image Display (Supabase Storage)
@@ -259,19 +279,32 @@ const { data } = await supabase.from("outfits").select("*, products(*)");  // �
 
 ## Troubleshooting
 
-| Problem | Cause | Fix |
-|---|---|---|
-| `SELF_SIGNED_CERT_IN_CHAIN` | Corporate proxy | Set `NODE_TLS_REJECT_UNAUTHORIZED=0` in env |
-| `Missing ActionQueueContext` | React 18.3.x | Pin React to 18.2.0 in package.json |
-| Login redirect loop | `getUser()` failing in middleware | Use `getSession()` instead |
-| Images not loading | `next/image` proxy issue | Use `<img>` tag instead |
-| `next.config.ts` not supported | Next.js 14.2 limitation | Rename to `next.config.mjs` |
-| Fonts not loading | Corporate proxy blocks Google Fonts API | Use `<link>` tags in layout |
-| Outfit cards invisible | CSS `opacity: 0` on animation class | Remove `opacity: 0` from `.stagger-fade-in` |
-| Empty products in nested query | RLS blocking nested select | Fetch outfits and products separately |
-| Post-login stays on login page | `router.push()` doesn't sync cookies | Use `window.location.href` |
+| Problem                        | Cause                                   | Fix                                         |
+| ------------------------------ | --------------------------------------- | ------------------------------------------- |
+| `SELF_SIGNED_CERT_IN_CHAIN`    | Corporate proxy                         | Set `NODE_TLS_REJECT_UNAUTHORIZED=0` in env |
+| `Missing ActionQueueContext`   | React 18.3.x                            | Pin React to 18.2.0 in package.json         |
+| Login redirect loop            | `getUser()` failing in middleware       | Use `getSession()` instead                  |
+| Images not loading             | `next/image` proxy issue                | Use `<img>` tag instead                     |
+| `next.config.ts` not supported | Next.js 14.2 limitation                 | Rename to `next.config.mjs`                 |
+| Fonts not loading              | Corporate proxy blocks Google Fonts API | Use `<link>` tags in layout                 |
+| Outfit cards invisible         | CSS `opacity: 0` on animation class     | Remove `opacity: 0` from `.stagger-fade-in` |
+| Empty products in nested query | RLS blocking nested select              | Fetch outfits and products separately       |
+| Post-login stays on login page | `router.push()` doesn't sync cookies    | Use `window.location.href`                  |
 
 ---
+
+## Configurable Elements (Quick Reference)
+
+| What to Change          | Where to Change                                   | Notes                                    |
+| ----------------------- | ------------------------------------------------- | ---------------------------------------- |
+| Site name / tagline     | `lib/config.ts` → `name`, `tagline`               | Applies to header, footer, SEO, metadata |
+| All colors / theme      | `app/globals.css` → `:root` CSS variables         | One file, instant rebrand                |
+| Product card colors     | `app/globals.css` → `--color-product-card-*`      | Background, border, hover, button        |
+| Platform badge colors   | `lib/config.ts` → `platformColors`                | Per-platform brand colors                |
+| Categories              | `lib/config.ts` → `categories` array              | Auto-updates filter bar + dropdown       |
+| Platforms               | `lib/config.ts` → `platforms` + `platformColors`  | Auto-updates badges + dropdown           |
+| Max products per outfit | `lib/config.ts` → `maxProductsPerOutfit`          | Form validation auto-updates             |
+| Ad slot frequency       | `components/outfit/OutfitGrid.tsx` → modulo check | Currently every 2nd outfit               |
 
 ## Future Phase Ideas (Not Built Yet)
 
@@ -284,7 +317,7 @@ These are discussed ideas for Phase 2+. Do NOT build unless explicitly requested
 - Click analytics chart/graph
 - Multiple creator profiles per account
 - Custom domain per creator (CNAME)
-- Automated out-of-stock detection (API check)
+- Automated out-of-stock detection (via e-commerce API — requires API partnerships)
 
 ---
 

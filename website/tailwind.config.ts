@@ -9,14 +9,14 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "#FAF8F5",
-        surface: "#FFFFFF",
-        "primary-dark": "#1A1A1A",
-        "gold-accent": "#C9A96E",
-        "text-primary": "#1A1A1A",
-        "text-secondary": "#888888",
-        border: "#EDE9E3",
-        // Platform badge colors
+        background: "var(--color-background)",
+        surface: "var(--color-surface)",
+        "primary-dark": "var(--color-primary-dark)",
+        "gold-accent": "var(--color-gold-accent)",
+        "text-primary": "var(--color-text-primary)",
+        "text-secondary": "var(--color-text-secondary)",
+        border: "var(--color-border)",
+        // Platform badge colors (kept as static — these are brand-specific)
         "platform-amazon": "#FF9900",
         "platform-flipkart": "#2874F0",
         "platform-myntra": "#FF3F6C",
@@ -31,6 +31,7 @@ const config: Config = {
       },
       maxWidth: {
         content: "1100px",
+        "content-wide": "1440px",
       },
       borderRadius: {
         card: "4px",

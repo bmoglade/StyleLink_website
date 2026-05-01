@@ -11,6 +11,9 @@ interface OutfitGridProps {
  * Renders a vertical list of outfit cards.
  * Each card is full-width (image left, products right).
  *
+ * Ad slots are inserted between outfits for mobile monetization.
+ * Desktop ad space is handled by the parent layout (side gutters).
+ *
  * Handles empty state when no outfits match filter.
  */
 export function OutfitGrid({ outfits }: OutfitGridProps) {
@@ -35,7 +38,20 @@ export function OutfitGrid({ outfits }: OutfitGridProps) {
   return (
     <div className="space-y-6">
       {visibleOutfits.map((outfit, index) => (
-        <OutfitCard key={outfit.id} outfit={outfit} index={index} />
+        <div key={outfit.id}>
+          <OutfitCard outfit={outfit} index={index} />
+
+          {/* Mobile Ad Slot — between outfits (every 2nd outfit) */}
+          {index < visibleOutfits.length - 1 && (index + 1) % 2 === 0 && (
+            <div
+              className="my-6 flex items-center justify-center border border-dashed border-border bg-background p-4 md:hidden"
+              data-ad-slot="mobile-between-outfits"
+              aria-label="Advertisement space"
+            >
+              <span className="text-xs text-text-secondary">Ad Space</span>
+            </div>
+          )}
+        </div>
       ))}
     </div>
   );

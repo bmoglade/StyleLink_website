@@ -14,6 +14,8 @@ export interface Creator {
   profile_image_url: string | null;
   instagram_handle: string | null;
   youtube_handle: string | null;
+  facebook_handle: string | null;
+  pinterest_handle: string | null;
   created_at: string;
 }
 
@@ -35,6 +37,7 @@ export interface Product {
   platform: string;
   affiliate_url: string;
   price: string;
+  image_url: string | null;
   display_order: number;
   in_stock: boolean;
   created_at: string;
@@ -82,6 +85,8 @@ export interface ProductFormData {
   platform: string;
   affiliate_url: string;
   price: string;
+  image_file?: File | null;
+  image_url?: string; // present when editing (existing image)
   in_stock: boolean;
 }
 
@@ -102,4 +107,6 @@ export interface ProfileFormData {
   profile_image_url?: string; // existing image
   instagram_handle: string;
   youtube_handle: string;
+  facebook_handle: string;
+  pinterest_handle: string;
 }

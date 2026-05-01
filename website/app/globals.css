@@ -3,6 +3,32 @@
 @tailwind utilities;
 
 @layer base {
+  /* =============================================
+   * COLOR THEME — CSS Custom Properties
+   * =============================================
+   * Change these values to rebrand the entire site's colors.
+   * All Tailwind color classes reference these variables.
+   */
+  :root {
+    --color-background: #FAF8F5;
+    --color-surface: #FFFFFF;
+    --color-primary-dark: #1A1A1A;
+    --color-gold-accent: #C9A96E;
+    --color-text-primary: #1A1A1A;
+    --color-text-secondary: #888888;
+    --color-border: #EDE9E3;
+
+    /* Product card accent (configurable per brand) */
+    --color-product-card-bg: #FFFFFF;
+    --color-product-card-border: #EDE9E3;
+    --color-product-card-hover: #C9A96E;
+
+    /* Shop button on product cards */
+    --color-shop-btn-bg: #1A1A1A;
+    --color-shop-btn-text: #FFFFFF;
+    --color-shop-btn-hover-bg: #333333;
+  }
+
   /* Smooth scrolling */
   html {
     scroll-behavior: smooth;
@@ -44,7 +70,6 @@
 
   /* Staggered fade-in for grid items */
   .stagger-fade-in {
-
     animation: fade-in-up 0.5s ease forwards;
   }
 }
@@ -54,6 +79,11 @@
   .container-content {
     @apply mx-auto w-full max-w-content px-4 sm:px-6;
   }
+
+  /* Wider container for storefront (includes ad gutters) */
+  .container-storefront {
+    @apply mx-auto w-full max-w-content-wide px-4 sm:px-6;
+  }
 }
 
 /* Scrollbar styling (subtle) */
@@ -61,12 +91,12 @@
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #faf8f5;
+  background: var(--color-background);
 }
 ::-webkit-scrollbar-thumb {
-  background: #ede9e3;
+  background: var(--color-border);
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #c9a96e;
+  background: var(--color-gold-accent);
 }

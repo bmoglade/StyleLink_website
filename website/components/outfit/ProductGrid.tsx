@@ -8,13 +8,12 @@ interface ProductGridProps {
 /**
  * Product Grid Component
  * ======================
- * Renders products in a responsive grid within an outfit card.
- * Handles 1-15 products gracefully.
+ * Renders products in a grid matching reference layout:
+ * Desktop: 5 columns × 3 rows (scrollable if more than 15)
+ * Tablet: 3 columns
+ * Mobile: 2 columns
  *
- * Layout:
- * - 1-4 products: 2 columns
- * - 5-9 products: 3 columns (desktop), 2 columns (tablet)
- * - 10-15 products: 3 columns with scroll if needed
+ * Handles 1-15 products gracefully.
  */
 export function ProductGrid({ products }: ProductGridProps) {
   // Only show in-stock products on public storefront
@@ -22,18 +21,12 @@ export function ProductGrid({ products }: ProductGridProps) {
 
   if (visibleProducts.length === 0) return null;
 
-  // Determine grid columns based on product count
-  const gridCols =
-    visibleProducts.length <= 4
-      ? "grid-cols-1 sm:grid-cols-2"
-      : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3";
-
   return (
     <div
-      className={`grid gap-2 ${gridCols}`}
+      className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2"
       style={{
-        maxHeight: visibleProducts.length > 9 ? "320px" : "none",
-        overflowY: visibleProducts.length > 9 ? "auto" : "visible",
+        maxHeight: visibleProducts.length > 15 ? "480px" : "none",
+        overflowY: visibleProducts.length > 15 ? "auto" : "visible",
       }}
     >
       {visibleProducts

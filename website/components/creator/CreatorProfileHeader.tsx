@@ -1,4 +1,3 @@
-import Image from "next/image";
 import type { CreatorProfile } from "@/lib/types";
 
 interface CreatorProfileHeaderProps {
@@ -9,7 +8,8 @@ interface CreatorProfileHeaderProps {
  * Creator Profile Header
  * ======================
  * Top section of the public storefront page.
- * Shows: photo, name, bio, social handles, stats.
+ * Shows: photo, name, bio, social handles (Instagram, YouTube, Facebook, Pinterest), stats.
+ * Uses <img> instead of next/image (corporate proxy compatibility).
  */
 export function CreatorProfileHeader({ creator }: CreatorProfileHeaderProps) {
   return (
@@ -17,12 +17,10 @@ export function CreatorProfileHeader({ creator }: CreatorProfileHeaderProps) {
       {/* Profile Photo */}
       <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-full border-2 border-border sm:h-24 sm:w-24">
         {creator.profile_image_url ? (
-          <Image
+          <img
             src={creator.profile_image_url}
             alt={creator.display_name}
-            fill
-            sizes="96px"
-            className="object-cover"
+            className="h-full w-full object-cover"
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center bg-border text-2xl text-text-secondary">
@@ -39,7 +37,7 @@ export function CreatorProfileHeader({ creator }: CreatorProfileHeaderProps) {
         </h1>
 
         {/* Social Handles */}
-        <div className="mt-1 flex items-center justify-center gap-4 sm:justify-start">
+        <div className="mt-1 flex flex-wrap items-center justify-center gap-3 sm:justify-start">
           {creator.instagram_handle && (
             <a
               href={`https://instagram.com/${creator.instagram_handle}`}
@@ -58,6 +56,26 @@ export function CreatorProfileHeader({ creator }: CreatorProfileHeaderProps) {
               className="text-sm text-text-secondary hover:text-gold-accent transition-colors"
             >
               YouTube
+            </a>
+          )}
+          {creator.facebook_handle && (
+            <a
+              href={`https://facebook.com/${creator.facebook_handle}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm text-text-secondary hover:text-gold-accent transition-colors"
+            >
+              Facebook
+            </a>
+          )}
+          {creator.pinterest_handle && (
+            <a
+              href={`https://pinterest.com/${creator.pinterest_handle}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm text-text-secondary hover:text-gold-accent transition-colors"
+            >
+              Pinterest
             </a>
           )}
         </div>
