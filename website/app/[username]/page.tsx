@@ -129,7 +129,10 @@ export default async function CreatorStorefrontPage({ params }: PageProps) {
 
         {/* Outfit grid uses wider container to accommodate ad gutters */}
         <div className="container-storefront">
-          <StorefrontContent outfits={data.outfits} />
+          <StorefrontContent
+            outfits={data.outfits}
+            creatorUsername={data.creator.username}
+          />
         </div>
       </main>
       <Footer />

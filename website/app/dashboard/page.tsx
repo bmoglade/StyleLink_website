@@ -1,14 +1,16 @@
 import Link from "next/link";
 import { createServerSupabaseClient } from "@/lib/supabase-server";
 import { redirect } from "next/navigation";
+import { siteConfig } from "@/lib/config";
 import { Button } from "@/components/ui/Button";
+import { CopyLinkInput } from "@/components/ui/CopyLinkInput";
 import type { DashboardStats, Outfit } from "@/lib/types";
 
 /**
  * Dashboard Overview Page
  * =======================
  * Route: /dashboard
- * Shows: stats cards, outfit list with edit/delete.
+ * Shows: stats cards, outfit list with edit/delete + shareable link for each outfit.
  */
 
 async function getDashboardData() {
@@ -112,51 +114,63 @@ export default async function DashboardPage() {
           </div>
         ) : (
           <ul className="divide-y divide-border">
-            {outfits.map((outfit: any) => (
-              <li
-                key={outfit.id}
-                className="flex items-center justify-between px-4 py-3"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 flex-shrink-0 overflow-hidden rounded-card bg-border">
-                    {outfit.image_url && (
-                      <img
-                        src={outfit.image_url}
-                        alt={outfit.title}
-                        className="h-full w-full object-cover"
-                      />
-                    )}
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-primary-dark">
-                      {outfit.title}
-                    </p>
+            {outfits.map((outfit: any) => {
+              const outfitLink = `${siteConfig.url}/${creator.username}?look=${outfit.id}`;
+              return (
+                <li
+                  key={outfit.id}
+                  className="px-4 py-3 space-y-2"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="h-10 w-10 flex-shrink-0 overflow-hidden rounded-card bg-border">
+                        {outfit.image_url && (
+                          <img
+                            src={outfit.image_url}
+                            alt={outfit.title}
+                            className="h-full w-full object-cover"
+                          />
+                        )}
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-primary-dark">
+                          {outfit.title}
+                        </p>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs text-text-secondary">
+                            {outfit.category}
+                          </span>
+                          <span
+                            className={`inline-flex items-center px-1.5 py-0.5 text-[10px] font-medium ${
+                              outfit.is_published
+                                ? "bg-green-50 text-green-700"
+                                : "bg-yellow-50 text-yellow-700"
+                            }`}
+                          >
+                            {outfit.is_published ? "Published" : "Draft"}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
                     <div className="flex items-center gap-2">
-                      <span className="text-xs text-text-secondary">
-                        {outfit.category}
-                      </span>
-                      <span
-                        className={`inline-flex items-center px-1.5 py-0.5 text-[10px] font-medium ${
-                          outfit.is_published
-                            ? "bg-green-50 text-green-700"
-                            : "bg-yellow-50 text-yellow-700"
-                        }`}
-                      >
-                        {outfit.is_published ? "Published" : "Draft"}
-                      </span>
+                      <Link href={`/dashboard/outfits/${outfit.id}/edit`}>
+                        <Button variant="ghost" size="sm">
+                          Edit
+                        </Button>
+                      </Link>
                     </div>
                   </div>
-                </div>
 
-                <div className="flex items-center gap-2">
-                  <Link href={`/dashboard/outfits/${outfit.id}/edit`}>
-                    <Button variant="ghost" size="sm">
-                      Edit
-                    </Button>
-                  </Link>
-                </div>
-              </li>
-            ))}
+                  {/* Shareable Outfit Link */}
+                  {outfit.is_published && (
+                    <div className="pl-[52px]">
+                      <CopyLinkInput text={outfitLink} />
+                    </div>
+                  )}
+                </li>
+              );
+            })}
           </ul>
         )}
       </div>
@@ -186,3 +200,5 @@ function StatsCard({ label, value }: { label: string; value: number }) {
     </div>
   );
 }
+
+

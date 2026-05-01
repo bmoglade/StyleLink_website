@@ -7,6 +7,7 @@ import type { OutfitWithProducts } from "@/lib/types";
 
 interface StorefrontContentProps {
   outfits: OutfitWithProducts[];
+  creatorUsername: string;
 }
 
 /**
@@ -17,8 +18,9 @@ interface StorefrontContentProps {
  *
  * Layout includes ad space gutters on desktop (left/right sides).
  * Mobile: full width, ads between outfits.
+ * Passes creatorUsername to OutfitGrid so each card can show a shareable link.
  */
-export function StorefrontContent({ outfits }: StorefrontContentProps) {
+export function StorefrontContent({ outfits, creatorUsername }: StorefrontContentProps) {
   const [activeCategory, setActiveCategory] = useState("All");
 
   const filteredOutfits =
@@ -51,7 +53,7 @@ export function StorefrontContent({ outfits }: StorefrontContentProps) {
 
         {/* Main Outfit Content */}
         <div className="flex-1 min-w-0">
-          <OutfitGrid outfits={filteredOutfits} />
+          <OutfitGrid outfits={filteredOutfits} creatorUsername={creatorUsername} />
         </div>
 
         {/* Right Ad Space — Desktop only */}

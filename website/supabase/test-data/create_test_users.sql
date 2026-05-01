@@ -1,0 +1,70 @@
+-- ============================================
+-- StyleLink: Create 5 Test Users
+-- ============================================
+-- 
+-- HOW TO USE:
+-- This script creates 5 test users in Supabase Auth + creators table.
+-- 
+-- ⚠️ IMPORTANT: Supabase does NOT allow direct password insertion via SQL.
+-- You must create users through the Supabase Dashboard or API.
+-- 
+-- OPTION A: Create via Supabase Dashboard (Recommended)
+-- -------------------------------------------------------
+-- 1. Go to: Supabase Dashboard → Authentication → Users → Add User
+-- 2. Create each user manually:
+--    - test1@stylelink.com / Testing@123
+--    - test2@stylelink.com / Testing@123
+--    - test3@stylelink.com / Testing@123
+--    - test4@stylelink.com / Testing@123
+--    - test5@stylelink.com / Testing@123
+-- 3. After creating auth users, note their UUIDs
+-- 4. Then run the SQL below (replacing the UUIDs)
+--
+-- OPTION B: Use this script after creating auth users
+-- -------------------------------------------------------
+-- After creating auth users in Dashboard, get their IDs and run:
+
+-- Replace these UUIDs with the actual auth.users IDs from Supabase Dashboard
+-- You can find them at: Authentication → Users → click user → copy UID
+
+-- INSERT INTO creators (auth_id, username, display_name, bio, instagram_handle)
+-- VALUES
+--   ('PASTE-AUTH-UUID-1-HERE', 'test_user_1', 'Test User 1', 'Fashion creator test account 1', 'test_user_1'),
+--   ('PASTE-AUTH-UUID-2-HERE', 'test_user_2', 'Test User 2', 'Fashion creator test account 2', 'test_user_2'),
+--   ('PASTE-AUTH-UUID-3-HERE', 'test_user_3', 'Test User 3', 'Fashion creator test account 3', 'test_user_3'),
+--   ('PASTE-AUTH-UUID-4-HERE', 'test_user_4', 'Test User 4', 'Fashion creator test account 4', 'test_user_4'),
+--   ('PASTE-AUTH-UUID-5-HERE', 'test_user_5', 'Test User 5', 'Fashion creator test account 5', 'test_user_5');
+
+
+-- ============================================
+-- OPTION C: Quick — Use Supabase Admin API (run from terminal)
+-- ============================================
+-- If you have the SUPABASE_SERVICE_ROLE_KEY, you can create users via curl:
+--
+-- Replace YOUR_SUPABASE_URL and YOUR_SERVICE_ROLE_KEY:
+--
+-- curl -X POST 'https://YOUR_SUPABASE_URL/auth/v1/admin/users' \
+--   -H "Authorization: Bearer YOUR_SERVICE_ROLE_KEY" \
+--   -H "apikey: YOUR_SERVICE_ROLE_KEY" \
+--   -H "Content-Type: application/json" \
+--   -d '{"email": "test1@stylelink.com", "password": "Testing@123", "email_confirm": true, "user_metadata": {"display_name": "Test User 1"}}'
+--
+-- Repeat for test2-test5.
+
+
+-- ============================================
+-- EASIEST METHOD: Sign up through the website
+-- ============================================
+-- 1. Go to http://localhost:3000/signup
+-- 2. Create account: test1@stylelink.com / Testing@123 / Display Name: Test User 1
+-- 3. Set username: test_user_1
+-- 4. Repeat for test2-test5
+--
+-- Test credentials:
+-- | Email                  | Password    | Username     | Display Name |
+-- |------------------------|-------------|--------------|--------------|
+-- | test1@stylelink.com    | Testing@123 | test_user_1  | Test User 1  |
+-- | test2@stylelink.com    | Testing@123 | test_user_2  | Test User 2  |
+-- | test3@stylelink.com    | Testing@123 | test_user_3  | Test User 3  |
+-- | test4@stylelink.com    | Testing@123 | test_user_4  | Test User 4  |
+-- | test5@stylelink.com    | Testing@123 | test_user_5  | Test User 5  |

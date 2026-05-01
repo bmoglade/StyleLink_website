@@ -11,10 +11,9 @@ interface ProductItemProps {
  * Product Item Component
  * ======================
  * Single product card within an outfit grid.
- * Shows: product image (if available), platform badge, name, and "Shop This Item" button.
+ * Layout (top to bottom): Platform badge → Product image → Product name → "Shop This Item" button.
+ * Matches reference: e-commerce site name on top, then image, then link.
  * Links through /go/[productId] for click tracking.
- *
- * Layout matches reference: image on top, platform badge, name, shop button at bottom.
  */
 export function ProductItem({ product }: ProductItemProps) {
   return (
@@ -25,8 +24,13 @@ export function ProductItem({ product }: ProductItemProps) {
         borderColor: "var(--color-product-card-border)",
       }}
     >
+      {/* Platform Badge — TOP (e-commerce site name first, like reference) */}
+      <div className="px-2 pt-2">
+        <PlatformBadge platform={product.platform} />
+      </div>
+
       {/* Product Image */}
-      <div className="relative aspect-square w-full overflow-hidden bg-background">
+      <div className="relative aspect-square w-full overflow-hidden bg-background mt-1.5">
         {product.image_url ? (
           <img
             src={product.image_url}
@@ -54,13 +58,8 @@ export function ProductItem({ product }: ProductItemProps) {
         )}
       </div>
 
-      {/* Product Info */}
+      {/* Product Name + Shop Button */}
       <div className="flex flex-1 flex-col p-2">
-        {/* Platform Badge */}
-        <div className="mb-1.5">
-          <PlatformBadge platform={product.platform} />
-        </div>
-
         {/* Product Name */}
         <p className="text-xs font-medium text-text-primary leading-tight line-clamp-2 flex-1">
           {truncate(product.name, siteConfig.maxProductNameLength)}

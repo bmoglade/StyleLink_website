@@ -3,6 +3,7 @@ import type { OutfitWithProducts } from "@/lib/types";
 
 interface OutfitGridProps {
   outfits: OutfitWithProducts[];
+  creatorUsername?: string;
 }
 
 /**
@@ -13,10 +14,11 @@ interface OutfitGridProps {
  *
  * Ad slots are inserted between outfits for mobile monetization.
  * Desktop ad space is handled by the parent layout (side gutters).
+ * Each outfit card shows a shareable link (if creatorUsername is provided).
  *
  * Handles empty state when no outfits match filter.
  */
-export function OutfitGrid({ outfits }: OutfitGridProps) {
+export function OutfitGrid({ outfits, creatorUsername }: OutfitGridProps) {
   // Filter out outfits where all products are out of stock
   const visibleOutfits = outfits.filter((outfit) =>
     outfit.products.some((p) => p.in_stock)
@@ -39,7 +41,11 @@ export function OutfitGrid({ outfits }: OutfitGridProps) {
     <div className="space-y-6">
       {visibleOutfits.map((outfit, index) => (
         <div key={outfit.id}>
-          <OutfitCard outfit={outfit} index={index} />
+          <OutfitCard
+            outfit={outfit}
+            index={index}
+            creatorUsername={creatorUsername}
+          />
 
           {/* Mobile Ad Slot — between outfits (every 2nd outfit) */}
           {index < visibleOutfits.length - 1 && (index + 1) % 2 === 0 && (
