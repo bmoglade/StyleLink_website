@@ -461,24 +461,16 @@ export default function EditOutfitPage() {
                   <span className="text-xs font-medium text-text-secondary">
                     Product {index + 1}
                   </span>
-                  <div className="flex items-center gap-3">
-                    <Toggle
-                      enabled={product.in_stock}
-                      onChange={(val) => updateProduct(index, "in_stock", val)}
-                      label={product.in_stock ? "In Stock" : "Out of Stock"}
-                      size="sm"
-                    />
-                    {products.length > 1 && (
-                      <button
-                        type="button"
-                        onClick={() => removeProduct(index)}
-                        className="text-xs text-red-600 hover:underline"
-                      >
-                        Remove
-                      </button>
-                    )}
+                  {products.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => removeProduct(index)}
+                      className="text-xs text-red-600 hover:underline"
+                    >
+                      Remove
+                    </button>
+                  )}
                 </div>
-    </div>
 
                 {/* Product Image */}
                 <div>
@@ -544,6 +536,18 @@ export default function EditOutfitPage() {
                     type="url"
                     required
                   />
+                </div>
+
+                {/* In-Stock indicator — disabled (future: auto-detect from store) */}
+                <div className="flex items-center gap-2 pt-2 border-t border-border opacity-50 pointer-events-none">
+                  <Toggle
+                    enabled={product.in_stock}
+                    onChange={() => {}}
+                    size="sm"
+                  />
+                  <span className="text-[10px] text-text-secondary">
+                    {product.in_stock ? "In Stock" : "Out of Stock"} (auto-managed)
+                  </span>
                 </div>
               </div>
             ))}
