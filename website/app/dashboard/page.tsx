@@ -3,7 +3,7 @@ import { createServerSupabaseClient } from "@/lib/supabase-server";
 import { redirect } from "next/navigation";
 import { siteConfig } from "@/lib/config";
 import { Button } from "@/components/ui/Button";
-import { CopyLinkInput } from "@/components/ui/CopyLinkInput";
+import { DashboardOutfitList } from "@/components/dashboard/DashboardOutfitList";
 import type { DashboardStats, Outfit } from "@/lib/types";
 
 /**
@@ -93,97 +93,8 @@ export default async function DashboardPage() {
         <StatsCard label="Clicks This Week" value={stats.clicks_this_week} />
       </div>
 
-      {/* Outfit List */}
-      <div className="border border-border bg-surface">
-        <div className="border-b border-border px-4 py-3">
-          <h2 className="text-sm font-semibold text-primary-dark">
-            Your Outfits
-          </h2>
-        </div>
-
-        {outfits.length === 0 ? (
-          <div className="py-12 text-center">
-            <p className="text-sm text-text-secondary">
-              You haven&apos;t created any outfits yet.
-            </p>
-            <Link href="/dashboard/outfits/new" className="mt-3 inline-block">
-              <Button variant="secondary" size="sm">
-                Create Your First Outfit
-              </Button>
-            </Link>
-          </div>
-        ) : (
-          <ul className="divide-y divide-border">
-            {outfits.map((outfit: any) => {
-              const outfitLink = `${siteConfig.url}/${creator.username}?look=${outfit.id}`;
-              return (
-                <li
-                  key={outfit.id}
-                  className="px-4 py-3 space-y-2"
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 flex-shrink-0 overflow-hidden rounded-card bg-border">
-                        {outfit.image_url && (
-                          <img
-                            src={outfit.image_url}
-                            alt={outfit.title}
-                            className="h-full w-full object-cover"
-                          />
-                        )}
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-primary-dark">
-                          {outfit.title}
-                        </p>
-                        <div className="flex items-center gap-2">
-                          <span className="text-xs text-text-secondary">
-                            {outfit.category}
-                          </span>
-                          <span
-                            className={`inline-flex items-center px-1.5 py-0.5 text-[10px] font-medium ${
-                              outfit.is_published
-                                ? "bg-green-50 text-green-700"
-                                : "bg-yellow-50 text-yellow-700"
-                            }`}
-                          >
-                            {outfit.is_published ? "Published" : "Draft"}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                      <Link href={`/dashboard/outfits/${outfit.id}/edit`}>
-                        <Button variant="ghost" size="sm">
-                          Edit
-                        </Button>
-                      </Link>
-                    </div>
-                  </div>
-
-                  {/* Shareable Outfit Link */}
-                  {outfit.is_published && (
-                    <div className="pl-[52px]">
-                      <CopyLinkInput text={outfitLink} />
-                    </div>
-                  )}
-                </li>
-              );
-            })}
-          </ul>
-        )}
-      </div>
-
-      {/* Quick Link to Storefront */}
-      <div className="mt-6 text-center">
-        <Link
-          href={`/${creator.username}`}
-          className="text-sm text-text-secondary hover:text-gold-accent transition-colors"
-        >
-          View your public storefront →
-        </Link>
-      </div>
+      {/* Outfit List with Category Filter */}
+      <DashboardOutfitList outfits={outfits} creatorUsername={creator.username} />
     </div>
   );
 }

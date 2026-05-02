@@ -4,6 +4,8 @@ import { DashboardSidebar } from "@/components/layout/DashboardSidebar";
  * Dashboard Layout
  * ================
  * Wraps all /dashboard/* pages with sidebar navigation.
+ * Mobile: sidebar is hidden, hamburger menu toggles it.
+ * Desktop: sidebar always visible on left.
  * Protected by middleware (redirects to /login if not authenticated).
  */
 export default function DashboardLayout({
@@ -16,9 +18,9 @@ export default function DashboardLayout({
       {/* Sidebar */}
       <DashboardSidebar />
 
-      {/* Main Content */}
+      {/* Main Content — top padding on mobile for fixed header */}
       <main className="flex-1 overflow-y-auto bg-background">
-        <div className="p-6 sm:p-8">{children}</div>
+        <div className="p-4 pt-[72px] sm:p-6 sm:pt-[72px] md:p-8 md:pt-8">{children}</div>
       </main>
     </div>
   );

@@ -41,7 +41,7 @@ export function OutfitCard({ outfit, index, creatorUsername }: OutfitCardProps) 
     >
       <div className="flex flex-col md:flex-row">
         {/* Outfit Image — Left Panel */}
-        <div className="relative h-72 w-full overflow-hidden md:h-auto md:w-80 flex-shrink-0">
+        <div className="relative h-80 w-full overflow-hidden sm:h-96 md:h-auto md:w-80 flex-shrink-0">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={outfit.image_url}

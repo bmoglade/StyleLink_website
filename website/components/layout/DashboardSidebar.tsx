@@ -17,13 +17,14 @@ const navItems = [
  * Dashboard Sidebar Navigation
  * ============================
  * Left sidebar for creator dashboard.
- * Highlights active route.
- * Includes: storefront link (always visible), logout button.
- * Storefront link fetches username on mount.
+ * Mobile: hidden by default, toggled via hamburger button.
+ * Desktop: always visible (w-64).
+ * Includes: storefront link, logout button (prominent).
  */
 export function DashboardSidebar() {
   const pathname = usePathname();
   const [username, setUsername] = useState<string | null>(null);
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   useEffect(() => {
     async function fetchUsername() {
@@ -40,80 +41,132 @@ export function DashboardSidebar() {
     fetchUsername();
   }, []);
 
+  // Close mobile sidebar on route change
+  useEffect(() => {
+    setIsMobileOpen(false);
+  }, [pathname]);
+
   const handleLogout = async () => {
     const supabase = createClient();
     await supabase.auth.signOut();
-    window.location.href = "/login";
+    window.location.href = "/";
   };
 
   return (
-    <aside className="flex h-full w-64 flex-col border-r border-border bg-surface">
-      {/* Brand */}
-      <div className="flex h-16 items-center border-b border-border px-6">
+    <>
+      {/* Mobile Header Bar — visible only on mobile */}
+      <div className="fixed top-0 left-0 right-0 z-40 flex h-14 items-center justify-between border-b border-border bg-surface px-4 md:hidden">
         <Link href="/" className="font-display text-lg font-bold text-primary-dark">
           {siteConfig.name}
         </Link>
-      </div>
-
-      {/* Navigation */}
-      <nav className="flex-1 px-4 py-6">
-        <ul className="space-y-1">
-          {navItems.map((item) => {
-            const isActive =
-              item.href === "/dashboard"
-                ? pathname === "/dashboard"
-                : pathname.startsWith(item.href);
-
-            return (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  className={cn(
-                    "flex items-center gap-3 px-3 py-2.5 text-sm font-medium transition-colors duration-200",
-                    isActive
-                      ? "bg-background text-primary-dark"
-                      : "text-text-secondary hover:bg-background hover:text-text-primary"
-                  )}
-                >
-                  <span>{item.icon}</span>
-                  {item.label}
-                </Link>
-              </li>
-            );
-          })}
-
-          {/* Storefront link — always visible in nav */}
-          {username && (
-            <li>
-              <a
-                href={`/${username}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-text-secondary hover:bg-background hover:text-text-primary transition-colors duration-200"
-              >
-                <span>🌐</span>
-                My Storefront
-              </a>
-            </li>
-          )}
-        </ul>
-      </nav>
-
-      {/* Bottom actions */}
-      <div className="border-t border-border px-4 py-4 space-y-2">
-        {username && (
-          <div className="px-3 py-1.5 text-[10px] text-text-secondary bg-background border border-border truncate">
-            {siteConfig.url}/{username}
-          </div>
-        )}
         <button
-          onClick={handleLogout}
-          className="flex w-full items-center gap-2 px-3 py-2 text-xs font-medium text-red-600 hover:bg-red-50 transition-colors"
+          onClick={() => setIsMobileOpen(!isMobileOpen)}
+          className="flex h-10 w-10 items-center justify-center text-primary-dark"
+          aria-label="Toggle menu"
         >
-          <span>🚪</span>
-          Log Out
+          {isMobileOpen ? (
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M18 6 6 18" /><path d="m6 6 12 12" />
+            </svg>
+          ) : (
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="4" x2="20" y1="12" y2="12" /><line x1="4" x2="20" y1="6" y2="6" /><line x1="4" x2="20" y1="18" y2="18" />
+            </svg>
+          )}
         </button>
       </div>
-    </aside>
+
+      {/* Mobile Overlay */}
+      {isMobileOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/40 md:hidden"
+          onClick={() => setIsMobileOpen(false)}
+        />
+      )}
+
+      {/* Sidebar */}
+      <aside
+        className={cn(
+          "fixed top-0 left-0 z-50 flex h-full w-64 flex-col border-r border-border bg-surface transition-transform duration-300 md:relative md:translate-x-0",
+          isMobileOpen ? "translate-x-0" : "-translate-x-full"
+        )}
+      >
+        {/* Brand */}
+        <div className="flex h-16 items-center justify-between border-b border-border px-6">
+          <Link href="/" className="font-display text-lg font-bold text-primary-dark">
+            {siteConfig.name}
+          </Link>
+          {/* Close button on mobile */}
+          <button
+            onClick={() => setIsMobileOpen(false)}
+            className="flex h-8 w-8 items-center justify-center text-text-secondary md:hidden"
+            aria-label="Close menu"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M18 6 6 18" /><path d="m6 6 12 12" />
+            </svg>
+          </button>
+        </div>
+
+        {/* Navigation */}
+        <nav className="flex-1 px-4 py-6">
+          <ul className="space-y-1">
+            {navItems.map((item) => {
+              const isActive =
+                item.href === "/dashboard"
+                  ? pathname === "/dashboard"
+                  : pathname.startsWith(item.href);
+
+              return (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    className={cn(
+                      "flex items-center gap-3 px-3 py-2.5 text-sm font-medium transition-colors duration-200",
+                      isActive
+                        ? "bg-background text-primary-dark"
+                        : "text-text-secondary hover:bg-background hover:text-text-primary"
+                    )}
+                  >
+                    <span>{item.icon}</span>
+                    {item.label}
+                  </Link>
+                </li>
+              );
+            })}
+
+            {/* Storefront link */}
+            {username && (
+              <li>
+                <a
+                  href={`/${username}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-text-secondary hover:bg-background hover:text-text-primary transition-colors duration-200"
+                >
+                  <span>🌐</span>
+                  My Storefront
+                </a>
+              </li>
+            )}
+          </ul>
+        </nav>
+
+        {/* Bottom actions — Logout prominent */}
+        <div className="border-t border-border px-4 py-4 space-y-3">
+          {username && (
+            <div className="px-3 py-1.5 text-[10px] text-text-secondary bg-background border border-border truncate">
+              {siteConfig.url}/{username}
+            </div>
+          )}
+          <button
+            onClick={handleLogout}
+            className="flex w-full items-center justify-center gap-2 px-3 py-2.5 text-sm font-medium text-white bg-red-500 hover:bg-red-600 transition-colors"
+          >
+            Log Out
+          </button>
+        </div>
+      </aside>
+    </>
   );
 }
