@@ -149,6 +149,64 @@ Run `supabase/migrations/002_add_product_images_and_social_handles.sql`:
 
 ---
 
+## [0.4.0] - 2025-05-02 - UI/UX Improvements & Mobile Responsive Dashboard
+
+### Added
+
+- **Mobile Responsive Dashboard** — Sidebar hidden by default on mobile, toggleable via hamburger ☰ menu. Overlay darkens background when sidebar is open. Closes on route change or tap outside.
+- **Mobile Header Bar** — Fixed header on dashboard mobile view with brand name + hamburger toggle
+- **LogoutButton Component** — New client component (`components/layout/LogoutButton.tsx`) for logout on public pages
+- **Logout on Public Pages** — "Log Out" button now visible in header on storefront/homepage when logged in (Issue #11)
+- **Dashboard Category Filters** — Filter pills (All, Office, Casual, Festive, Beauty, Home, Other) on overview page to quickly find outfits (Issue #10)
+- **DashboardOutfitList Component** — New client component (`components/dashboard/DashboardOutfitList.tsx`) with category filter + outfit count indicator
+- **Google OAuth Buttons** — "Continue with Google" on login page, "Sign up with Google" on signup page with Google logo and "or" divider (requires Supabase Google provider setup)
+
+### Changed
+
+- **Homepage Header** — "Log in" now styled as bordered button (equal visual weight to "Join as Creator") (Issue #6)
+- **Header (logged in)** — Shows "← Dashboard" + "Log Out" instead of just "← Dashboard" (Issue #5, #11)
+- **Product Button Text** — "Shop This Item ↗" simplified to "Shop ↗" (Issue #13)
+- **Platform Badge Alignment** — Centered within product card instead of left-aligned (Issue #14)
+- **Outfit Image (Mobile)** — Increased height from h-72 to h-80/h-96 for better visibility on mobile (Issue #3)
+- **Product Grid (Mobile)** — Removed max-height restriction so all products are visible without scrolling (Issue #3)
+- **My Storefront Link** — Now opens in same tab instead of new window; user navigates back via "← Dashboard" in header
+- **Post-Logout Redirect** — Now redirects to homepage `/` instead of `/login` (Issue #4)
+- **Logout Button (Sidebar)** — Redesigned as prominent red button (full width, white text on red background) (Issue #5)
+- **Edit Outfit — In-Stock Toggle** — Moved from top-right corner (was overlapping Remove button) to bottom of product card, visually disabled with "auto-managed" label
+- **Edit Outfit — Remove Button** — Now has full space in top-right corner with no overlap
+
+### Removed
+
+- **Duplicate "View your public storefront →"** — Removed from bottom of dashboard overview page (already in sidebar) (Issue #12)
+
+### New Files
+
+- `website/components/layout/LogoutButton.tsx` — Client component for header logout
+- `website/components/dashboard/DashboardOutfitList.tsx` — Outfit list with category filters
+
+### Navigation Behavior
+
+All internal links open in **same tab**:
+| Click | Behaviour |
+|-------|-----------|
+| My Storefront (sidebar) | Same tab |
+| Overview, New Outfit, Settings | Same tab |
+| ← Dashboard (header) | Same tab |
+| StyleLink logo | Same tab → homepage |
+| **Shop ↗** (product) | **New tab** (external: Amazon/Flipkart) |
+| **Social links** (Instagram etc.) | **New tab** (external) |
+
+### Google OAuth Setup Required
+
+To enable Google login, complete these steps:
+1. Google Cloud Console → Create OAuth 2.0 credentials
+2. Set redirect URI: `https://<SUPABASE_URL>/auth/v1/callback`
+3. Supabase Dashboard → Authentication → Providers → Google → Enable
+4. Paste Client ID + Client Secret
+5. Buttons are already visible in code — no code changes needed
+
+---
+
 ## [Unreleased] - Changes in Progress
 
 > Add entries here as new features/fixes are implemented.

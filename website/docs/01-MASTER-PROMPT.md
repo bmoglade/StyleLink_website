@@ -140,6 +140,19 @@ If developing behind a corporate network with SSL inspection:
 16. ✅ TypeScript build errors resolved
 17. ✅ End-to-end cycle working: Code → GitHub → Vercel → Live site
 
+## UI/UX IMPROVEMENTS (COMPLETED — v0.4.0)
+
+18. ✅ Mobile responsive dashboard (hamburger menu, collapsible sidebar)
+19. ✅ Logout accessible from all pages (sidebar + public header)
+20. ✅ Homepage header balanced ("Log in" bordered button = "Join as Creator")
+21. ✅ Dashboard category filters (find outfits by category)
+22. ✅ Google OAuth buttons on login/signup (requires Supabase config)
+23. ✅ Product button simplified ("Shop ↗")
+24. ✅ Platform badge centered in product cards
+25. ✅ Internal links open in same tab, external links open in new tab
+26. ✅ In-Stock toggle disabled on edit page (moved to bottom, greyed out)
+27. ✅ Mobile storefront: larger outfit images, all products visible
+
 ---
 
 ## WHAT NOT TO BUILD
