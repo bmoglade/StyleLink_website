@@ -24,8 +24,8 @@ export function ProductItem({ product }: ProductItemProps) {
         borderColor: "var(--color-product-card-border)",
       }}
     >
-      {/* Platform Badge — TOP (e-commerce site name first, like reference) */}
-      <div className="px-2 pt-2">
+      {/* Platform Badge — TOP centered */}
+      <div className="px-2 pt-2 text-center">
         <PlatformBadge platform={product.platform} />
       </div>
 
@@ -82,7 +82,7 @@ export function ProductItem({ product }: ProductItemProps) {
             e.currentTarget.style.backgroundColor = "var(--color-shop-btn-bg)";
           }}
         >
-          Shop This Item
+          Shop
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="10"
