@@ -14,52 +14,67 @@ import { createServerClient } from "@supabase/ssr";
  * from the cookie directly — no network call needed.
  */
 export async function middleware(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({ request });
-
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return request.cookies.getAll();
-        },
-        setAll(cookiesToSet: { name: string; value: string; options?: any }[]) {
-          cookiesToSet.forEach(({ name, value, options }) =>
-            request.cookies.set(name, value)
-          );
-          supabaseResponse = NextResponse.next({ request });
-          cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options)
-          );
-        },
-      },
-    }
-  );
-
-  // Get session from cookie (no network call — works behind corporate proxy)
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-
-  const user = session?.user || null;
-
-  // Protect dashboard routes
-  if (request.nextUrl.pathname.startsWith("/dashboard")) {
-    if (!user) {
-      const loginUrl = new URL("/login", request.url);
-      loginUrl.searchParams.set("redirect", request.nextUrl.pathname);
-      return NextResponse.redirect(loginUrl);
-    }
+  // If Supabase env vars are missing, skip auth and let the request through
+  if (
+    !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+    !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  ) {
+    return NextResponse.next();
   }
 
-  // Redirect logged-in users away from login/signup
-  if (
-    user &&
-    (request.nextUrl.pathname === "/login" ||
-      request.nextUrl.pathname === "/signup")
-  ) {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
+  let supabaseResponse = NextResponse.next({ request });
+
+  try {
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+      {
+        cookies: {
+          getAll() {
+            return request.cookies.getAll();
+          },
+          setAll(
+            cookiesToSet: { name: string; value: string; options?: any }[]
+          ) {
+            cookiesToSet.forEach(({ name, value, options }) =>
+              request.cookies.set(name, value)
+            );
+            supabaseResponse = NextResponse.next({ request });
+            cookiesToSet.forEach(({ name, value, options }) =>
+              supabaseResponse.cookies.set(name, value, options)
+            );
+          },
+        },
+      }
+    );
+
+    // Get session from cookie (no network call — works behind corporate proxy)
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
+    const user = session?.user || null;
+
+    // Protect dashboard routes
+    if (request.nextUrl.pathname.startsWith("/dashboard")) {
+      if (!user) {
+        const loginUrl = new URL("/login", request.url);
+        loginUrl.searchParams.set("redirect", request.nextUrl.pathname);
+        return NextResponse.redirect(loginUrl);
+      }
+    }
+
+    // Redirect logged-in users away from login/signup
+    if (
+      user &&
+      (request.nextUrl.pathname === "/login" ||
+        request.nextUrl.pathname === "/signup")
+    ) {
+      return NextResponse.redirect(new URL("/dashboard", request.url));
+    }
+  } catch (error) {
+    // If Supabase fails, let the request through rather than crashing
+    console.error("Middleware auth error:", error);
   }
 
   return supabaseResponse;
