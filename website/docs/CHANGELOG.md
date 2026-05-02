@@ -119,6 +119,36 @@ Run `supabase/migrations/002_add_product_images_and_social_handles.sql`:
 
 ---
 
+## [0.3.0] - 2025-05-02 - Production Deployment to Vercel 🚀
+
+### Added
+
+- **Vercel Production Deployment** — Site is now live at `https://stylelink-phi.vercel.app/`
+- **`vercel.json`** — Added framework detection config (`"framework": "nextjs"`) so Vercel correctly identifies the project
+- **Resilient Middleware** — Middleware now has try/catch error handling and env var checks; if Supabase is unavailable, requests pass through instead of crashing with 500 error
+- **GitHub Remote** — Repository now pushes to GitHub (`bmoglade/StyleLink_website`) in addition to Foundry; Vercel auto-deploys on every push to `main`
+
+### Fixed
+
+- **TypeScript type error in `lib/supabase-server.ts`** — Added explicit type annotation for `cookiesToSet` parameter (`{ name: string; value: string; options?: any }[]`) to fix build failure
+- **TypeScript type error in `middleware.ts`** — Same `cookiesToSet` type annotation fix
+- **MIDDLEWARE_INVOCATION_FAILED (500 error)** — Middleware now gracefully handles missing env vars and Supabase connection failures instead of crashing the entire site
+
+### Deployment Setup
+
+- **Vercel Config**: Framework = Next.js, Root Directory = `website`, Build = `npm run build`, Output = `.next`
+- **Environment Variables on Vercel**: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `NEXT_PUBLIC_GA_MEASUREMENT_ID`, `NEXT_PUBLIC_APP_URL`, `NODE_ENV`
+- **Supabase Auth Config**: Site URL and Redirect URLs updated to production Vercel URL
+- **Auto-deploy pipeline**: Push to GitHub `main` → Vercel auto-builds and deploys
+
+### Notes
+
+- `NODE_TLS_REJECT_UNAUTHORIZED=0` must NEVER be set on Vercel — it is a local dev workaround only
+- `NEXT_PUBLIC_APP_URL` on Vercel is set to `https://stylelink-phi.vercel.app/`
+- Git SSL workaround for corporate proxy: `git -c http.sslVerify=false push github main`
+
+---
+
 ## [Unreleased] - Changes in Progress
 
 > Add entries here as new features/fixes are implemented.

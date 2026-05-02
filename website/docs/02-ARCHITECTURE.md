@@ -263,7 +263,8 @@ website/
 │   ├── seed.sql
 │   └── test-data/insert_test_data.sql
 ├── docs/                        ← Project documentation
-├── middleware.ts                ← Auth protection + session refresh
+├── middleware.ts                ← Auth protection + session refresh (with error handling)
+├── vercel.json                 ← Vercel framework detection config
 ├── next.config.mjs             ← Next.js config (must be .mjs, not .ts)
 ├── tailwind.config.ts
 ├── package.json
@@ -341,18 +342,45 @@ pnpm dev
 # → http://localhost:3000
 ```
 
-### Production (Vercel)
+### Production (Vercel) — LIVE ✅
+
+**Live URL:** https://stylelink-phi.vercel.app/
+**GitHub Repo:** https://github.com/bmoglade/StyleLink_website
+**Auto-deploy:** Every push to `main` triggers Vercel build + deploy
 
 ```
-1. Push to GitHub
-2. Connect repo to Vercel
-3. Set environment variables:
-   - NEXT_PUBLIC_SUPABASE_URL
-   - NEXT_PUBLIC_SUPABASE_ANON_KEY
-   - SUPABASE_SERVICE_ROLE_KEY
-   - NEXT_PUBLIC_GA_MEASUREMENT_ID
-   - NEXT_PUBLIC_APP_URL (production URL)
-4. Deploy (auto on push)
+Vercel Project Settings:
+  - Framework Preset: Next.js
+  - Root Directory: website
+  - Build Command: npm run build
+  - Output Directory: .next
+  - Install Command: npm install
+  - Node.js Version: 18.x
+
+Environment Variables (on Vercel dashboard):
+  - NEXT_PUBLIC_SUPABASE_URL
+  - NEXT_PUBLIC_SUPABASE_ANON_KEY
+  - SUPABASE_SERVICE_ROLE_KEY
+  - NEXT_PUBLIC_GA_MEASUREMENT_ID
+  - NEXT_PUBLIC_APP_URL = https://stylelink-phi.vercel.app/
+  - NODE_ENV = production
+```
+
+**Deploy workflow:**
+
+```bash
+# Make changes locally
+git add .
+git commit -m "description of change"
+git -c http.sslVerify=false push github main   # Corporate proxy workaround
+# Vercel auto-deploys in ~1-2 minutes
 ```
 
 **Zero code changes between dev and production.** Only environment variables differ.
+
+### Supabase Production Auth Config
+
+In Supabase Dashboard → Authentication → URL Configuration:
+
+- **Site URL:** `https://stylelink-phi.vercel.app`
+- **Redirect URLs:** `https://stylelink-phi.vercel.app/**`

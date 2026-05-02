@@ -272,24 +272,34 @@ const { data } = await supabase.from("outfits").select("*, products(*)");  // �
 
 ### For Subsequent Deploys
 
-- Push to GitHub → Vercel auto-deploys
-- No manual steps needed
+```bash
+git add .
+git commit -m "description of change"
+git -c http.sslVerify=false push github main
+# Vercel auto-deploys in ~1-2 minutes — check https://vercel.com/dashboard
+```
+
+No manual steps needed. Vercel watches the `main` branch on GitHub.
 
 ---
 
 ## Troubleshooting
 
-| Problem                        | Cause                                   | Fix                                         |
-| ------------------------------ | --------------------------------------- | ------------------------------------------- |
-| `SELF_SIGNED_CERT_IN_CHAIN`    | Corporate proxy                         | Set `NODE_TLS_REJECT_UNAUTHORIZED=0` in env |
-| `Missing ActionQueueContext`   | React 18.3.x                            | Pin React to 18.2.0 in package.json         |
-| Login redirect loop            | `getUser()` failing in middleware       | Use `getSession()` instead                  |
-| Images not loading           | `next/image` proxy issue                | Use `<img>` tag instead                     |
-| `next.config.ts` not supported | Next.js 14.2 limitation                 | Rename to `next.config.mjs`                 |
-| Fonts not loading              | Corporate proxy blocks Google Fonts API | Use `<link>` tags in layout                 |
-| Outfit cards invisible         | CSS `opacity: 0` on animation class     | Remove `opacity: 0` from `.stagger-fade-in` |
-| Empty products in nested query | RLS blocking nested select              | Fetch outfits and products separately       |
-| Post-login stays on login page | `router.push()` doesn't sync cookies    | Use `window.location.href`                  |
+| Problem                                | Cause                                      | Fix                                                         |
+| -------------------------------------- | ------------------------------------------ | ----------------------------------------------------------- |
+| `SELF_SIGNED_CERT_IN_CHAIN`            | Corporate proxy                            | Set `NODE_TLS_REJECT_UNAUTHORIZED=0` in env                 |
+| `Missing ActionQueueContext`           | React 18.3.x                               | Pin React to 18.2.0 in package.json                         |
+| Login redirect loop                    | `getUser()` failing in middleware          | Use `getSession()` instead                                  |
+| Images not loading                     | `next/image` proxy issue                   | Use `<img>` tag instead                                     |
+| `next.config.ts` not supported         | Next.js 14.2 limitation                    | Rename to `next.config.mjs`                                 |
+| Fonts not loading                      | Corporate proxy blocks Google Fonts API    | Use `<link>` tags in layout                                 |
+| Outfit cards invisible                 | CSS `opacity: 0` on animation class        | Remove `opacity: 0` from `.stagger-fade-in`                 |
+| Empty products in nested query         | RLS blocking nested select                 | Fetch outfits and products separately                       |
+| Post-login stays on login page         | `router.push()` doesn't sync cookies       | Use `window.location.href`                                  |
+| Git push SSL error                     | Corporate proxy intercepts HTTPS           | `git -c http.sslVerify=false push github main`              |
+| Vercel `MIDDLEWARE_INVOCATION_FAILED`  | Middleware crashes if Supabase unavailable | Added try/catch + env var check in middleware               |
+| Vercel "No framework detected"         | Root directory change resets preset        | Added `vercel.json` with `"framework": "nextjs"`            |
+| TypeScript `implicitly has 'any' type` | Missing type on `cookiesToSet` param       | Add `{ name: string; value: string; options?: any }[]` type |
 
 ---
 
@@ -311,6 +321,7 @@ const { data } = await supabase.from("outfits").select("*, products(*)");  // �
 Google OAuth login buttons are **temporarily hidden** because Google OAuth is not configured in the Supabase project.
 
 **To re-enable:**
+
 1. Go to [Google Cloud Console](https://console.cloud.google.com/) → Create OAuth 2.0 credentials
 2. Set authorized redirect URI: `https://YOUR_SUPABASE_URL/auth/v1/callback`
 3. Go to Supabase Dashboard → Authentication → Providers → Google → Enable
@@ -340,10 +351,33 @@ These are discussed ideas for Phase 2+. Do NOT build unless explicitly requested
 
 ---
 
+## Git Remotes
+
+This repo has two remotes:
+
+| Remote   | URL                                   | Purpose                   |
+| -------- | ------------------------------------- | ------------------------- |
+| `origin` | Foundry (Palantir)                    | Primary code repo         |
+| `github` | github.com/bmoglade/StyleLink_website | Vercel auto-deploy source |
+
+```bash
+# Push to Foundry
+git push origin main
+
+# Push to GitHub (triggers Vercel deploy)
+git -c http.sslVerify=false push github main
+
+# Push to both
+git push origin main && git -c http.sslVerify=false push github main
+```
+
+---
+
 ## Contact / Ownership
 
-- **Project Owner:** [Your Name]
-- **Repository:** [Repo URL]
+- **Project Owner:** Bhushan Moglade
+- **Repository (Foundry):** ri.stemma.main.repository.b2e8b5a3-4b79-4e84-ae4e-b75249b50c7a
+- **Repository (GitHub):** https://github.com/bmoglade/StyleLink_website
 - **Supabase Project:** [Dashboard URL]
-- **Vercel Deployment:** [Vercel URL]
-- **Domain:** [Custom domain if any]
+- **Vercel Deployment:** https://stylelink-phi.vercel.app/
+- **Domain:** stylelink-phi.vercel.app (Vercel default — custom domain can be added later)

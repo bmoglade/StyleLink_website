@@ -26,7 +26,29 @@ Based on my reading of all three files, I understand:
 - **Folder structure**: `app/` for routes, `components/` for UI, `lib/` for utilities, `docs/` for documentation
 - **Design system**: CSS variable-based colors, editorial/fashion aesthetic, Tailwind utility classes
 
-Now I'll apply the suggested edit. This is a new file — `website/docs/00-SESSION-START.md` — based on the content and intent of the suggestion:
+**Current status (as of v0.3.0 — May 2025):**
+
+- ✅ **LIVE in production** at https://stylelink-phi.vercel.app/
+- ✅ End-to-end cycle working: Code → GitHub → Vercel → Live site
+- ✅ Phase 1 + Phase 2 features complete
+- ✅ Vercel auto-deploys on push to `main` branch on GitHub
+- ✅ Supabase Auth configured for production URL
+- 🔄 Currently in **user testing phase** — collecting feedback for improvements
+
+**Deploy workflow:**
+
+```bash
+git add .
+git commit -m "change description"
+git -c http.sslVerify=false push github main   # Triggers Vercel auto-deploy
+```
+
+**Git remotes:**
+
+- `origin` → Foundry (primary code repo)
+- `github` → GitHub (Vercel deployment source)
+
+Now I'll apply the suggested edit:
 
 ---
 

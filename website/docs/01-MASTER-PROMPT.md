@@ -22,6 +22,7 @@ A web platform where fashion/lifestyle creators (influencers) can build a person
 ### The Core Problem Being Solved
 
 Currently, when a consumer sees an influencer's outfit on Instagram or YouTube, they must:
+
 - Click a link in bio
 - Navigate to a messy Linktree
 - Hunt for the right product
@@ -53,17 +54,19 @@ Instagram Bio → stylelink.com/creator_name → Browse outfits → Click produc
 
 ## TECH STACK — USE EXACTLY THIS
 
-| Layer | Technology | Notes |
-|---|---|---|
-| Framework | Next.js 14 (App Router) | NO pages router |
-| Language | TypeScript (strict mode) | |
-| Styling | Tailwind CSS | NO CSS-in-JS, NO styled-components |
-| Database | Supabase (PostgreSQL) | Free tier sufficient for MVP |
-| Auth | Supabase Auth | Email + Google OAuth |
-| Image Storage | Supabase Storage | Two buckets: `outfit-images`, `profile-photos` |
-| Deployment | Vercel | Auto-deploys from GitHub |
-| Package Manager | pnpm | |
-| Analytics | Google Analytics 4 | Via gtag.js, only loads when GA ID is configured |
+| Layer           | Technology                            | Notes                                            |
+| --------------- | ------------------------------------- | ------------------------------------------------ |
+| Framework       | Next.js 14 (App Router)               | NO pages router                                  |
+| Language        | TypeScript (strict mode)              |                                                  |
+| Styling         | Tailwind CSS                          | NO CSS-in-JS, NO styled-components               |
+| Database        | Supabase (PostgreSQL)                 | Free tier sufficient for MVP                     |
+| Auth            | Supabase Auth                         | Email + Google OAuth                             |
+| Image Storage   | Supabase Storage                      | Two buckets: `outfit-images`, `profile-photos`   |
+| Deployment      | Vercel                                | Auto-deploys from GitHub (`main` branch)         |
+| Live URL        | https://stylelink-phi.vercel.app/     | Production site                                  |
+| GitHub Repo     | github.com/bmoglade/StyleLink_website | Source → Vercel auto-deploy                      |
+| Package Manager | pnpm                                  |                                                  |
+| Analytics       | Google Analytics 4                    | Via gtag.js, only loads when GA ID is configured |
 
 ### Key Dependencies (Minimal)
 
@@ -126,6 +129,16 @@ If developing behind a corporate network with SSL inspection:
 8. ✅ Legal pages (Privacy, Terms, Affiliate Disclosure)
 9. ✅ Out-of-stock product hiding
 10. ✅ Google Analytics integration
+
+## PRODUCTION DEPLOYMENT (COMPLETED — v0.3.0)
+
+11. ✅ Deployed to Vercel at `https://stylelink-phi.vercel.app/`
+12. ✅ GitHub → Vercel auto-deploy pipeline (push to `main` = instant deploy)
+13. ✅ Environment variables configured on Vercel
+14. ✅ Supabase Auth redirect URLs updated for production
+15. ✅ Middleware hardened with error handling (no more 500 crashes)
+16. ✅ TypeScript build errors resolved
+17. ✅ End-to-end cycle working: Code → GitHub → Vercel → Live site
 
 ---
 
@@ -199,12 +212,12 @@ All branding is configurable via `lib/config.ts`:
 
 ```typescript
 export const siteConfig = {
-  name: "StyleLink",        // Change to rebrand
+  name: "StyleLink", // Change to rebrand
   tagline: "Shop Creator Looks",
   maxProductsPerOutfit: 15,
   maxBioLength: 120,
   // ... all other config
-}
+};
 ```
 
 **Change this one file = rebrand entire platform.**
