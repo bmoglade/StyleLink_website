@@ -265,6 +265,10 @@ website/
 ├── docs/                        ← Project documentation
 ├── middleware.ts                ← Auth protection + session refresh (with error handling)
 ├── vercel.json                 ← Vercel framework detection config
+│
+│   NEW in v0.4.0:
+├── components/layout/LogoutButton.tsx  ← Client component for header logout
+├── components/dashboard/DashboardOutfitList.tsx ← Outfit list + category filter
 ├── next.config.mjs             ← Next.js config (must be .mjs, not .ts)
 ├── tailwind.config.ts
 ├── package.json
