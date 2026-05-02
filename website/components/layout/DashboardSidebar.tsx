@@ -135,18 +135,16 @@ export function DashboardSidebar() {
               );
             })}
 
-            {/* Storefront link */}
+            {/* Storefront link — same tab (internal page, user has "← Dashboard" to come back) */}
             {username && (
               <li>
-                <a
+                <Link
                   href={`/${username}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
                   className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-text-secondary hover:bg-background hover:text-text-primary transition-colors duration-200"
                 >
                   <span>🌐</span>
                   My Storefront
-                </a>
+                </Link>
               </li>
             )}
           </ul>
