@@ -159,7 +159,7 @@ export function DashboardSidebar() {
           )}
           <button
             onClick={handleLogout}
-            className="flex w-full items-center justify-center gap-2 px-3 py-2.5 text-sm font-medium text-white bg-red-500 hover:bg-red-600 transition-colors"
+            className="flex w-full items-center justify-center gap-2 px-3 py-2.5 text-sm font-medium border border-red-500/50 text-red-400 hover:bg-red-500 hover:text-white transition-colors duration-200"
           >
             Log Out
           </button>
