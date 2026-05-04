@@ -86,5 +86,30 @@ export const platformColors: Record<string, { bg: string; text: string }> = {
   Other: { bg: "#666666", text: "#FFFFFF" },
 };
 
+/**
+ * Platform Logo Configuration
+ * ============================
+ * Maps platform names to their logo image paths.
+ * Place logo images in: public/images/platforms/
+ * Recommended: 64x64px PNG with transparent background.
+ *
+ * HOW TO ADD LOGOS:
+ * 1. Save logo image to: website/public/images/platforms/<platform-lowercase>.png
+ * 2. Add/update the entry below.
+ * 3. The ProductItem and homepage mockup will automatically display the logo.
+ *
+ * When logo is null → falls back to colored square with first letter.
+ */
+export const platformLogos: Record<string, string | null> = {
+  Amazon: "/images/platforms/amazon.png",
+  Flipkart: "/images/platforms/flipkart.png",
+  Myntra: "/images/platforms/myntra.png",
+  Nykaa: "/images/platforms/nykaa.png",
+  Ajio: "/images/platforms/ajio.png",
+  Meesho: "/images/platforms/meesho.png",
+  Other: null,
+};
+
 export type Category = (typeof siteConfig.categories)[number];
 export type Platform = (typeof siteConfig.platforms)[number];
+

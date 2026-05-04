@@ -1,4 +1,4 @@
-import { platformColors } from "@/lib/config";
+import { platformColors, platformLogos } from "@/lib/config";
 import { truncate } from "@/lib/utils";
 import { siteConfig } from "@/lib/config";
 import type { Product } from "@/lib/types";
@@ -14,13 +14,15 @@ interface ProductItemProps {
  * Layout (top to bottom):
  *   1. Product image (hero — full width)
  *   2. Product name
- *   3. Bottom row: Store logo circle + store name (left) | Shop button (right)
+ *   3. Bottom row: Store logo square + store name (left) | Shop button (right)
  *
- * Store identity shown as colored circle with first letter + platform name in brand color.
+ * Store logo: Square image from /public/images/platforms/<platform>.png
+ * Fallback: colored square with first letter when logo image not available.
  * Links through /go/[productId] for click tracking.
  */
 export function ProductItem({ product }: ProductItemProps) {
   const colors = platformColors[product.platform] || platformColors.Other;
+  const logoSrc = platformLogos[product.platform] || null;
 
   return (
     <div
@@ -70,13 +72,8 @@ export function ProductItem({ product }: ProductItemProps) {
       <div className="flex items-center justify-between gap-1.5 px-2 py-2 mt-auto">
         {/* Store logo + name */}
         <div className="flex items-center gap-1.5 min-w-0">
-          {/* Colored circle with first letter */}
-          <div
-            className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full text-[8px] font-bold"
-            style={{ backgroundColor: colors.bg, color: colors.text }}
-          >
-            {product.platform.charAt(0)}
-          </div>
+          {/* Square store logo — image or fallback */}
+          <PlatformLogo platform={product.platform} logoSrc={logoSrc} colors={colors} />
           {/* Platform name in brand color */}
           <span
             className="text-[10px] font-medium truncate"
@@ -120,6 +117,43 @@ export function ProductItem({ product }: ProductItemProps) {
           </svg>
         </a>
       </div>
+    </div>
+  );
+}
+
+/**
+ * Platform Logo — Square
+ * Shows platform logo image if available, otherwise colored square with first letter.
+ * To add logos: place images in public/images/platforms/<platform-lowercase>.png
+ */
+function PlatformLogo({
+  platform,
+  logoSrc,
+  colors,
+}: {
+  platform: string;
+  logoSrc: string | null;
+  colors: { bg: string; text: string };
+}) {
+  if (logoSrc) {
+    return (
+      <div className="h-5 w-5 flex-shrink-0 overflow-hidden rounded-sm border border-border">
+        <img
+          src={logoSrc}
+          alt={`${platform} logo`}
+          className="h-full w-full object-contain"
+        />
+      </div>
+    );
+  }
+
+  // Fallback: colored square with first letter
+  return (
+    <div
+      className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-sm text-[8px] font-bold"
+      style={{ backgroundColor: colors.bg, color: colors.text }}
+    >
+      {platform.charAt(0)}
     </div>
   );
 }

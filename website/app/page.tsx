@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-import { siteConfig } from "@/lib/config";
+import { siteConfig, platformColors, platformLogos } from "@/lib/config";
 
 /**
  * Homepage — Influra
@@ -10,7 +10,20 @@ import { siteConfig } from "@/lib/config";
  * Luxury dark theme landing page.
  * Layout: Hero (headline left + outfit card right) + How it works + Earnings
  * Mobile: stacked vertically.
+ *
+ * Outfit card on homepage is a DUMMY mockup — not connected to real data.
+ * It uses the same visual style as the real product list view.
  */
+
+/** Dummy products for the homepage mockup card */
+const MOCK_PRODUCTS = [
+  { platform: "Amazon",   name: "Ribbed Tank Top",          price: "₹1,890" },
+  { platform: "Flipkart", name: "Tailored Wide Leg Pants",  price: "₹3,790" },
+  { platform: "Myntra",   name: "Clean Leather Sneakers",   price: "₹2,499" },
+  { platform: "Ajio",     name: "Minimal Shoulder Bag",     price: "₹2,999" },
+  { platform: "Nykaa",    name: "Gold Hoop Earrings Set",   price: "₹699"   },
+];
+
 export default function HomePage() {
   return (
     <div className="flex min-h-screen flex-col">
@@ -36,34 +49,59 @@ export default function HomePage() {
                     className="inline-block border-2 border-gold-accent px-8 py-3 text-sm font-semibold uppercase tracking-wider text-gold-accent hover:bg-gold-accent hover:text-background transition-colors duration-200"
             >
                     Start for Free
-            </Link>
-          </div>
-    </div>
+                  </Link>
+                </div>
+              </div>
 
-              {/* Right — Outfit Card Mockup */}
+              {/* Right — Outfit Card Mockup (list view, like WearThis) */}
               <div className="flex-1 flex flex-col items-center lg:items-end">
-                <div className="w-full max-w-sm border border-border bg-surface p-4 sm:p-5">
-                  {/* Card Header */}
-                  <h3 className="font-display text-lg font-semibold text-text-primary">
-                    City Minimal Essentials
-      </h3>
-                  <p className="mt-1 text-xs text-text-secondary">
-                    Clean. Classic. Effortless pieces for everyday confidence.
-                  </p>
+                <div className="w-full max-w-md border border-border bg-surface overflow-hidden">
+                  {/* Top: Outfit image + card header side by side */}
+                  <div className="flex">
+                    {/* Outfit image placeholder (left) */}
+                    <div className="w-40 sm:w-48 flex-shrink-0 bg-background border-r border-border">
+                      <div className="aspect-[3/4] w-full flex items-center justify-center text-text-secondary/30">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="40"
+                          height="40"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="0.8"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+      >
+                          <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
+                          <circle cx="9" cy="9" r="2" />
+                          <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
+                        </svg>
+      </div>
+      </div>
 
-                  {/* Mock Product List */}
-                  <div className="mt-4 space-y-3">
-                    <MockProduct platform="Amazon" name="Ribbed Tank Top" price="₹1,890" color="#FF9900" />
-                    <MockProduct platform="Flipkart" name="Tailored Wide Leg Pants" price="₹3,790" color="#2874F0" />
-                    <MockProduct platform="Myntra" name="Clean Leather Sneakers" price="₹2,499" color="#FF3F6C" />
-                    <MockProduct platform="Ajio" name="Minimal Shoulder Bag" price="₹2,999" color="#1A1A1A" />
-                    <MockProduct platform="Nykaa" name="Gold Hoop Earrings Set" price="₹699" color="#FC2779" />
+                    {/* Right side: Title + product list */}
+                    <div className="flex-1 min-w-0 p-4">
+                      {/* Card Header */}
+                      <h3 className="font-display text-lg font-semibold text-text-primary">
+                        City Minimal Essentials
+                      </h3>
+                      <p className="mt-1 text-xs text-text-secondary">
+                        Clean. Classic. Effortless pieces for everyday confidence.
+                      </p>
+
+                      {/* Mock Product List */}
+                      <div className="mt-4 space-y-3">
+                        {MOCK_PRODUCTS.map((product) => (
+                          <MockProduct key={product.name} {...product} />
+                        ))}
     </div>
 
-                  {/* Total */}
-                  <div className="mt-4 flex items-center justify-between border-t border-border pt-3">
-                    <span className="text-sm font-medium text-gold-accent">Total</span>
-                    <span className="font-display text-lg font-bold text-text-primary">₹11,877</span>
+                      {/* Total */}
+                      <div className="mt-4 flex items-center justify-between border-t border-border pt-3">
+                        <span className="text-sm font-medium text-gold-accent">Total</span>
+                        <span className="font-display text-lg font-bold text-text-primary">₹11,877</span>
+    </div>
+                    </div>
                   </div>
                 </div>
 
@@ -130,35 +168,80 @@ export default function HomePage() {
 }
 
 /**
- * Mock Product Row — used in the hero outfit card mockup
+ * Mock Product Row — used in the hero outfit card mockup (DUMMY, not real data)
+ *
+ * Layout: [Square Store Logo] Product Name ........... ₹Price
+ * Logo: loads from /images/platforms/<platform>.png
+ * Fallback: colored square with first letter if image not found
  */
 function MockProduct({
   platform,
   name,
   price,
-  color,
 }: {
   platform: string;
   name: string;
   price: string;
-  color: string;
 }) {
+  const colors = platformColors[platform] || platformColors.Other;
+  const logoSrc = platformLogos[platform] || null;
+
   return (
     <div className="flex items-center gap-3">
-      {/* Platform icon circle */}
-      <div
-        className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full text-[9px] font-bold text-white"
-        style={{ backgroundColor: color }}
-      >
-        {platform.charAt(0)}
-      </div>
+      {/* Platform square logo */}
+      <MockPlatformLogo platform={platform} logoSrc={logoSrc} colors={colors} />
       {/* Product info */}
       <div className="flex-1 min-w-0">
         <p className="text-sm font-medium text-text-primary truncate">{name}</p>
-        <p className="text-[11px] text-gold-accent">{platform}</p>
+        <p className="text-[11px] font-medium" style={{ color: colors.bg }}>
+          {platform}
+        </p>
       </div>
       {/* Price */}
       <span className="flex-shrink-0 text-sm text-text-secondary">{price}</span>
+    </div>
+  );
+}
+
+/**
+ * Mock Platform Logo — Square
+ * Shows logo image if file exists at the configured path, otherwise colored square with letter.
+ * Used only in the homepage mockup card.
+ *
+ * TO ADD REAL LOGOS:
+ * 1. Save logo file to: website/public/images/platforms/<platform-lowercase>.png
+ *    e.g. amazon.png, flipkart.png, myntra.png, nykaa.png, ajio.png, meesho.png
+ * 2. Recommended size: 64x64px PNG with transparent background
+ * 3. Logos are configured in lib/config.ts → platformLogos
+ * 4. Both homepage mockup and real product cards will auto-display them
+ */
+function MockPlatformLogo({
+  platform,
+  logoSrc,
+  colors,
+}: {
+  platform: string;
+  logoSrc: string | null;
+  colors: { bg: string; text: string };
+}) {
+  // For the homepage mockup: show blank square placeholder (logos to be added later)
+  // When logo images are added to public/images/platforms/, they'll display automatically
+  return (
+    <div
+      className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-sm overflow-hidden border border-border"
+      style={{ backgroundColor: colors.bg }}
+    >
+      {logoSrc ? (
+        <img
+          src={logoSrc}
+          alt={`${platform} logo`}
+          className="h-full w-full object-contain p-0.5 bg-white"
+        />
+      ) : (
+        <span className="text-[10px] font-bold" style={{ color: colors.text }}>
+          {platform.charAt(0)}
+        </span>
+      )}
     </div>
   );
 }
