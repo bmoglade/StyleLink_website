@@ -32,7 +32,7 @@ export function CreatorProfileHeader({ creator }: CreatorProfileHeaderProps) {
       {/* Info */}
       <div className="flex-1 text-center sm:text-left">
         {/* Name */}
-        <h1 className="font-display text-2xl font-bold text-primary-dark sm:text-3xl">
+        <h1 className="font-display text-2xl font-bold text-text-primary sm:text-3xl">
           {creator.display_name}
         </h1>
 
@@ -88,7 +88,7 @@ export function CreatorProfileHeader({ creator }: CreatorProfileHeaderProps) {
         {/* Stats */}
         <div className="mt-3 flex items-center justify-center gap-6 sm:justify-start">
           <div className="text-center sm:text-left">
-            <span className="text-lg font-bold text-primary-dark">
+            <span className="text-lg font-bold text-text-primary">
               {creator.outfit_count}
             </span>
             <span className="ml-1 text-xs text-text-secondary">
@@ -96,7 +96,7 @@ export function CreatorProfileHeader({ creator }: CreatorProfileHeaderProps) {
             </span>
           </div>
           <div className="text-center sm:text-left">
-            <span className="text-lg font-bold text-primary-dark">
+            <span className="text-lg font-bold text-text-primary">
               {creator.product_count}
             </span>
             <span className="ml-1 text-xs text-text-secondary">

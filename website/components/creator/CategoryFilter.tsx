@@ -28,8 +28,8 @@ export function CategoryFilter({
           className={cn(
             "px-4 py-1.5 text-xs font-medium uppercase tracking-wider transition-colors duration-200",
             activeCategory === category
-              ? "bg-primary-dark text-white"
-              : "border border-border text-text-secondary hover:border-primary-dark hover:text-primary-dark"
+              ? "bg-gold-accent text-background"
+              : "border border-border text-text-secondary hover:border-gold-accent hover:text-text-primary"
           )}
         >
           {category}

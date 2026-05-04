@@ -32,9 +32,7 @@ export function DashboardOutfitList({ outfits, creatorUsername }: DashboardOutfi
     <div className="border border-border bg-surface">
       {/* Header with filter */}
       <div className="border-b border-border px-4 py-3 space-y-3">
-        <h2 className="text-sm font-semibold text-primary-dark">
-          Your Outfits
-        </h2>
+        <h2 className="text-sm font-semibold text-text-primary">Your Outfits</h2>
 
         {/* Category Filter Pills */}
         <div className="flex flex-wrap items-center gap-2">
@@ -45,8 +43,8 @@ export function DashboardOutfitList({ outfits, creatorUsername }: DashboardOutfi
               className={cn(
                 "px-3 py-1 text-[11px] font-medium uppercase tracking-wider transition-colors duration-200",
                 activeCategory === category
-                  ? "bg-primary-dark text-white"
-                  : "border border-border text-text-secondary hover:border-primary-dark hover:text-primary-dark"
+                  ? "bg-gold-accent text-background"
+                  : "border border-border text-text-secondary hover:border-gold-accent hover:text-text-primary"
               )}
             >
               {category}
@@ -89,7 +87,7 @@ export function DashboardOutfitList({ outfits, creatorUsername }: DashboardOutfi
                       )}
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-primary-dark">
+                      <p className="text-sm font-medium text-text-primary">
                         {outfit.title}
                       </p>
                       <div className="flex items-center gap-2">

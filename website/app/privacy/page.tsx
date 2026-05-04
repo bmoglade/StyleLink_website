@@ -8,7 +8,7 @@ export default function PrivacyPolicyPage() {
       <Header />
       <main className="flex-1">
         <div className="container-content py-12">
-          <h1 className="font-display text-3xl font-bold text-primary-dark">
+          <h1 className="font-display text-3xl font-bold text-text-primary">
             Privacy Policy
           </h1>
           <div className="mt-8 space-y-6 text-sm text-text-secondary leading-relaxed">
@@ -17,7 +17,7 @@ export default function PrivacyPolicyPage() {
               collect, use, and protect your information.
             </p>
 
-            <h2 className="font-display text-lg font-semibold text-primary-dark">
+            <h2 className="font-display text-lg font-semibold text-text-primary">
               Information We Collect
             </h2>
             <ul className="list-disc pl-5 space-y-1">
@@ -27,7 +27,7 @@ export default function PrivacyPolicyPage() {
               <li>Standard web analytics (via Google Analytics)</li>
             </ul>
 
-            <h2 className="font-display text-lg font-semibold text-primary-dark">
+            <h2 className="font-display text-lg font-semibold text-text-primary">
               How We Use Your Information
             </h2>
             <ul className="list-disc pl-5 space-y-1">
@@ -36,7 +36,7 @@ export default function PrivacyPolicyPage() {
               <li>To improve the user experience</li>
             </ul>
 
-            <h2 className="font-display text-lg font-semibold text-primary-dark">
+            <h2 className="font-display text-lg font-semibold text-text-primary">
               Third-Party Links
             </h2>
             <p>
@@ -45,7 +45,7 @@ export default function PrivacyPolicyPage() {
               privacy practices.
             </p>
 
-            <h2 className="font-display text-lg font-semibold text-primary-dark">
+            <h2 className="font-display text-lg font-semibold text-text-primary">
               Contact
             </h2>
             <p>

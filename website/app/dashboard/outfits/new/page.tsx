@@ -297,7 +297,7 @@ export default function NewOutfitPage() {
     return (
       <div className="mx-auto max-w-2xl text-center py-12">
         <div className="text-4xl mb-4">✅</div>
-        <h2 className="font-display text-2xl font-bold text-primary-dark">
+        <h2 className="font-display text-2xl font-bold text-text-primary">
           Outfit Published!
         </h2>
         <p className="mt-2 text-sm text-text-secondary">
@@ -314,7 +314,7 @@ export default function NewOutfitPage() {
           />
           <button
             onClick={copyUrl}
-            className="bg-primary-dark px-3 py-1.5 text-xs font-medium text-white hover:bg-[#333] transition-colors"
+            className="bg-gold-accent px-3 py-1.5 text-xs font-medium text-background hover:bg-[#C4A24E] transition-colors"
           >
             Copy
                 </button>
@@ -344,7 +344,7 @@ export default function NewOutfitPage() {
               setImagePreview(null);
               setProducts([{ ...emptyProduct }]);
             }}
-            className="bg-gold-accent px-4 py-2 text-sm font-medium text-white hover:opacity-90 transition-opacity"
+            className="bg-gold-accent px-4 py-2 text-sm font-medium text-background hover:bg-[#C4A24E] transition-colors"
                       >
             Create Another
           </button>
@@ -355,7 +355,7 @@ export default function NewOutfitPage() {
 
   return (
     <div className="mx-auto max-w-2xl">
-      <h1 className="font-display text-2xl font-bold text-primary-dark">
+      <h1 className="font-display text-2xl font-bold text-text-primary">
         Create New Outfit
       </h1>
       <p className="mt-1 text-sm text-text-secondary">

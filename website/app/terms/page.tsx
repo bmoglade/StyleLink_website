@@ -8,7 +8,7 @@ export default function TermsPage() {
       <Header />
       <main className="flex-1">
         <div className="container-content py-12">
-          <h1 className="font-display text-3xl font-bold text-primary-dark">
+          <h1 className="font-display text-3xl font-bold text-text-primary">
             Terms of Service
           </h1>
           <div className="mt-8 space-y-6 text-sm text-text-secondary leading-relaxed">
@@ -16,7 +16,7 @@ export default function TermsPage() {
               By using {siteConfig.name}, you agree to these terms.
             </p>
 
-            <h2 className="font-display text-lg font-semibold text-primary-dark">
+            <h2 className="font-display text-lg font-semibold text-text-primary">
               For Creators
             </h2>
             <ul className="list-disc pl-5 space-y-1">
@@ -26,7 +26,7 @@ export default function TermsPage() {
               <li>We may remove content that violates these terms</li>
             </ul>
 
-            <h2 className="font-display text-lg font-semibold text-primary-dark">
+            <h2 className="font-display text-lg font-semibold text-text-primary">
               For Consumers
             </h2>
             <ul className="list-disc pl-5 space-y-1">
@@ -35,7 +35,7 @@ export default function TermsPage() {
               <li>Product availability and prices may change without notice</li>
             </ul>
 
-            <h2 className="font-display text-lg font-semibold text-primary-dark">
+            <h2 className="font-display text-lg font-semibold text-text-primary">
               Limitation of Liability
             </h2>
             <p>

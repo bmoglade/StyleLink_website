@@ -140,7 +140,7 @@ export default function SignupPage() {
         <main className="flex flex-1 items-center justify-center px-4">
           <div className="w-full max-w-sm">
             <div className="mb-8 text-center">
-              <h1 className="font-display text-3xl font-bold text-primary-dark">
+              <h1 className="font-display text-3xl font-bold text-text-primary">
                 Choose your URL
               </h1>
               <p className="mt-2 text-sm text-text-secondary">
@@ -201,7 +201,7 @@ export default function SignupPage() {
       <main className="flex flex-1 items-center justify-center px-4">
         <div className="w-full max-w-sm">
           <div className="mb-8 text-center">
-            <h1 className="font-display text-3xl font-bold text-primary-dark">
+            <h1 className="font-display text-3xl font-bold text-text-primary">
               Join {siteConfig.name}
             </h1>
             <p className="mt-2 text-sm text-text-secondary">
@@ -213,7 +213,7 @@ export default function SignupPage() {
           <button
             onClick={handleGoogleSignup}
             type="button"
-            className="flex w-full items-center justify-center gap-3 border border-border px-4 py-2.5 text-sm font-medium text-text-primary hover:bg-background transition-colors duration-200"
+            className="flex w-full items-center justify-center gap-3 border border-border px-4 py-2.5 text-sm font-medium text-text-primary hover:bg-surface transition-colors duration-200"
           >
             <svg width="18" height="18" viewBox="0 0 24 24">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -229,7 +229,7 @@ export default function SignupPage() {
               <div className="w-full border-t border-border" />
             </div>
             <div className="relative flex justify-center text-xs">
-              <span className="bg-surface px-4 text-text-secondary">or</span>
+              <span className="bg-background px-4 text-text-secondary">or</span>
             </div>
           </div>
 
@@ -261,15 +261,13 @@ export default function SignupPage() {
 
             {error && <p className="text-sm text-red-600">{error}</p>}
 
-            <Button
+            <button
               type="submit"
-              variant="primary"
-              size="lg"
-              isLoading={isLoading}
-              className="w-full"
+              disabled={isLoading}
+              className="w-full bg-gold-accent px-4 py-3 text-sm font-semibold text-background hover:bg-[#C4A24E] transition-colors duration-200 disabled:opacity-50"
             >
-              Create Account
-            </Button>
+              {isLoading ? "Creating..." : "Create Account"}
+            </button>
           </form>
 
           <p className="mt-6 text-center text-sm text-text-secondary">

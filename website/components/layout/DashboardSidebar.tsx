@@ -56,12 +56,12 @@ export function DashboardSidebar() {
     <>
       {/* Mobile Header Bar — visible only on mobile */}
       <div className="fixed top-0 left-0 right-0 z-40 flex h-14 items-center justify-between border-b border-border bg-surface px-4 md:hidden">
-        <Link href="/" className="font-display text-lg font-bold text-primary-dark">
+        <Link href="/" className="font-display text-lg font-bold text-gold-accent">
           {siteConfig.name}
         </Link>
         <button
           onClick={() => setIsMobileOpen(!isMobileOpen)}
-          className="flex h-10 w-10 items-center justify-center text-primary-dark"
+          className="flex h-10 w-10 items-center justify-center text-text-primary"
           aria-label="Toggle menu"
         >
           {isMobileOpen ? (
@@ -93,7 +93,7 @@ export function DashboardSidebar() {
       >
         {/* Brand */}
         <div className="flex h-16 items-center justify-between border-b border-border px-6">
-          <Link href="/" className="font-display text-lg font-bold text-primary-dark">
+          <Link href="/" className="font-display text-lg font-bold text-gold-accent">
             {siteConfig.name}
           </Link>
           {/* Close button on mobile */}
@@ -124,7 +124,7 @@ export function DashboardSidebar() {
                     className={cn(
                       "flex items-center gap-3 px-3 py-2.5 text-sm font-medium transition-colors duration-200",
                       isActive
-                        ? "bg-background text-primary-dark"
+                        ? "bg-background text-text-primary"
                         : "text-text-secondary hover:bg-background hover:text-text-primary"
                     )}
                   >
@@ -159,7 +159,7 @@ export function DashboardSidebar() {
           )}
           <button
             onClick={handleLogout}
-            className="flex w-full items-center justify-center gap-2 px-3 py-2.5 text-sm font-medium text-white bg-red-500 hover:bg-red-600 transition-colors"
+            className="flex w-full items-center justify-center gap-2 px-3 py-2.5 text-sm font-medium border border-red-500/50 text-red-400 hover:bg-red-500 hover:text-white transition-colors duration-200"
           >
             Log Out
           </button>

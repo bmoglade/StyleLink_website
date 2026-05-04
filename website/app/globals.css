@@ -4,29 +4,34 @@
 
 @layer base {
   /* =============================================
-   * COLOR THEME — CSS Custom Properties
+   * COLOR THEME — Luxury Palette (Dark Mode)
    * =============================================
-   * Change these values to rebrand the entire site's colors.
-   * All Tailwind color classes reference these variables.
+   * 60% Obsidian Black  — Background
+   * 30% Champagne Gold  — Accent (logo, buttons, highlights)
+   * 8%  Warm Ivory      — Text on dark, light content base
+   * 2%  Deep Wine       — Hover states, profile details
    */
   :root {
-    --color-background: #FAF8F5;
-    --color-surface: #FFFFFF;
-    --color-primary-dark: #1A1A1A;
-    --color-gold-accent: #C9A96E;
-    --color-text-primary: #1A1A1A;
-    --color-text-secondary: #888888;
-    --color-border: #EDE9E3;
+    --color-background: #0B0B0F;
+    --color-surface: #161618;
+    --color-primary-dark: #F4EDE4;
+    --color-gold-accent: #D6B25E;
+    --color-text-primary: #F4EDE4;
+    --color-text-secondary: #9A9490;
+    --color-border: #2A2A2E;
 
-    /* Product card accent (configurable per brand) */
-    --color-product-card-bg: #FFFFFF;
-    --color-product-card-border: #EDE9E3;
-    --color-product-card-hover: #C9A96E;
+    /* Deep wine accent for hover/details */
+    --color-wine: #4A2E35;
+
+    /* Product card accent (dark theme) */
+    --color-product-card-bg: #161618;
+    --color-product-card-border: #2A2A2E;
+    --color-product-card-hover: #D6B25E;
 
     /* Shop button on product cards */
-    --color-shop-btn-bg: #1A1A1A;
-    --color-shop-btn-text: #FFFFFF;
-    --color-shop-btn-hover-bg: #333333;
+    --color-shop-btn-bg: #D6B25E;
+    --color-shop-btn-text: #0B0B0F;
+    --color-shop-btn-hover-bg: #C4A24E;
   }
 
   /* Smooth scrolling */
@@ -52,7 +57,7 @@
   }
   .card-hover:hover {
     transform: translateY(-4px);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 12px 40px rgba(214, 178, 94, 0.08);
   }
 
   /* Image hover zoom inside cards */
