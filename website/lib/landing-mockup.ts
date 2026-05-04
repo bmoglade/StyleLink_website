@@ -1,22 +1,23 @@
 /**
- * Landing Page Mockup Data
- * =========================
- * SINGLE SOURCE OF TRUTH for all images & content on the homepage outfit card.
+ * Landing Page Mockup Data — FALLBACK ONLY
+ * ==========================================
+ * This data is used ONLY if no admin-featured outfit is set.
  *
- * This is NOT connected to the database. It's a static mockup for display only.
- * To refresh the landing page content, just:
- *   1. Replace images in: public/images/landing/
- *   2. Update the data below (names, prices, platforms)
- *   3. The homepage auto-reflects changes — no other files to touch.
+ * PRIMARY FLOW (preferred):
+ *   Admin creates an outfit in dashboard → marks it as "featured" →
+ *   Homepage automatically displays that outfit with its products.
  *
- * IMAGE FILES GO HERE:
+ * FALLBACK FLOW:
+ *   If no featured outfit exists, this static data is shown instead.
+ *
+ * IMAGE FILES (fallback only):
  *   website/public/images/landing/
  *     ├── outfit.jpg            ← Main outfit photo (left side of card)
- *     ├── product-1.jpg         ← Product thumbnail for row 1
- *     ├── product-2.jpg         ← Product thumbnail for row 2
- *     ├── product-3.jpg         ← Product thumbnail for row 3
- *     ├── product-4.jpg         ← Product thumbnail for row 4
- *     └── product-5.jpg         ← Product thumbnail for row 5
+ *     ├── product-1.png         ← Product thumbnail for row 1
+ *     ├── product-2.png         ← Product thumbnail for row 2
+ *     ├── product-3.png         ← Product thumbnail for row 3
+ *     ├── product-4.png         ← Product thumbnail for row 4
+ *     └── product-5.png         ← Product thumbnail for row 5
  *
  * RECOMMENDED SIZES:
  *   - outfit.jpg:    600×800px (3:4 ratio, portrait)
@@ -35,12 +36,8 @@ export const landingMockup = {
   /** Outfit card description */
   description: "Clean. Classic. Effortless pieces for everyday confidence.",
 
-  /**
-   * Main outfit image (left panel of the card)
-   * Replace with: /images/landing/outfit.jpg (600×800px portrait)
-   * Currently using SVG placeholder
-   */
-  outfitImage: "/images/landing/outfit.svg",
+  /** Main outfit image (left panel of the card) — 600×800px portrait */
+  outfitImage: "/images/landing/outfit.jpg",
 
   /** Emotional tagline below the card */
   tagline: "Your followers want to dress like you. Let them.",
@@ -50,37 +47,29 @@ export const landingMockup = {
     {
       name: "Ribbed Tank Top",
       platform: "Amazon",
-      price: "₹1,890",
-      image: "/images/landing/product-1.svg",
+      image: "/images/landing/product-1.png",
     },
     {
       name: "Tailored Wide Leg Pants",
       platform: "Flipkart",
-      price: "₹3,790",
-      image: "/images/landing/product-2.svg",
+      image: "/images/landing/product-2.png",
     },
     {
       name: "Clean Leather Sneakers",
       platform: "Myntra",
-      price: "₹2,499",
-      image: "/images/landing/product-3.svg",
+      image: "/images/landing/product-3.png",
     },
     {
       name: "Minimal Shoulder Bag",
       platform: "Ajio",
-      price: "₹2,999",
-      image: "/images/landing/product-4.svg",
+      image: "/images/landing/product-4.png",
     },
     {
       name: "Gold Hoop Earrings Set",
       platform: "Nykaa",
-      price: "₹699",
-      image: "/images/landing/product-5.svg",
+      image: "/images/landing/product-5.png",
     },
   ],
-
-  /** Total price displayed at bottom of card */
-  total: "₹11,877",
 } as const;
 
 export type LandingProduct = (typeof landingMockup.products)[number];

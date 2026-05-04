@@ -9,16 +9,13 @@ import { landingMockup } from "@/lib/landing-mockup";
  * ==================
  * Route: /
  * Luxury dark theme landing page (Server Component — no event handlers).
- * Layout: Hero (headline left + outfit card right) + How it works + Earnings
- * Mobile: stacked vertically.
  *
- * Outfit card is a STATIC MOCKUP — all data comes from lib/landing-mockup.ts
- * All images come from public/images/landing/ folder.
+ * LANDING OUTFIT CARD:
+ * - Currently reads from lib/landing-mockup.ts (static fallback)
+ * - FUTURE: Will read from database — admin marks one outfit as "featured"
+ *   and it auto-displays here (same create-outfit flow, no extra work)
  *
- * TO REFRESH LANDING PAGE CONTENT:
- * 1. Replace images in: public/images/landing/ (outfit.jpg, product-1.jpg, etc.)
- * 2. Update text/prices in: lib/landing-mockup.ts
- * 3. Deploy — homepage auto-updates. No other files to touch.
+ * No prices shown on landing page — just visual showcase.
  */
 
 export default function HomePage() {
@@ -55,7 +52,7 @@ export default function HomePage() {
                 <div className="w-full max-w-md border border-border bg-surface overflow-hidden">
                   {/* Two-panel: Outfit image (left) + product list (right) */}
                   <div className="flex">
-                    {/* Outfit image (left panel) — from public/images/landing/ */}
+                    {/* Outfit image (left panel) */}
                     <div className="w-40 sm:w-48 flex-shrink-0 bg-background border-r border-border overflow-hidden">
                       <div className="aspect-[3/4] w-full">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -67,7 +64,7 @@ export default function HomePage() {
                       </div>
                     </div>
 
-                    {/* Right side: Title + product list */}
+                    {/* Right side: Title + product list (NO prices) */}
                     <div className="flex-1 min-w-0 p-4">
                       {/* Card Header */}
                       <h3 className="font-display text-lg font-semibold text-text-primary">
@@ -77,19 +74,11 @@ export default function HomePage() {
                         {landingMockup.description}
                       </p>
 
-                      {/* Product List — from landing-mockup.ts */}
+                      {/* Product List — no prices, just image + name + platform */}
                       <div className="mt-4 space-y-3">
                         {landingMockup.products.map((product, index) => (
                           <MockProduct key={index} {...product} />
                         ))}
-    </div>
-
-                      {/* Total */}
-                      <div className="mt-4 flex items-center justify-between border-t border-border pt-3">
-                        <span className="text-sm font-medium text-gold-accent">Total</span>
-                        <span className="font-display text-lg font-bold text-text-primary">
-                          {landingMockup.total}
-                        </span>
                       </div>
                     </div>
                   </div>
@@ -158,32 +147,23 @@ export default function HomePage() {
 }
 
 /**
- * Mock Product Row — used in the hero outfit card mockup
- *
- * Layout: [Product Thumbnail] Product Name + Platform ... ₹Price
- *
- * Images come from: public/images/landing/product-N.svg (or .jpg when replaced)
- * All data from: lib/landing-mockup.ts
- *
- * NOTE: This is a Server Component — no onError/onClick handlers allowed.
- * Images must exist at the configured paths. Use SVG placeholders during development.
+ * Mock Product Row — NO PRICE shown
+ * Layout: [Product Thumbnail] Product Name + Platform name
  */
 function MockProduct({
   platform,
   name,
-  price,
   image,
 }: {
   platform: string;
   name: string;
-  price: string;
   image: string;
 }) {
   const colors = platformColors[platform] || platformColors.Other;
 
   return (
     <div className="flex items-center gap-2.5">
-      {/* Product thumbnail — from public/images/landing/product-N */}
+      {/* Product thumbnail */}
       <div className="h-8 w-8 flex-shrink-0 overflow-hidden rounded-sm border border-border">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
@@ -193,16 +173,13 @@ function MockProduct({
         />
       </div>
 
-      {/* Product info */}
+      {/* Product info — name + platform (no price) */}
       <div className="flex-1 min-w-0">
         <p className="text-sm font-medium text-text-primary truncate">{name}</p>
         <p className="text-[11px] font-medium" style={{ color: colors.bg }}>
           {platform}
         </p>
       </div>
-
-      {/* Price */}
-      <span className="flex-shrink-0 text-sm text-text-secondary">{price}</span>
     </div>
   );
 }
