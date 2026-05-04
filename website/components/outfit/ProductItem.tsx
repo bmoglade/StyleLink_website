@@ -1,4 +1,4 @@
-import { PlatformBadge } from "@/components/ui/Badge";
+import { platformColors } from "@/lib/config";
 import { truncate } from "@/lib/utils";
 import { siteConfig } from "@/lib/config";
 import type { Product } from "@/lib/types";
@@ -11,11 +11,17 @@ interface ProductItemProps {
  * Product Item Component
  * ======================
  * Single product card within an outfit grid.
- * Layout (top to bottom): Platform badge → Product image → Product name → "Shop This Item" button.
- * Matches reference: e-commerce site name on top, then image, then link.
+ * Layout (top to bottom):
+ *   1. Product image (hero — full width)
+ *   2. Product name
+ *   3. Bottom row: Store logo circle + store name (left) | Shop button (right)
+ *
+ * Store identity shown as colored circle with first letter + platform name in brand color.
  * Links through /go/[productId] for click tracking.
  */
 export function ProductItem({ product }: ProductItemProps) {
+  const colors = platformColors[product.platform] || platformColors.Other;
+
   return (
     <div
       className="flex flex-col border overflow-hidden transition-colors duration-200 hover:border-[var(--color-product-card-hover)]"
@@ -24,13 +30,8 @@ export function ProductItem({ product }: ProductItemProps) {
         borderColor: "var(--color-product-card-border)",
       }}
     >
-      {/* Platform Badge — TOP centered */}
-      <div className="px-2 pt-2 text-center">
-        <PlatformBadge platform={product.platform} />
-      </div>
-
-      {/* Product Image */}
-      <div className="relative aspect-square w-full overflow-hidden bg-background mt-1.5">
+      {/* Product Image — TOP (hero of the card) */}
+      <div className="relative aspect-square w-full overflow-hidden bg-background">
         {product.image_url ? (
           <img
             src={product.image_url}
@@ -58,19 +59,39 @@ export function ProductItem({ product }: ProductItemProps) {
         )}
       </div>
 
-      {/* Product Name + Shop Button */}
-      <div className="flex flex-1 flex-col p-2">
-        {/* Product Name */}
-        <p className="text-xs font-medium text-text-primary leading-tight line-clamp-2 flex-1">
+      {/* Product Name */}
+      <div className="px-2 pt-2">
+        <p className="text-xs font-medium text-text-primary leading-tight line-clamp-2">
           {truncate(product.name, siteConfig.maxProductNameLength)}
         </p>
+      </div>
 
-        {/* Shop This Item Button */}
+      {/* Bottom Row: Store Logo + Name (left) | Shop Button (right) */}
+      <div className="flex items-center justify-between gap-1.5 px-2 py-2 mt-auto">
+        {/* Store logo + name */}
+        <div className="flex items-center gap-1.5 min-w-0">
+          {/* Colored circle with first letter */}
+          <div
+            className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full text-[8px] font-bold"
+            style={{ backgroundColor: colors.bg, color: colors.text }}
+          >
+            {product.platform.charAt(0)}
+          </div>
+          {/* Platform name in brand color */}
+          <span
+            className="text-[10px] font-medium truncate"
+            style={{ color: colors.bg }}
+          >
+            {product.platform}
+          </span>
+        </div>
+
+        {/* Shop Button */}
         <a
           href={`/go/${product.id}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-2 flex items-center justify-center gap-1 px-2 py-1.5 text-[11px] font-semibold transition-colors duration-200"
+          className="flex-shrink-0 flex items-center gap-0.5 px-2 py-1 text-[10px] font-semibold transition-colors duration-200"
           style={{
             backgroundColor: "var(--color-shop-btn-bg)",
             color: "var(--color-shop-btn-text)",
@@ -85,8 +106,8 @@ export function ProductItem({ product }: ProductItemProps) {
           Shop
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="10"
-            height="10"
+            width="9"
+            height="9"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
