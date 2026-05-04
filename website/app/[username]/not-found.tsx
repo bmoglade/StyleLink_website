@@ -25,7 +25,7 @@ export default function CreatorNotFound() {
           </p>
           <Link
             href="/"
-            className="mt-6 inline-block bg-gold-accent px-6 py-3 text-sm font-medium text-white hover:bg-[#B8954F] transition-colors duration-200"
+            className="mt-6 inline-block bg-gold-accent px-6 py-3 text-sm font-medium text-background hover:bg-[#C4A24E] transition-colors duration-200"
           >
             Go to Homepage
           </Link>

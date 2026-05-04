@@ -22,10 +22,10 @@
 
 export const siteConfig = {
   // Brand — Change these to rebrand the entire platform
-  name: "StyleLink",
-  tagline: "Shop Creator Looks",
+  name: "Influra",
+  tagline: "Monetize Your Taste",
   description:
-    "Discover complete outfits from your favorite fashion creators. Every look, every item, one click away.",
+    "A luxury creator platform designed to turn influence into income. Build your storefront, share your looks, earn from every click.",
 
   // URL — reads from environment variable (configurable per deployment)
   url: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",

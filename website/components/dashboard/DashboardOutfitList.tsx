@@ -45,7 +45,7 @@ export function DashboardOutfitList({ outfits, creatorUsername }: DashboardOutfi
               className={cn(
                 "px-3 py-1 text-[11px] font-medium uppercase tracking-wider transition-colors duration-200",
                 activeCategory === category
-                  ? "bg-primary-dark text-white"
+                  ? "bg-gold-accent text-background"
                   : "border border-border text-text-secondary hover:border-primary-dark hover:text-primary-dark"
               )}
             >

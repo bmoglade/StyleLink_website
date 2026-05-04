@@ -30,11 +30,11 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       "inline-flex items-center justify-center font-body font-medium transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-accent disabled:opacity-50 disabled:cursor-not-allowed";
 
     const variants = {
-      primary: "bg-gold-accent text-white hover:bg-[#B8954F]",
+      primary: "bg-gold-accent text-background hover:bg-[#C4A24E]",
       secondary:
-        "bg-primary-dark text-white hover:bg-[#333333]",
+        "border border-border text-text-primary hover:bg-surface",
       ghost:
-        "bg-transparent text-text-primary hover:bg-border",
+        "bg-transparent text-text-primary hover:bg-surface",
       danger: "bg-red-600 text-white hover:bg-red-700",
     };
 

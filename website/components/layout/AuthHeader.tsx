@@ -5,7 +5,7 @@ import { siteConfig } from "@/lib/config";
  * Auth Header (for login/signup pages)
  * =====================================
  * Simple header without session check (used in client components).
- * Does NOT show "Join as Creator" since user is already on auth page.
+ * Dark luxury theme — gold brand name.
  */
 export function AuthHeader() {
   return (
@@ -13,7 +13,7 @@ export function AuthHeader() {
       <div className="container-content flex h-16 items-center justify-between">
         {/* Logo / Brand */}
         <Link href="/" className="flex items-center gap-2">
-          <span className="font-display text-xl font-bold text-primary-dark">
+          <span className="font-display text-xl font-bold text-gold-accent">
             {siteConfig.name}
           </span>
         </Link>

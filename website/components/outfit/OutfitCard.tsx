@@ -83,7 +83,7 @@ export function OutfitCard({ outfit, index, creatorUsername }: OutfitCardProps) 
               <button
                 type="button"
                 onClick={() => navigator.clipboard.writeText(outfitLink)}
-                className="flex-shrink-0 border border-border bg-surface px-2 py-1 text-[10px] font-medium text-text-secondary hover:text-primary-dark hover:border-gold-accent transition-colors"
+                className="flex-shrink-0 border border-border bg-surface px-2 py-1 text-[10px] font-medium text-text-secondary hover:text-gold-accent hover:border-gold-accent transition-colors"
                 title="Copy outfit link"
               >
                 📋 Copy

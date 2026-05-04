@@ -4,7 +4,7 @@ import { siteConfig } from "@/lib/config";
 /**
  * Site Footer
  * ===========
- * Minimal footer with brand, links, and legal.
+ * Minimal dark footer matching luxury theme.
  */
 export function Footer() {
   return (
@@ -13,7 +13,7 @@ export function Footer() {
         <div className="flex flex-col items-center gap-6 sm:flex-row sm:justify-between">
           {/* Brand */}
           <div>
-            <span className="font-display text-lg font-bold text-primary-dark">
+            <span className="font-display text-lg font-bold text-gold-accent">
               {siteConfig.name}
             </span>
             <p className="mt-1 text-xs text-text-secondary">
@@ -27,7 +27,7 @@ export function Footer() {
               href="/privacy"
               className="hover:text-text-primary transition-colors"
             >
-              Privacy Policy
+              Privacy
             </Link>
             <Link
               href="/terms"
@@ -39,7 +39,7 @@ export function Footer() {
               href="/disclosure"
               className="hover:text-text-primary transition-colors"
             >
-              Affiliate Disclosure
+              Disclosure
             </Link>
           </div>
         </div>
