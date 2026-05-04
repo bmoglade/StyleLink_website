@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { siteConfig, platformColors, platformLogos } from "@/lib/config";
+import { landingMockup } from "@/lib/landing-mockup";
 
 /**
  * Homepage — Influra
@@ -11,18 +12,14 @@ import { siteConfig, platformColors, platformLogos } from "@/lib/config";
  * Layout: Hero (headline left + outfit card right) + How it works + Earnings
  * Mobile: stacked vertically.
  *
- * Outfit card on homepage is a DUMMY mockup — not connected to real data.
- * It uses the same visual style as the real product list view.
+ * Outfit card is a STATIC MOCKUP — all data comes from lib/landing-mockup.ts
+ * All images come from public/images/landing/ folder.
+ *
+ * TO REFRESH LANDING PAGE CONTENT:
+ * 1. Replace images in: public/images/landing/ (outfit.jpg, product-1.jpg, etc.)
+ * 2. Update text/prices in: lib/landing-mockup.ts
+ * 3. Deploy — homepage auto-updates. No other files to touch.
  */
-
-/** Dummy products for the homepage mockup card */
-const MOCK_PRODUCTS = [
-  { platform: "Amazon",   name: "Ribbed Tank Top",          price: "₹1,890" },
-  { platform: "Flipkart", name: "Tailored Wide Leg Pants",  price: "₹3,790" },
-  { platform: "Myntra",   name: "Clean Leather Sneakers",   price: "₹2,499" },
-  { platform: "Ajio",     name: "Minimal Shoulder Bag",     price: "₹2,999" },
-  { platform: "Nykaa",    name: "Gold Hoop Earrings Set",   price: "₹699"   },
-];
 
 export default function HomePage() {
   return (
@@ -56,58 +53,77 @@ export default function HomePage() {
               {/* Right — Outfit Card Mockup (list view, like WearThis) */}
               <div className="flex-1 flex flex-col items-center lg:items-end">
                 <div className="w-full max-w-md border border-border bg-surface overflow-hidden">
-                  {/* Top: Outfit image + card header side by side */}
+                  {/* Two-panel: Outfit image (left) + product list (right) */}
                   <div className="flex">
-                    {/* Outfit image placeholder (left) */}
-                    <div className="w-40 sm:w-48 flex-shrink-0 bg-background border-r border-border">
-                      <div className="aspect-[3/4] w-full flex items-center justify-center text-text-secondary/30">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="40"
-                          height="40"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="0.8"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-      >
-                          <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
-                          <circle cx="9" cy="9" r="2" />
-                          <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
-                        </svg>
-      </div>
-      </div>
+                    {/* Outfit image (left panel) — from public/images/landing/outfit.jpg */}
+                    <div className="w-40 sm:w-48 flex-shrink-0 bg-background border-r border-border overflow-hidden">
+                      <div className="aspect-[3/4] w-full">
+                        <img
+                          src={landingMockup.outfitImage}
+                          alt={landingMockup.title}
+                          className="h-full w-full object-cover"
+                          onError={(e) => {
+                            // If outfit image not yet added, show placeholder
+                            e.currentTarget.style.display = "none";
+                            const fallback = e.currentTarget.nextElementSibling as HTMLElement;
+                            if (fallback) fallback.style.display = "flex";
+                          }}
+                        />
+                        {/* Fallback placeholder — shown when image not found */}
+                        <div
+                          className="h-full w-full items-center justify-center text-text-secondary/30"
+                          style={{ display: "none" }}
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="40"
+                            height="40"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="0.8"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
+                            <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
+                            <circle cx="9" cy="9" r="2" />
+                            <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
 
                     {/* Right side: Title + product list */}
                     <div className="flex-1 min-w-0 p-4">
                       {/* Card Header */}
                       <h3 className="font-display text-lg font-semibold text-text-primary">
-                        City Minimal Essentials
+                        {landingMockup.title}
                       </h3>
                       <p className="mt-1 text-xs text-text-secondary">
-                        Clean. Classic. Effortless pieces for everyday confidence.
+                        {landingMockup.description}
                       </p>
 
-                      {/* Mock Product List */}
+                      {/* Product List — from landing-mockup.ts */}
                       <div className="mt-4 space-y-3">
-                        {MOCK_PRODUCTS.map((product) => (
-                          <MockProduct key={product.name} {...product} />
+                        {landingMockup.products.map((product, index) => (
+                          <MockProduct key={index} {...product} />
                         ))}
     </div>
 
                       {/* Total */}
                       <div className="mt-4 flex items-center justify-between border-t border-border pt-3">
                         <span className="text-sm font-medium text-gold-accent">Total</span>
-                        <span className="font-display text-lg font-bold text-text-primary">₹11,877</span>
-    </div>
+                        <span className="font-display text-lg font-bold text-text-primary">
+                          {landingMockup.total}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
 
                 {/* Emotional closer below card */}
                 <p className="mt-6 max-w-sm text-center text-sm italic text-text-secondary lg:text-right">
-                  &ldquo;Your followers want to dress like you. Let them.&rdquo;
+                  &ldquo;{landingMockup.tagline}&rdquo;
                 </p>
               </div>
             </div>
@@ -168,28 +184,54 @@ export default function HomePage() {
 }
 
 /**
- * Mock Product Row — used in the hero outfit card mockup (DUMMY, not real data)
+ * Mock Product Row — used in the hero outfit card mockup
  *
- * Layout: [Square Store Logo] Product Name ........... ₹Price
- * Logo: loads from /images/platforms/<platform>.png
- * Fallback: colored square with first letter if image not found
+ * Layout: [Product Image] [Store Logo] Product Name ... ₹Price
+ *
+ * Images come from: public/images/landing/product-N.jpg
+ * Store logos come from: public/images/platforms/<platform>.png
+ * All data from: lib/landing-mockup.ts
  */
 function MockProduct({
   platform,
   name,
   price,
+  image,
 }: {
   platform: string;
   name: string;
   price: string;
+  image: string;
 }) {
   const colors = platformColors[platform] || platformColors.Other;
   const logoSrc = platformLogos[platform] || null;
 
   return (
-    <div className="flex items-center gap-3">
-      {/* Platform square logo */}
-      <MockPlatformLogo platform={platform} logoSrc={logoSrc} colors={colors} />
+    <div className="flex items-center gap-2.5">
+      {/* Product thumbnail — from public/images/landing/product-N.jpg */}
+      <div className="h-8 w-8 flex-shrink-0 overflow-hidden rounded-sm bg-background border border-border">
+        <img
+          src={image}
+          alt={name}
+          className="h-full w-full object-cover"
+          onError={(e) => {
+            // Hide broken image, show platform color fallback
+            e.currentTarget.style.display = "none";
+            const fallback = e.currentTarget.nextElementSibling as HTMLElement;
+            if (fallback) fallback.style.display = "flex";
+          }}
+        />
+        {/* Fallback if product image not yet added */}
+        <div
+          className="h-full w-full items-center justify-center"
+          style={{ backgroundColor: colors.bg, display: "none" }}
+        >
+          <span className="text-[8px] font-bold" style={{ color: colors.text }}>
+            {platform.charAt(0)}
+          </span>
+        </div>
+      </div>
+
       {/* Product info */}
       <div className="flex-1 min-w-0">
         <p className="text-sm font-medium text-text-primary truncate">{name}</p>
@@ -197,51 +239,9 @@ function MockProduct({
           {platform}
         </p>
       </div>
+
       {/* Price */}
       <span className="flex-shrink-0 text-sm text-text-secondary">{price}</span>
-    </div>
-  );
-}
-
-/**
- * Mock Platform Logo — Square
- * Shows logo image if file exists at the configured path, otherwise colored square with letter.
- * Used only in the homepage mockup card.
- *
- * TO ADD REAL LOGOS:
- * 1. Save logo file to: website/public/images/platforms/<platform-lowercase>.png
- *    e.g. amazon.png, flipkart.png, myntra.png, nykaa.png, ajio.png, meesho.png
- * 2. Recommended size: 64x64px PNG with transparent background
- * 3. Logos are configured in lib/config.ts → platformLogos
- * 4. Both homepage mockup and real product cards will auto-display them
- */
-function MockPlatformLogo({
-  platform,
-  logoSrc,
-  colors,
-}: {
-  platform: string;
-  logoSrc: string | null;
-  colors: { bg: string; text: string };
-}) {
-  // For the homepage mockup: show blank square placeholder (logos to be added later)
-  // When logo images are added to public/images/platforms/, they'll display automatically
-  return (
-    <div
-      className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-sm overflow-hidden border border-border"
-      style={{ backgroundColor: colors.bg }}
-    >
-      {logoSrc ? (
-        <img
-          src={logoSrc}
-          alt={`${platform} logo`}
-          className="h-full w-full object-contain p-0.5 bg-white"
-        />
-      ) : (
-        <span className="text-[10px] font-bold" style={{ color: colors.text }}>
-          {platform.charAt(0)}
-        </span>
-      )}
     </div>
   );
 }
@@ -257,4 +257,3 @@ function StepItem({ number, text }: { number: string; text: string }) {
     </div>
   );
 }
-
