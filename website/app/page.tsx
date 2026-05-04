@@ -3,22 +3,50 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { siteConfig, platformColors, platformLogos } from "@/lib/config";
 import { landingMockup } from "@/lib/landing-mockup";
+import { getFeaturedOutfit } from "@/lib/queries";
 
 /**
  * Homepage — Influra
  * ==================
  * Route: /
- * Luxury dark theme landing page (Server Component — no event handlers).
  *
- * LANDING OUTFIT CARD:
- * - Currently reads from lib/landing-mockup.ts (static fallback)
- * - FUTURE: Will read from database — admin marks one outfit as "featured"
- *   and it auto-displays here (same create-outfit flow, no extra work)
+ * LANDING OUTFIT CARD FLOW:
+ * 1. Tries to load the "featured" outfit from database (admin-set)
+ * 2. If no featured outfit → falls back to static mockup data (lib/landing-mockup.ts)
  *
+ * Admin flow: Create outfit in dashboard → toggle "Feature on Landing Page" → done.
  * No prices shown on landing page — just visual showcase.
  */
 
-export default function HomePage() {
+export default async function HomePage() {
+  // Try to load admin-featured outfit from database
+  const featuredOutfit = await getFeaturedOutfit();
+
+  // Determine what to display: database outfit or static fallback
+  const displayData = featuredOutfit
+    ? {
+        title: featuredOutfit.title,
+        description: featuredOutfit.category,
+        outfitImage: featuredOutfit.image_url,
+        tagline: landingMockup.tagline,
+        products: featuredOutfit.products.map((p) => ({
+          name: p.name,
+          platform: p.platform,
+          image: p.image_url || "",
+        })),
+      }
+    : {
+        title: landingMockup.title,
+        description: landingMockup.description,
+        outfitImage: landingMockup.outfitImage,
+        tagline: landingMockup.tagline,
+        products: landingMockup.products.map((p) => ({
+          name: p.name,
+          platform: p.platform,
+          image: p.image,
+        })),
+      };
+
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
@@ -47,7 +75,7 @@ export default function HomePage() {
                 </div>
               </div>
 
-              {/* Right — Outfit Card Mockup (list view, like WearThis) */}
+              {/* Right — Outfit Card (from DB or fallback) */}
               <div className="flex-1 flex flex-col items-center lg:items-end">
                 <div className="w-full max-w-md border border-border bg-surface overflow-hidden">
                   {/* Two-panel: Outfit image (left) + product list (right) */}
@@ -55,12 +83,22 @@ export default function HomePage() {
                     {/* Outfit image (left panel) */}
                     <div className="w-40 sm:w-48 flex-shrink-0 bg-background border-r border-border overflow-hidden">
                       <div className="aspect-[3/4] w-full">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                          src={landingMockup.outfitImage}
-                          alt={landingMockup.title}
-                          className="h-full w-full object-cover"
-                        />
+                        {displayData.outfitImage ? (
+                          /* eslint-disable-next-line @next/next/no-img-element */
+                          <img
+                            src={displayData.outfitImage}
+                            alt={displayData.title}
+                            className="h-full w-full object-cover"
+                          />
+                        ) : (
+                          <div className="flex h-full w-full items-center justify-center text-text-secondary/30">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="0.8" strokeLinecap="round" strokeLinejoin="round">
+                              <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
+                              <circle cx="9" cy="9" r="2" />
+                              <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
+                            </svg>
+                          </div>
+                        )}
                       </div>
                     </div>
 
@@ -68,16 +106,16 @@ export default function HomePage() {
                     <div className="flex-1 min-w-0 p-4">
                       {/* Card Header */}
                       <h3 className="font-display text-lg font-semibold text-text-primary">
-                        {landingMockup.title}
+                        {displayData.title}
                       </h3>
                       <p className="mt-1 text-xs text-text-secondary">
-                        {landingMockup.description}
+                        {displayData.description}
                       </p>
 
-                      {/* Product List — no prices, just image + name + platform */}
+                      {/* Product List — no prices */}
                       <div className="mt-4 space-y-3">
-                        {landingMockup.products.map((product, index) => (
-                          <MockProduct key={index} {...product} />
+                        {displayData.products.map((product, index) => (
+                          <LandingProductRow key={index} {...product} />
                         ))}
                       </div>
                     </div>
@@ -86,7 +124,7 @@ export default function HomePage() {
 
                 {/* Emotional closer below card */}
                 <p className="mt-6 max-w-sm text-center text-sm italic text-text-secondary lg:text-right">
-                  &ldquo;{landingMockup.tagline}&rdquo;
+                  &ldquo;{displayData.tagline}&rdquo;
                 </p>
               </div>
             </div>
@@ -147,10 +185,11 @@ export default function HomePage() {
 }
 
 /**
- * Mock Product Row — NO PRICE shown
- * Layout: [Product Thumbnail] Product Name + Platform name
+ * Landing Product Row — displayed in hero outfit card
+ * Shows: [Product Thumbnail] Product Name / Platform
+ * No price. No links. Pure visual showcase.
  */
-function MockProduct({
+function LandingProductRow({
   platform,
   name,
   image,
@@ -164,13 +203,20 @@ function MockProduct({
   return (
     <div className="flex items-center gap-2.5">
       {/* Product thumbnail */}
-      <div className="h-8 w-8 flex-shrink-0 overflow-hidden rounded-sm border border-border">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={image}
-          alt={name}
-          className="h-full w-full object-cover"
-        />
+      <div className="h-8 w-8 flex-shrink-0 overflow-hidden rounded-sm border border-border bg-background">
+        {image ? (
+          /* eslint-disable-next-line @next/next/no-img-element */
+          <img src={image} alt={name} className="h-full w-full object-cover" />
+        ) : (
+          <div
+            className="flex h-full w-full items-center justify-center"
+            style={{ backgroundColor: colors.bg }}
+          >
+            <span className="text-[8px] font-bold" style={{ color: colors.text }}>
+              {platform.charAt(0)}
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Product info — name + platform (no price) */}

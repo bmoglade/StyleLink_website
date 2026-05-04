@@ -37,6 +37,7 @@ export default function NewOutfitPage() {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isPublished, setIsPublished] = useState(true);
+  const [isFeatured, setIsFeatured] = useState(false);
   const [products, setProducts] = useState<ProductFormData[]>([{ ...emptyProduct }]);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -209,6 +210,7 @@ export default function NewOutfitPage() {
           category,
           image_url: publicUrl,
           is_published: isPublished,
+          is_featured: isFeatured,
         })
         .select("id")
         .single();
@@ -551,6 +553,29 @@ export default function NewOutfitPage() {
               {isPublished
                 ? "This outfit will be visible on your storefront"
                 : "Only you can see this outfit (hidden from public)"}
+            </p>
+          </div>
+        </div>
+
+        {/* Feature on Landing Page Toggle */}
+        <div className="flex items-center gap-4 border border-gold-accent/30 bg-surface p-4">
+          <label className="relative inline-flex cursor-pointer items-center">
+            <input
+              type="checkbox"
+              checked={isFeatured}
+              onChange={(e) => setIsFeatured(e.target.checked)}
+              className="peer sr-only"
+            />
+            <div className="h-5 w-9 rounded-full bg-border peer-checked:bg-gold-accent transition-colors after:absolute after:left-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-full after:bg-white after:transition-all peer-checked:after:translate-x-full" />
+          </label>
+          <div>
+            <p className="text-sm font-medium text-gold-accent">
+              ⭐ Feature on Landing Page
+            </p>
+            <p className="text-xs text-text-secondary">
+              {isFeatured
+                ? "This outfit will be showcased on the homepage (replaces any currently featured)"
+                : "Toggle ON to display this outfit on the homepage"}
             </p>
           </div>
         </div>

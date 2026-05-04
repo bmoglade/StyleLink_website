@@ -26,6 +26,7 @@ export interface Outfit {
   category: string;
   image_url: string;
   is_published: boolean;
+  is_featured: boolean;
   created_at: string;
   updated_at: string;
 }
