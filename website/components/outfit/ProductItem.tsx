@@ -1,3 +1,5 @@
+"use client";
+
 import { platformColors, platformLogos } from "@/lib/config";
 import { truncate } from "@/lib/utils";
 import { siteConfig } from "@/lib/config";

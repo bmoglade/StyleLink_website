@@ -1,3 +1,5 @@
+"use client";
+
 import { ProductGrid } from "./ProductGrid";
 import { CategoryBadge } from "@/components/ui/Badge";
 import { getStaggerDelay } from "@/lib/utils";
