@@ -51,7 +51,8 @@ pnpm install
 1. In Supabase Dashboard, go to **SQL Editor**
 2. Copy the contents of `supabase/migrations/001_initial_schema.sql`
 3. Paste and click **Run**
-4. All tables, indexes, and RLS policies will be created
+4. Then run `supabase/migrations/002_featured_outfit.sql`
+5. All tables, indexes, RLS policies, and featured outfit support will be created
 
 ### Step 5: Create storage buckets
 
@@ -150,12 +151,15 @@ git push -u origin main
 
 - [ ] Environment variables set in Vercel
 - [ ] `NEXT_PUBLIC_APP_URL` updated to production URL
+- [ ] Both migrations run on production Supabase (001 + 002)
 - [ ] Google OAuth redirect URI updated to production URL
 - [ ] Google Analytics measurement ID configured
 - [ ] Storage bucket policies verified
 - [ ] RLS policies tested
 - [ ] Custom domain configured (optional)
 - [ ] Platform name updated in `lib/config.ts` (if changing from "StyleLink")
+- [ ] Admin user created (signup via `/signup` as first user)
+- [ ] Platform logo images added to `public/images/platforms/` (optional)
 
 ---
 
@@ -175,7 +179,7 @@ website/
 │   ├── signup/              # Signup page
 │   ├── layout.tsx           # Root layout
 │   ├── globals.css          # Global styles
-│   └── page.tsx             # Homepage
+│   └── page.tsx             # Homepage (async — reads featured outfit from DB)
 ├── components/
 │   ├── analytics/           # Google Analytics
 │   ├── creator/             # Creator profile components
@@ -183,13 +187,21 @@ website/
 │   ├── outfit/              # Outfit card, product grid
 │   └── ui/                  # Reusable UI primitives
 ├── lib/
-│   ├── config.ts            # Site configuration (name, colors, limits)
+│   ├── config.ts            # Site config (name, colors, limits, platform logos)
+│   ├── landing-mockup.ts    # Static fallback data for homepage (when no featured outfit)
+│   ├── queries.ts           # Server-side DB queries (getFeaturedOutfit)
 │   ├── supabase.ts          # Browser Supabase client
 │   ├── supabase-server.ts   # Server Supabase client
 │   ├── types.ts             # TypeScript types
 │   └── utils.ts             # Helper functions
+├── public/
+│   └── images/
+│       ├── platforms/       # E-commerce store logos (64×64px PNG)
+│       └── landing/         # Static fallback images for homepage
 ├── supabase/
-│   ├── migrations/          # Database schema SQL
+│   ├── migrations/
+│   │   ├── 001_initial_schema.sql        # Tables, RLS, indexes
+│   │   └── 002_featured_outfit.sql       # is_featured column + trigger
 │   └── seed.sql             # Demo data
 ├── middleware.ts             # Auth protection middleware
 └── README.md                # This file
@@ -203,11 +215,11 @@ All branding and limits are configurable in `lib/config.ts`:
 
 ```typescript
 export const siteConfig = {
-  name: "StyleLink",              // Change platform name here
+  name: "StyleLink", // Change platform name here
   tagline: "Shop Creator Looks",
   maxProductsPerOutfit: 15,
   // ... all other config
-}
+};
 ```
 
 Change this one file to rebrand the entire platform.
