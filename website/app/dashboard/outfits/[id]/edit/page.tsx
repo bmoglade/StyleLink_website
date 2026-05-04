@@ -48,6 +48,7 @@ export default function EditOutfitPage() {
   const [success, setSuccess] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isPageLoading, setIsPageLoading] = useState(true);
+  const [isFeatured, setIsFeatured] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [creatorUsername, setCreatorUsername] = useState("");
 
@@ -91,6 +92,7 @@ export default function EditOutfitPage() {
       setExistingImageUrl(outfit.image_url);
       setImagePreview(outfit.image_url);
       setIsPublished(outfit.is_published);
+      setIsFeatured(outfit.is_featured || false);
 
       const existingProducts: ProductFormData[] = (productsData || []).map((p: any) => ({
         id: p.id,
@@ -236,6 +238,7 @@ export default function EditOutfitPage() {
           category,
           image_url: finalImageUrl,
           is_published: isPublished,
+          is_featured: isFeatured,
           updated_at: new Date().toISOString(),
         })
         .eq("id", outfitId);
@@ -565,6 +568,21 @@ export default function EditOutfitPage() {
               {isPublished
                 ? "Visible on your storefront"
                 : "Hidden from public view"}
+            </p>
+          </div>
+        </div>
+
+        {/* Feature on Landing Page Toggle */}
+        <div className="flex items-center gap-4 border border-gold-accent/30 bg-surface p-4">
+          <Toggle enabled={isFeatured} onChange={setIsFeatured} />
+          <div>
+            <p className="text-sm font-medium text-gold-accent">
+              ⭐ Feature on Landing Page
+            </p>
+            <p className="text-xs text-text-secondary">
+              {isFeatured
+                ? "This outfit is displayed on the homepage (only one can be featured)"
+                : "Toggle ON to showcase this outfit on the homepage"}
             </p>
           </div>
         </div>
