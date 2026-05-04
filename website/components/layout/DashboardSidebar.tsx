@@ -124,7 +124,7 @@ export function DashboardSidebar() {
                     className={cn(
                       "flex items-center gap-3 px-3 py-2.5 text-sm font-medium transition-colors duration-200",
                       isActive
-                        ? "bg-background text-primary-dark"
+                        ? "bg-background text-text-primary"
                         : "text-text-secondary hover:bg-background hover:text-text-primary"
                     )}
                   >

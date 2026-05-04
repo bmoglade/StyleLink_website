@@ -66,7 +66,7 @@ export default function LoginPage() {
         <div className="w-full max-w-sm">
           {/* Heading */}
           <div className="mb-8 text-center">
-            <h1 className="font-display text-3xl font-bold text-primary-dark">
+            <h1 className="font-display text-3xl font-bold text-text-primary">
               Welcome back
             </h1>
             <p className="mt-2 text-sm text-text-secondary">
@@ -94,7 +94,7 @@ export default function LoginPage() {
               <div className="w-full border-t border-border" />
             </div>
             <div className="relative flex justify-center text-xs">
-              <span className="bg-surface px-4 text-text-secondary">or</span>
+              <span className="bg-background px-4 text-text-secondary">or</span>
             </div>
           </div>
 

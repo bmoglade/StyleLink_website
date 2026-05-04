@@ -8,12 +8,12 @@ export default function AffiliateDisclosurePage() {
       <Header />
       <main className="flex-1">
         <div className="container-content py-12">
-          <h1 className="font-display text-3xl font-bold text-primary-dark">
+          <h1 className="font-display text-3xl font-bold text-text-primary">
             Affiliate Disclosure
           </h1>
           <div className="mt-8 space-y-6 text-sm text-text-secondary leading-relaxed">
             <p>
-              <strong className="text-primary-dark">
+              <strong className="text-text-primary">
                 {siteConfig.name} contains affiliate links.
               </strong>
             </p>
@@ -25,7 +25,7 @@ export default function AffiliateDisclosurePage() {
               commission at no additional cost to you.
             </p>
 
-            <h2 className="font-display text-lg font-semibold text-primary-dark">
+            <h2 className="font-display text-lg font-semibold text-text-primary">
               What This Means
             </h2>
             <ul className="list-disc pl-5 space-y-1">
@@ -35,7 +35,7 @@ export default function AffiliateDisclosurePage() {
               <li>Affiliate commissions help creators produce content for free</li>
             </ul>
 
-            <h2 className="font-display text-lg font-semibold text-primary-dark">
+            <h2 className="font-display text-lg font-semibold text-text-primary">
               Our Commitment
             </h2>
             <p>

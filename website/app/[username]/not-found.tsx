@@ -14,7 +14,7 @@ export default function CreatorNotFound() {
       <Header />
       <main className="flex flex-1 items-center justify-center">
         <div className="text-center px-4">
-          <h1 className="font-display text-5xl font-bold text-primary-dark">
+          <h1 className="font-display text-5xl font-bold text-text-primary">
             404
           </h1>
           <p className="mt-4 text-lg text-text-secondary">
