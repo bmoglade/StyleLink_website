@@ -165,6 +165,17 @@ If developing behind a corporate network with SSL inspection:
 35. ✅ Homepage is async Server Component (queries DB for featured outfit)
 36. ✅ "Feature on Landing Page" toggle in both Create and Edit outfit forms
 
+## HOMEPAGE LAYOUT POLISH (COMPLETED — v0.5.1)
+
+37. ✅ Scrolling brand logo strip (infinite CSS animation, auto-reads from platformLogos config)
+38. ✅ 4 new platforms added: Tata Cliq, Bewakoof, H&M, Zara
+39. ✅ Homepage layout: 3 stacked sections (Hero 38/62 → Brand strip → Info 45/55)
+40. ✅ Content-driven height (no forced min-height dead space)
+41. ✅ All sections share same container-content width (consistent alignment)
+42. ✅ Brand strip background contained within content width (not bleeding full page)
+43. ✅ Golden styling for "Build → Share → Earn" and tagline quote
+44. ✅ Outfit image uses object-contain with flex centering
+
 ---
 
 ## WHAT NOT TO BUILD
@@ -207,13 +218,17 @@ Border:         #EDE9E3
 ### Platform Badge Colors
 
 ```
-Amazon:   bg #FF9900, text #000000
-Flipkart: bg #2874F0, text #FFFFFF
-Myntra:   bg #FF3F6C, text #FFFFFF
-Nykaa:    bg #FC2779, text #FFFFFF
-Ajio:     bg #1A1A1A, text #FFFFFF
-Meesho:   bg #9B2EFA, text #FFFFFF
-Other:    bg #666666, text #FFFFFF
+Amazon:    bg #FF9900, text #000000
+Flipkart:  bg #2874F0, text #FFFFFF
+Myntra:    bg #FF3F6C, text #FFFFFF
+Nykaa:     bg #FC2779, text #FFFFFF
+Ajio:      bg #1A1A1A, text #FFFFFF
+Meesho:    bg #9B2EFA, text #FFFFFF
+Tata Cliq: bg #E42574, text #FFFFFF
+Bewakoof:  bg #FDD835, text #000000
+H&M:       bg #E50010, text #FFFFFF
+Zara:      bg #000000, text #FFFFFF
+Other:     bg #666666, text #FFFFFF
 ```
 
 ### Layout Rules

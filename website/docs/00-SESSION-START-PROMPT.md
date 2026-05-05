@@ -26,12 +26,14 @@ Based on my reading of all three files, I understand:
 - **Folder structure**: `app/` for routes, `components/` for UI, `lib/` for utilities, `docs/` for documentation
 - **Design system**: CSS variable-based colors, editorial/fashion aesthetic, Tailwind utility classes
 
-**Current status (as of v0.4.0 — May 2025):**
+**Current status (as of v0.5.1 — May 2026):**
 
 - ✅ **LIVE in production** at https://stylelink-phi.vercel.app/
 - ✅ End-to-end cycle working: Code → GitHub → Vercel → Live site
 - ✅ Phase 1 + Phase 2 features complete
 - ✅ v0.4.0 UI/UX improvements deployed (mobile responsive dashboard, Google OAuth buttons, navigation fixes)
+- ✅ v0.5.0 Landing page redesign (admin-featured outfit, WearThis-style card, platform logos)
+- ✅ v0.5.1 Homepage polish (scrolling brand strip, 4 new platforms, layout alignment, bg fix)
 - ✅ Vercel auto-deploys on push to `main` branch on GitHub
 - ✅ Supabase Auth configured for production URL
 - 🔄 Currently in **user testing phase** — collecting feedback for improvements

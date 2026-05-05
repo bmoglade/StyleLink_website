@@ -51,21 +51,21 @@ External:
 
 ## Route Map
 
-| Route                          | Type          | Auth      | Description                              |
-| ------------------------------ | ------------- | --------- | ---------------------------------------- |
-| `/`                            | SSR (async)   | Public    | Homepage with featured outfit from DB    |
-| `/[username]`                  | SSR           | Public    | Creator storefront (MOST IMPORTANT PAGE) |
-| `/login`                       | Client        | Public    | Email + Google login                     |
-| `/signup`                      | Client        | Public    | Signup + username setup                  |
-| `/auth/callback`               | Route Handler | Public    | OAuth callback                           |
-| `/dashboard`                   | SSR           | Protected | Stats + outfit list                      |
-| `/dashboard/outfits/new`       | Client        | Protected | Create outfit form                       |
-| `/dashboard/outfits/[id]/edit` | Client        | Protected | Edit outfit form                         |
-| `/dashboard/settings`          | Client        | Protected | Profile settings                         |
-| `/go/[productId]`              | Route Handler | Public    | Click tracking + redirect                |
-| `/privacy`                     | SSR           | Public    | Privacy policy                           |
-| `/terms`                       | SSR           | Public    | Terms of service                         |
-| `/disclosure`                  | SSR           | Public    | Affiliate disclosure                     |
+| Route                          | Type          | Auth      | Description                                                   |
+| ------------------------------ | ------------- | --------- | ------------------------------------------------------------- |
+| `/`                            | SSR (async)   | Public    | Homepage with featured outfit from DB + scrolling brand strip |
+| `/[username]`                  | SSR           | Public    | Creator storefront (MOST IMPORTANT PAGE)                      |
+| `/login`                       | Client        | Public    | Email + Google login                                          |
+| `/signup`                      | Client        | Public    | Signup + username setup                                       |
+| `/auth/callback`               | Route Handler | Public    | OAuth callback                                                |
+| `/dashboard`                   | SSR           | Protected | Stats + outfit list                                           |
+| `/dashboard/outfits/new`       | Client        | Protected | Create outfit form                                            |
+| `/dashboard/outfits/[id]/edit` | Client        | Protected | Edit outfit form                                              |
+| `/dashboard/settings`          | Client        | Protected | Profile settings                                              |
+| `/go/[productId]`              | Route Handler | Public    | Click tracking + redirect                                     |
+| `/privacy`                     | SSR           | Public    | Privacy policy                                                |
+| `/terms`                       | SSR           | Public    | Terms of service                                              |
+| `/disclosure`                  | SSR           | Public    | Affiliate disclosure                                          |
 
 ---
 
@@ -228,8 +228,8 @@ website/
 │   ├── terms/page.tsx           ← Static legal page
 │   ├── disclosure/page.tsx      ← Static legal page
 │   ├── layout.tsx               ← Root layout (fonts, GA, metadata)
-│   ├── globals.css              ← Tailwind + custom CSS
-│   └── page.tsx                 ← Homepage
+│   ├── globals.css              ← Tailwind + custom CSS + scroll-x keyframes
+│   └── page.tsx                 ← Homepage (hero + brand strip + info sections)
 ├── components/
 │   ├── analytics/GoogleAnalytics.tsx
 │   ├── creator/
@@ -278,6 +278,12 @@ website/
 │   NEW in v0.4.0:
 ├── components/layout/LogoutButton.tsx  ← Client component for header logout
 ├── components/dashboard/DashboardOutfitList.tsx ← Outfit list + category filter
+│
+│   NEW in v0.5.0/v0.5.1:
+├── lib/queries.ts               ← Server-side DB queries (getFeaturedOutfit)
+├── lib/landing-mockup.ts        ← Static fallback data for homepage
+├── public/images/platforms/     ← E-commerce store logo PNGs (64×64px)
+├── public/images/landing/       ← Static fallback images for homepage card
 ├── next.config.mjs             ← Next.js config (must be .mjs, not .ts)
 ├── tailwind.config.ts
 ├── package.json
@@ -298,6 +304,9 @@ website/
 | React 18.2.0 (pinned)                          | React 18.3.x incompatible with Next.js 14.2 App Router                     |
 | Fonts via `<link>` tags                        | `next/font/google` fails behind corporate proxy                            |
 | `NODE_TLS_REJECT_UNAUTHORIZED=0` in dev        | Required for local development behind corporate SSL inspection             |
+| Homepage as async Server Component             | Queries DB for featured outfit; avoids client-side loading flicker          |
+| CSS `@keyframes` for scrolling brand strip     | Pure CSS animation, no JS overhead, infinite loop                          |
+| Brand strip bg inside container (not section)  | Prevents background from bleeding full page width                          |
 
 ---
 
