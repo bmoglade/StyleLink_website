@@ -207,6 +207,98 @@ To enable Google login, complete these steps:
 
 ---
 
+## [0.5.0] - 2026-05-04 - Landing Page Redesign + Admin-Featured Outfit
+
+### Added
+
+- **Admin-Featured Outfit on Homepage** — Admin can mark any outfit as "featured" from the dashboard. The homepage automatically displays that outfit's image + products (no manual file editing needed).
+  - New toggle: ⭐ "Feature on Landing Page" in both Create and Edit outfit forms
+  - Database trigger ensures only ONE outfit is featured at a time
+  - Fallback: if no outfit is featured, static mockup data is displayed
+- **`is_featured` column on outfits table** — Boolean flag, default false. Migration: `002_featured_outfit.sql`
+- **`lib/queries.ts`** — Server-side query module. First function: `getFeaturedOutfit()` — reads featured outfit + products from DB
+- **`lib/landing-mockup.ts`** — Static fallback data for homepage (used only when no featured outfit is set)
+- **Platform Logo System** — Square store logos on product cards. Loads from `/images/platforms/<platform>.png`. Fallback: colored square with first letter.
+  - `platformLogos` config in `lib/config.ts` — maps platform names to image paths
+  - Created `public/images/platforms/` folder (add logo PNGs here)
+- **Landing page image folder** — `public/images/landing/` for outfit + product images (static fallback only)
+  - `README.md` inside folder with specs and instructions
+- **Outfit image in homepage card** — Left panel shows outfit image (from DB or static file)
+- **Product thumbnails in homepage card** — Each product row shows its image
+
+### Changed
+
+- **Homepage Outfit Card — WearThis-style layout** — Two-panel: outfit image (left) + product list (right)
+- **Product Card (`ProductItem.tsx`)** — Redesigned:
+  - Image hero at top (full width)
+  - Product name below
+  - Bottom row: square store logo + platform name (left) | Shop ↗ button (right)
+  - Changed from circle to square logos
+- **Homepage is now `async` Server Component** — Queries database for featured outfit
+- **Removed ALL prices from landing page** — No individual prices, no total. Clean visual showcase only.
+- **Platform logos: circle → square** — Both homepage mockup and real product cards use square logos now
+- **Landing page mockup data** — Moved from hardcoded in `page.tsx` to separate `lib/landing-mockup.ts` (single source of truth for fallback content)
+
+### Fixed
+
+- **"Event handlers cannot be passed to Client Component props"** — Removed `onError`/`onMouseEnter` from Server Component (`page.tsx`). Added `"use client"` to `ProductItem.tsx` and `OutfitCard.tsx` which need interactivity.
+- **Images not loading on landing page** — File extension mismatch (code referenced `.svg` but actual files were `.jpg`/`.png`). Fixed paths to match actual files.
+
+### Database Migration Required
+
+Run in Supabase SQL Editor:
+
+```sql
+ALTER TABLE outfits ADD COLUMN IF NOT EXISTS is_featured BOOLEAN DEFAULT false;
+CREATE INDEX IF NOT EXISTS idx_outfits_featured ON outfits(is_featured) WHERE is_featured = true;
+
+CREATE OR REPLACE FUNCTION ensure_single_featured_outfit()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF NEW.is_featured = true THEN
+    UPDATE outfits SET is_featured = false WHERE id != NEW.id AND is_featured = true;
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS trg_single_featured_outfit ON outfits;
+CREATE TRIGGER trg_single_featured_outfit
+  BEFORE INSERT OR UPDATE OF is_featured ON outfits
+  FOR EACH ROW
+  WHEN (NEW.is_featured = true)
+  EXECUTE FUNCTION ensure_single_featured_outfit();
+```
+
+**⚠️ IMPORTANT: Run this migration BEFORE deploying the new code. The app will error ("Database error querying schema") if the `is_featured` column doesn't exist.**
+
+### New Files
+
+| File | Purpose |
+|------|---------|
+| `website/lib/queries.ts` | Server-side DB queries (getFeaturedOutfit) |
+| `website/lib/landing-mockup.ts` | Static fallback data for homepage |
+| `website/supabase/migrations/002_featured_outfit.sql` | Migration: add is_featured column + trigger |
+| `website/public/images/platforms/` | Folder for e-commerce store logo PNGs |
+| `website/public/images/landing/` | Folder for static landing page images (fallback) |
+| `website/public/images/landing/README.md` | Instructions for image specs |
+
+### How to Use (Admin Flow)
+
+1. Run the migration SQL above
+2. Login as admin at `/login`
+3. Create an outfit at `/dashboard/outfits/new`
+4. Toggle ⭐ "Feature on Landing Page" → ON
+5. Publish — homepage auto-displays this outfit
+6. To change: edit outfit or create new one with ⭐ toggled on
+
+### Known Issue
+
+- **"Database error querying schema" on login** — This occurs if the `is_featured` column hasn't been added to the database yet. Run the migration SQL above to fix.
+- **Admin user creation via SQL** — Supabase `crypt()` function can be unreliable. Recommended: sign up through the website UI at `/signup` instead.
+
+---
+
 ## [Unreleased] - Changes in Progress
 
 > Add entries here as new features/fixes are implemented.
