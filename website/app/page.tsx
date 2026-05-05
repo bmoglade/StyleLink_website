@@ -10,11 +10,13 @@ import { getFeaturedOutfit } from "@/lib/queries";
  * ==================
  * Layout: Option C — Full-width stacked sections
  *
- * Section 1 (Hero):     ~60% of viewport — 40/60 split (headline left, outfit right)
- * Divider:              Thin brand logo scrolling strip
- * Section 2 (Bottom):   ~30% of viewport — How it works + Earnings (45/55 centered)
+ * Section 1 (Hero):     ~60vh — 38/62 split (headline left, outfit right)
+ * Divider:              Thin brand logo scrolling strip (fully visible)
+ * Section 2 (Bottom):   Compact — How it works + Earnings (45/55 centered)
  *
- * Visual rhythm: Large hero dominates → thin separator → compact info section
+ * Brand strip auto-reads from platformLogos config.
+ * Add logo image to public/images/platforms/ → strip auto-updates.
+ * If image missing → shows platform name as text fallback.
  */
 
 export default async function HomePage() {
@@ -44,20 +46,25 @@ export default async function HomePage() {
         })),
       };
 
+  // Get all platforms with logos for the scrolling strip (exclude "Other")
+  const brandStripPlatforms = Object.keys(platformLogos).filter(
+    (p) => p !== "Other"
+  );
+
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
       <main className="flex-1">
 
         {/* ═══════════════════════════════════════════════════════════
-            SECTION 1: HERO — Dominant section (~60vh)
-            40% headline (left) / 60% outfit card (right)
+            SECTION 1: HERO — Dominant (~60vh)
+            38% headline (left) / 62% outfit card (right)
             ═══════════════════════════════════════════════════════════ */}
         <section className="flex items-center min-h-[60vh] py-16 sm:py-20 lg:py-24">
           <div className="container-content w-full">
-            <div className="flex flex-col gap-10 lg:flex-row lg:items-center lg:gap-12">
+            <div className="flex flex-col gap-10 lg:flex-row lg:items-center lg:gap-14">
 
-              {/* Left — 40% — Headline + CTA */}
+              {/* Left — 38% — Headline + CTA */}
               <div className="lg:w-[38%] text-center lg:text-left">
                 <h1 className="font-display text-4xl font-bold text-text-primary sm:text-5xl lg:text-6xl leading-tight">
                   Monetize
@@ -77,11 +84,11 @@ export default async function HomePage() {
                 </div>
               </div>
 
-              {/* Right — 60% — Outfit Card + Tagline */}
+              {/* Right — 62% — Outfit Card + Tagline */}
               <div className="lg:w-[62%] flex flex-col items-center lg:items-end">
                 <div className="w-full max-w-lg border border-border bg-surface overflow-hidden">
                   <div className="flex">
-                    {/* Outfit image (left panel) — vertically centered */}
+                    {/* Outfit image — vertically centered */}
                     <div className="w-40 sm:w-48 flex-shrink-0 bg-background border-r border-border overflow-hidden flex items-center justify-center">
                       <div className="aspect-[3/4] w-full flex items-center justify-center">
                         {displayData.outfitImage ? (
@@ -103,7 +110,7 @@ export default async function HomePage() {
                       </div>
                     </div>
 
-                    {/* Right side: Title + product list */}
+                    {/* Product list */}
                     <div className="flex-1 min-w-0 p-4 sm:p-5">
                       <h3 className="font-display text-lg font-semibold text-text-primary">
                         {displayData.title}
@@ -130,18 +137,26 @@ export default async function HomePage() {
         </section>
 
         {/* ═══════════════════════════════════════════════════════════
-            DIVIDER: Thin brand logo scrolling strip
+            DIVIDER: Brand logo scrolling strip — FULLY VISIBLE
+            Auto-reads from platformLogos config. Add new logo file
+            to public/images/platforms/ → auto-appears here.
             ═══════════════════════════════════════════════════════════ */}
-        <section className="border-y border-border bg-surface/50 py-4 overflow-hidden">
-          <div className="relative">
-            <div className="flex animate-scroll-x gap-12 sm:gap-16">
-              {siteConfig.platforms.filter((p) => p !== "Other").map((platform) => (
+        <section className="border-y border-border bg-surface py-5 overflow-hidden">
+          <div className="container-content mb-2">
+            <p className="text-[10px] uppercase tracking-widest text-text-secondary text-center">
+              Shop from trusted platforms
+            </p>
+          </div>
+          <div className="relative mt-3">
+            <div className="flex animate-scroll-x gap-10 sm:gap-14">
+              {/* Three sets for seamless infinite scroll */}
+              {brandStripPlatforms.map((platform) => (
                 <BrandLogo key={`a-${platform}`} platform={platform} />
               ))}
-              {siteConfig.platforms.filter((p) => p !== "Other").map((platform) => (
+              {brandStripPlatforms.map((platform) => (
                 <BrandLogo key={`b-${platform}`} platform={platform} />
               ))}
-              {siteConfig.platforms.filter((p) => p !== "Other").map((platform) => (
+              {brandStripPlatforms.map((platform) => (
                 <BrandLogo key={`c-${platform}`} platform={platform} />
               ))}
             </div>
@@ -149,10 +164,10 @@ export default async function HomePage() {
         </section>
 
         {/* ═══════════════════════════════════════════════════════════
-            SECTION 2: INFO — Compact section (~30vh)
-            How it works (45%) + Earnings (55%) — centered to page
+            SECTION 2: INFO — Compact (~30vh)
+            How it works (45%) + Earnings (55%) — centered max-w-4xl
             ═══════════════════════════════════════════════════════════ */}
-        <section className="bg-surface py-12 sm:py-14 lg:py-16">
+        <section className="bg-background py-12 sm:py-14 lg:py-16">
           <div className="container-content">
             <div className="mx-auto max-w-4xl">
               <div className="grid grid-cols-1 gap-10 md:grid-cols-[45%_55%] md:gap-12 lg:gap-16 items-start">
@@ -186,7 +201,7 @@ export default async function HomePage() {
                         {[1, 2, 3, 4, 5].map((i) => (
                           <div
                             key={i}
-                            className="h-7 w-7 rounded-full border-2 border-surface bg-border"
+                            className="h-7 w-7 rounded-full border-2 border-background bg-border"
                           />
                         ))}
                       </div>
@@ -208,24 +223,27 @@ export default async function HomePage() {
 }
 
 /**
- * Brand Logo — Single platform logo in the scrolling strip.
+ * Brand Logo — Platform logo in the scrolling strip.
+ * Reads from platformLogos config.
+ * If image file exists → shows logo at full opacity.
+ * If image file missing → shows platform name as colored text.
  */
 function BrandLogo({ platform }: { platform: string }) {
   const logoSrc = platformLogos[platform];
   const colors = platformColors[platform] || platformColors.Other;
 
   return (
-    <div className="flex-shrink-0 flex items-center justify-center h-8 w-20 opacity-40 hover:opacity-100 transition-opacity duration-300">
+    <div className="flex-shrink-0 flex items-center justify-center h-10 px-2">
       {logoSrc ? (
         /* eslint-disable-next-line @next/next/no-img-element */
         <img
           src={logoSrc}
           alt={platform}
-          className="h-6 w-auto object-contain"
+          className="h-8 w-auto object-contain opacity-80 hover:opacity-100 transition-opacity duration-200"
         />
       ) : (
         <span
-          className="text-xs font-bold tracking-wide"
+          className="text-sm font-bold tracking-wide whitespace-nowrap opacity-80"
           style={{ color: colors.bg }}
         >
           {platform}

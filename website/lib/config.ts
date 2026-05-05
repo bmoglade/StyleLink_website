@@ -55,7 +55,7 @@ export const siteConfig = {
     "Other",
   ] as const,
 
-  // Supported e-commerce platforms
+  // Supported e-commerce platforms for product creation dropdown
   // To add a new platform: add here AND add color entry in platformColors below
   platforms: [
     "Amazon",
@@ -64,6 +64,10 @@ export const siteConfig = {
     "Nykaa",
     "Ajio",
     "Meesho",
+    "Tata Cliq",
+    "Bewakoof",
+    "H&M",
+    "Zara",
     "Other",
   ] as const,
 } as const;
@@ -83,6 +87,10 @@ export const platformColors: Record<string, { bg: string; text: string }> = {
   Nykaa: { bg: "#FC2779", text: "#FFFFFF" },
   Ajio: { bg: "#1A1A1A", text: "#FFFFFF" },
   Meesho: { bg: "#9B2EFA", text: "#FFFFFF" },
+  "Tata Cliq": { bg: "#E42574", text: "#FFFFFF" },
+  Bewakoof: { bg: "#FDD835", text: "#000000" },
+  "H&M": { bg: "#E50010", text: "#FFFFFF" },
+  Zara: { bg: "#000000", text: "#FFFFFF" },
   Other: { bg: "#666666", text: "#FFFFFF" },
 };
 
@@ -100,6 +108,23 @@ export const platformColors: Record<string, { bg: string; text: string }> = {
  *
  * When logo is null → falls back to colored square with first letter.
  */
+/**
+ * Platform Logo Configuration
+ * ============================
+ * Maps platform names to their logo image paths.
+ * Place logo images in: public/images/platforms/
+ * Recommended: 64×64px or 120×40px PNG with transparent background.
+ *
+ * HOW TO ADD A NEW STORE:
+ * 1. Add the platform name to siteConfig.platforms above
+ * 2. Add color entry to platformColors above
+ * 3. Add logo path below (or null for text fallback)
+ * 4. Save logo image to: website/public/images/platforms/<name>.png
+ * 5. Everything auto-updates: product dropdown, badges, scrolling strip
+ *
+ * The scrolling brand strip on the homepage reads from this list.
+ * If a logo image file is missing, the strip shows the platform name in text.
+ */
 export const platformLogos: Record<string, string | null> = {
   Amazon: "/images/platforms/amazon.png",
   Flipkart: "/images/platforms/flipkart.png",
@@ -107,9 +132,12 @@ export const platformLogos: Record<string, string | null> = {
   Nykaa: "/images/platforms/nykaa.png",
   Ajio: "/images/platforms/ajio.png",
   Meesho: "/images/platforms/meesho.png",
+  "Tata Cliq": "/images/platforms/tatacliq.png",
+  Bewakoof: "/images/platforms/bewakoof.png",
+  "H&M": "/images/platforms/hm.png",
+  Zara: "/images/platforms/zara.png",
   Other: null,
 };
 
 export type Category = (typeof siteConfig.categories)[number];
 export type Platform = (typeof siteConfig.platforms)[number];
-
