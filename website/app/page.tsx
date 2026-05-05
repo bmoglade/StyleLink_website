@@ -62,7 +62,7 @@ export default async function HomePage() {
                   <br />
                   Your Taste.
                 </h1>
-                <p className="mt-6 text-lg text-text-secondary">
+                <p className="mt-6 text-lg font-semibold text-gold-accent">
                   Build → Share → Earn
                 </p>
                 <div className="mt-8">
@@ -80,15 +80,15 @@ export default async function HomePage() {
                 <div className="w-full max-w-md border border-border bg-surface overflow-hidden">
                   {/* Two-panel: Outfit image (left) + product list (right) */}
                   <div className="flex">
-                    {/* Outfit image (left panel) */}
-                    <div className="w-40 sm:w-48 flex-shrink-0 bg-background border-r border-border overflow-hidden">
-                      <div className="aspect-[3/4] w-full">
+                    {/* Outfit image (left panel) — vertically centered, contained */}
+                    <div className="w-40 sm:w-48 flex-shrink-0 bg-background border-r border-border overflow-hidden flex items-center justify-center">
+                      <div className="aspect-[3/4] w-full flex items-center justify-center">
                         {displayData.outfitImage ? (
                           /* eslint-disable-next-line @next/next/no-img-element */
                           <img
                             src={displayData.outfitImage}
                             alt={displayData.title}
-                            className="h-full w-full object-cover"
+                            className="h-full w-full object-contain"
                           />
                         ) : (
                           <div className="flex h-full w-full items-center justify-center text-text-secondary/30">
@@ -122,11 +122,38 @@ export default async function HomePage() {
                   </div>
                 </div>
 
-                {/* Emotional closer below card */}
-                <p className="mt-6 max-w-sm text-center text-sm italic text-text-secondary lg:text-right">
+                {/* Emotional tagline — golden, prominent, full width of card */}
+                <p className="mt-6 w-full max-w-md text-center text-base font-display font-semibold italic text-gold-accent lg:text-right">
                   &ldquo;{displayData.tagline}&rdquo;
                 </p>
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Brand Logo Strip — Scrolling e-commerce partner logos */}
+        <section className="border-t border-border bg-background py-6 overflow-hidden">
+          <div className="relative">
+            {/* Scrolling track — duplicated for infinite loop effect */}
+            <div className="flex animate-scroll-x gap-12 sm:gap-16">
+              {/* First set */}
+              {siteConfig.platforms
+                .filter((p) => p !== "Other")
+                .map((platform) => (
+                  <BrandLogo key={`a-${platform}`} platform={platform} />
+                ))}
+              {/* Duplicate for seamless loop */}
+              {siteConfig.platforms
+                .filter((p) => p !== "Other")
+                .map((platform) => (
+                  <BrandLogo key={`b-${platform}`} platform={platform} />
+                ))}
+              {/* Third set for wider screens */}
+              {siteConfig.platforms
+                .filter((p) => p !== "Other")
+                .map((platform) => (
+                  <BrandLogo key={`c-${platform}`} platform={platform} />
+                ))}
             </div>
           </div>
         </section>
@@ -180,6 +207,36 @@ export default async function HomePage() {
         </section>
       </main>
       <Footer />
+    </div>
+  );
+}
+
+/**
+ * Brand Logo — Single platform logo in the scrolling strip.
+ * Shows image from /images/platforms/<platform>.png
+ * Falls back to platform name text if image not available.
+ */
+function BrandLogo({ platform }: { platform: string }) {
+  const logoSrc = platformLogos[platform];
+  const colors = platformColors[platform] || platformColors.Other;
+
+  return (
+    <div className="flex-shrink-0 flex items-center justify-center h-10 w-24 opacity-50 hover:opacity-100 transition-opacity duration-300">
+      {logoSrc ? (
+        /* eslint-disable-next-line @next/next/no-img-element */
+        <img
+          src={logoSrc}
+          alt={platform}
+          className="h-8 w-auto object-contain"
+        />
+      ) : (
+        <span
+          className="text-sm font-bold tracking-wide"
+          style={{ color: colors.bg }}
+        >
+          {platform}
+        </span>
+      )}
     </div>
   );
 }
