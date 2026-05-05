@@ -140,8 +140,8 @@ export default async function HomePage() {
             DIVIDER: Brand logo scrolling strip
             Constrained to same content width as hero + bottom sections
             ═══════════════════════════════════════════════════════════ */}
-        <section className="border-y border-border bg-surface py-4">
-          <div className="container-content">
+        <section className="py-4">
+          <div className="container-content border-y border-border bg-surface rounded-md py-4">
             <p className="text-[10px] uppercase tracking-widest text-text-secondary text-center mb-3">
               Shop from trusted platforms
             </p>

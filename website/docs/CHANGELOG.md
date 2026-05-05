@@ -299,6 +299,55 @@ CREATE TRIGGER trg_single_featured_outfit
 
 ---
 
+## [0.5.1] - 2026-05-05 - Homepage Layout Polish + New Platforms
+
+### Added
+
+- **Scrolling Brand Logo Strip** — Infinite horizontal scroll of e-commerce platform logos between hero and info sections
+  - "Shop from trusted platforms" label above
+  - Auto-reads from `platformLogos` config — add new logo image → strip auto-updates
+  - CSS `@keyframes scroll-x` animation (20s loop)
+- **4 New E-Commerce Platforms** — Tata Cliq, Bewakoof, H&M, Zara
+  - Added to `siteConfig.platforms` (appears in product creation dropdown)
+  - Added to `platformColors` (brand colors for badges)
+  - Added to `platformLogos` (logo paths — add PNGs to display)
+- **"Shop from trusted platforms"** — Label text above logo strip
+
+### Changed
+
+- **Homepage Layout → Option C (Stacked Sections):**
+  - Section 1 (Hero): 38%/62% horizontal split, content-driven height (no forced min-height)
+  - Divider: Thin brand logo strip constrained to content width
+  - Section 2 (Info): 45%/55% split, centered max-w-4xl
+- **Removed dead space** — `min-h-[60vh]` removed from hero (was forcing empty gap below content)
+- **Logo strip constrained** — Now uses same `container-content` width as hero and info sections (was full-width edge-to-edge, looked disproportionate)
+- **"Build → Share → Earn"** — Now golden (`text-gold-accent`) + `font-semibold` (was grey/light)
+- **Tagline quote** — Now golden, `font-display`, `font-semibold`, `text-base` (was small grey text, easily missed)
+- **Outfit image** — Changed to `object-contain` with flex centering (smaller images center vertically, larger images scale down to fit)
+- **Section 2 background** — Changed to `bg-background` (same as hero) for unified feel
+- **All sections aligned** — Share identical horizontal boundaries via `container-content`
+- **Consistent vertical padding** — Hero and Info both use `py-14/16/20`, strip uses `py-4`
+
+### Fixed
+
+- **Logo strip background bleeding full-width** — The `bg-surface` + `border-y` was on the `<section>` (full page width), making the strip background run edge-to-edge which looked weird. Moved background/border styling to the inner `container-content` div so it matches the bounded width of hero and info sections. Added `rounded-md` for clean edges.
+- **Logo strip too faint** — Increased opacity from 40% to 80% (clearly visible now)
+- **Logo strip too wide** — Wrapped in `container-content` to match other sections
+- **Scattered alignment** — All content now shares same max-width container
+
+### Platform Logos
+
+To add logos for the new platforms, save PNGs to:
+```
+website/public/images/platforms/
+  ├── tatacliq.png
+  ├── bewakoof.png
+  ├── hm.png
+  └── zara.png
+```
+
+---
+
 ## [Unreleased] - Changes in Progress
 
 > Add entries here as new features/fixes are implemented.
