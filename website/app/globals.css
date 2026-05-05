@@ -77,6 +77,20 @@
   .stagger-fade-in {
     animation: fade-in-up 0.5s ease forwards;
   }
+
+  /* Infinite horizontal scroll for brand logo strip */
+  .animate-scroll-x {
+    animation: scroll-x 20s linear infinite;
+  }
+}
+
+@keyframes scroll-x {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-33.333%);
+  }
 }
 
 @layer utilities {
