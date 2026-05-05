@@ -138,23 +138,25 @@ export default async function HomePage() {
 
         {/* ═══════════════════════════════════════════════════════════
             DIVIDER: Brand logo scrolling strip
-            Sits tight under hero — no extra gap
+            Constrained to same content width as hero + bottom sections
             ═══════════════════════════════════════════════════════════ */}
-        <section className="border-y border-border bg-surface py-4 overflow-hidden">
-          <p className="text-[10px] uppercase tracking-widest text-text-secondary text-center mb-3">
-            Shop from trusted platforms
-          </p>
-          <div className="relative">
-            <div className="flex animate-scroll-x gap-10 sm:gap-14">
-              {brandStripPlatforms.map((platform) => (
-                <BrandLogo key={`a-${platform}`} platform={platform} />
-              ))}
-              {brandStripPlatforms.map((platform) => (
-                <BrandLogo key={`b-${platform}`} platform={platform} />
-              ))}
-              {brandStripPlatforms.map((platform) => (
-                <BrandLogo key={`c-${platform}`} platform={platform} />
-              ))}
+        <section className="border-y border-border bg-surface py-4">
+          <div className="container-content">
+            <p className="text-[10px] uppercase tracking-widest text-text-secondary text-center mb-3">
+              Shop from trusted platforms
+            </p>
+            <div className="relative overflow-hidden">
+              <div className="flex animate-scroll-x gap-10 sm:gap-14">
+                {brandStripPlatforms.map((platform) => (
+                  <BrandLogo key={`a-${platform}`} platform={platform} />
+                ))}
+                {brandStripPlatforms.map((platform) => (
+                  <BrandLogo key={`b-${platform}`} platform={platform} />
+                ))}
+                {brandStripPlatforms.map((platform) => (
+                  <BrandLogo key={`c-${platform}`} platform={platform} />
+                ))}
+              </div>
             </div>
           </div>
         </section>
