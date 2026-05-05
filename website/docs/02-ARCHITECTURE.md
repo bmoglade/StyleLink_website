@@ -1,4 +1,4 @@
-olve this # StyleLink — Architecture Document (Updated)
+olve this cd # StyleLink — Architecture Document (Updated)
 
 > Last updated after Phase 1 completion.
 > This reflects the ACTUAL built system, including all changes made during development.
@@ -53,7 +53,7 @@ External:
 
 | Route                          | Type          | Auth      | Description                              |
 | ------------------------------ | ------------- | --------- | ---------------------------------------- |
-| `/`                            | SSR           | Public    | Homepage with value props                |
+| `/`                            | SSR (async)   | Public    | Homepage with featured outfit from DB    |
 | `/[username]`                  | SSR           | Public    | Creator storefront (MOST IMPORTANT PAGE) |
 | `/login`                       | Client        | Public    | Email + Google login                     |
 | `/signup`                      | Client        | Public    | Signup + username setup                  |
@@ -160,6 +160,7 @@ outfits (
   category TEXT,          -- "Office", "Casual", "Festive", "Beauty", "Home", "Other"
   image_url TEXT,
   is_published BOOLEAN,   -- false = draft, hidden from public
+  is_featured BOOLEAN,    -- true = displayed on homepage (only one at a time)
   created_at TIMESTAMPTZ,
   updated_at TIMESTAMPTZ
 )
@@ -253,13 +254,21 @@ website/
 │       ├── Skeleton.tsx
 │       └── Toggle.tsx
 ├── lib/
-│   ├── config.ts               ← ALL branding + limits (single source of truth)
+│   ├── config.ts               ← ALL branding + limits + platform logos (single source of truth)
+│   ├── landing-mockup.ts       ← Static fallback data for homepage outfit card
+│   ├── queries.ts              ← Server-side DB queries (getFeaturedOutfit)
 │   ├── supabase.ts             ← Browser client
 │   ├── supabase-server.ts      ← Server client + Admin client
 │   ├── types.ts                ← TypeScript interfaces
 │   └── utils.ts                ← Helpers (cn, formatPrice, truncate, etc.)
+├── public/
+│   └── images/
+│       ├── platforms/          ← E-commerce store logo PNGs (64×64px)
+│       └── landing/            ← Static fallback images for homepage card
 ├── supabase/
-│   ├── migrations/001_initial_schema.sql
+│   ├── migrations/
+│   │   ├── 001_initial_schema.sql
+│   │   └── 002_featured_outfit.sql
 │   ├── seed.sql
 │   └── test-data/insert_test_data.sql
 ├── docs/                        ← Project documentation

@@ -153,6 +153,18 @@ If developing behind a corporate network with SSL inspection:
 26. ✅ In-Stock toggle disabled on edit page (moved to bottom, greyed out)
 27. ✅ Mobile storefront: larger outfit images, all products visible
 
+## LANDING PAGE REDESIGN + ADMIN FEATURES (COMPLETED — v0.5.0)
+
+28. ✅ Homepage outfit card redesigned (WearThis-style: outfit image left + product list right)
+29. ✅ Admin-featured outfit system (toggle ⭐ in dashboard → auto-displays on homepage)
+30. ✅ Database trigger ensures only one featured outfit at a time
+31. ✅ Static fallback when no featured outfit (lib/landing-mockup.ts + public/images/landing/)
+32. ✅ Prices removed from landing page (clean visual showcase only)
+33. ✅ Platform logos: circle → square, with image support (public/images/platforms/)
+34. ✅ Product card redesigned (image hero + store logo square + Shop button)
+35. ✅ Homepage is async Server Component (queries DB for featured outfit)
+36. ✅ "Feature on Landing Page" toggle in both Create and Edit outfit forms
+
 ---
 
 ## WHAT NOT TO BUILD

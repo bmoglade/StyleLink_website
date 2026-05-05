@@ -9,7 +9,7 @@
 
 ---
 
-I'll read the three documentation files first before making any changes.
+Read the three documentation files first before making any changes.
 
 Let me read the files in order:
 
