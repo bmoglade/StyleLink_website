@@ -19,41 +19,78 @@ Let me read the files in order:
 
 Based on my reading of all three files, I understand:
 
-- **Product**: StyleLink is a creator affiliate storefront — creators curate outfit collections, visitors browse and click affiliate product links, generating revenue
+- **Product**: Influra (formerly StyleLink) is a creator affiliate storefront — creators curate outfit collections, visitors browse and click affiliate product links, generating revenue
 - **Tech stack**: Next.js 14 (App Router) + Supabase + Tailwind CSS + TypeScript
 - **Database tables**: `creators`, `outfits`, `products`, `clicks`
 - **Key constraints**: Corporate proxy workarounds, React pinned at 18.2, no `next/image`, no `next/font/google`, no `getUser()` in middleware, no `router.push()` post-auth
 - **Folder structure**: `app/` for routes, `components/` for UI, `lib/` for utilities, `docs/` for documentation
 - **Design system**: CSS variable-based colors, editorial/fashion aesthetic, Tailwind utility classes
 
-**Current status (as of v0.5.1 — May 2026):**
+---
 
-- ✅ **LIVE in production** at https://stylelink-phi.vercel.app/
-- ✅ End-to-end cycle working: Code → GitHub → Vercel → Live site
+### ⚠️ BRANCHING CONTEXT — READ THIS FIRST
+
+**I am working on branch `v1`** — this is the development branch for the next major release (v1.0.0).
+
+| Branch   | Purpose                               | Deploys To                                    |
+| -------- | ------------------------------------- | --------------------------------------------- |
+| `master` | Production (stable, frozen at v0.5.1) | Vercel production: `stylelink-phi.vercel.app` |
+| `v1`     | Development (all new work goes here)  | Vercel preview URL (testing only)             |
+
+**Rules:**
+
+- All code changes happen on `v1` — NEVER commit directly to `master`
+- Documentation is updated alongside code on `v1`
+- When `v1` is ready for release → PR in Foundry: `v1 → master` → merge → push to GitHub `main`
+- CHANGELOG entries go under `[Unreleased - v1.0.0]` until merged
+
+---
+
+**Production status (v0.5.1 — frozen on `master`):**
+
+- ✅ **LIVE** at https://stylelink-phi.vercel.app/
 - ✅ Phase 1 + Phase 2 features complete
-- ✅ v0.4.0 UI/UX improvements deployed (mobile responsive dashboard, Google OAuth buttons, navigation fixes)
+- ✅ v0.4.0 UI/UX improvements (mobile responsive dashboard, Google OAuth buttons, navigation fixes)
 - ✅ v0.5.0 Landing page redesign (admin-featured outfit, WearThis-style card, platform logos)
 - ✅ v0.5.1 Homepage polish (scrolling brand strip, 4 new platforms, layout alignment, bg fix)
-- ✅ Vercel auto-deploys on push to `main` branch on GitHub
-- ✅ Supabase Auth configured for production URL
-- 🔄 Currently in **user testing phase** — collecting feedback for improvements
-- ⏳ **Google OAuth** — buttons are in code, needs Supabase provider config to activate
-- ⏳ **Deferred** — Inline product editing from dashboard, expandable product rows
+
+**v1 branch status (in development):**
+
+- 🔨 Building next major version
+- Changes here do NOT affect production until merged to `master`
+- Test via Vercel preview URL (push `v1` to GitHub `develop` branch)
 
 **Deploy workflow:**
 
 ```bash
+# Day-to-day development (testing only — production untouched):
 git add .
 git commit -m "change description"
-git -c http.sslVerify=false push github main   # Triggers Vercel auto-deploy
+git push origin v1                                    # Push to Foundry v1 branch
+# Then on local PC:
+git pull origin v1
+git -c http.sslVerify=false push github develop       # Vercel preview URL
+
+# Release (when v1 is ready for production):
+# 1. Create PR in Foundry: v1 → master
+# 2. Merge the PR
+# 3. On local PC:
+git checkout master && git pull origin master
+git -c http.sslVerify=false push github main          # Vercel production updates
+git tag v1.0.0 && git push origin v1.0.0              # Tag the release
 ```
 
 **Git remotes:**
 
-- `origin` → Foundry (primary code repo)
-- `github` → GitHub (Vercel deployment source)
+- `origin` → Foundry (primary code repo — branches: `master`, `v1`)
+- `github` → GitHub (Vercel source — branches: `main` = production, `develop` = preview)
 
-Now I'll apply the suggested edit:
+**Branch mapping:**
+
+| Foundry  | →   | GitHub    | →   | Vercel                 |
+| -------- | --- | --------- | --- | ---------------------- |
+| `master` | →   | `main`    | →   | Production (live site) |
+| `v1`     | →   | `develop` | →   | Preview URL (testing)  |
 
 ---
 
@@ -68,6 +105,7 @@ Now I'll apply the suggested edit:
 3. **One feature per session** — keeps things focused and reduces errors
 4. **After the AI confirms understanding** — describe your change in plain language
 5. **If the AI asks clarifying questions** — answer them, don't skip
+6. **Confirm the branch** — the AI should be working on `v1`, not `master`
 
 ## Example Follow-up Messages
 
@@ -78,3 +116,4 @@ After the AI reads the docs and asks what you want, you can say things like:
 - "Add a 'Sort by newest/popular' dropdown on the storefront page"
 - "Change the gold accent color to teal"
 - "Add a new category called 'Gym Wear'"
+- "What's the diff between v1 and master right now?"

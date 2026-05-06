@@ -384,25 +384,63 @@ These are discussed ideas for future versions. Do NOT build unless explicitly re
 
 ---
 
-## Git Remotes
+## Git Remotes & Branching
 
-This repo has two remotes:
+This repo has two remotes and a branch-based version control workflow:
 
 | Remote   | URL                                   | Purpose                   |
 | -------- | ------------------------------------- | ------------------------- |
 | `origin` | Foundry (Palantir)                    | Primary code repo         |
 | `github` | github.com/bmoglade/StyleLink_website | Vercel auto-deploy source |
 
+### Branch Strategy
+
+| Foundry Branch | GitHub Branch | Vercel                     | Purpose                         |
+| -------------- | ------------- | -------------------------- | ------------------------------- |
+| `master`       | `main`        | **Production** (live site) | Stable, frozen between releases |
+| `v1`           | `develop`     | **Preview URL** (testing)  | All new development work        |
+
+### Rules
+
+1. **NEVER commit directly to `master`** — all work happens on `v1`
+2. **To release:** Create PR in Foundry (`v1 → master`) → merge → push `master` to GitHub `main`
+3. **To test:** Push `v1` to GitHub `develop` → Vercel generates preview URL automatically
+4. **After release:** Tag the version on `master`, then continue new work on `v1`
+
+### Daily Development (on `v1` branch)
+
 ```bash
-# Push to Foundry
-git push origin main
+# In Foundry/AI environment:
+git add . && git commit -m "description"
+git push origin v1
 
-# Push to GitHub (triggers Vercel deploy)
-git -c http.sslVerify=false push github main
-
-# Push to both
-git push origin main && git -c http.sslVerify=false push github main
+# On local PC (to see preview):
+git pull origin v1
+git -c http.sslVerify=false push github develop
+# → Vercel preview URL generated (only you can see)
 ```
+
+### Release to Production
+
+```bash
+# After PR merged in Foundry: v1 → master
+# On local PC:
+git checkout master
+git pull origin master
+git -c http.sslVerify=false push github main    # Production updates
+git tag v1.0.0
+git push origin v1.0.0                          # Tag the release
+
+# Start next version:
+git checkout v1
+```
+
+### Documentation Rules During Development
+
+- All doc updates happen on `v1` alongside code
+- CHANGELOG entries go under `[Unreleased - v1.0.0]`
+- When merged to `master` → rename to `[1.0.0] - date`
+- `master` docs are frozen between releases
 
 ---
 

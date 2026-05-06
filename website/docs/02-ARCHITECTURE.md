@@ -304,7 +304,7 @@ website/
 | React 18.2.0 (pinned)                          | React 18.3.x incompatible with Next.js 14.2 App Router                     |
 | Fonts via `<link>` tags                        | `next/font/google` fails behind corporate proxy                            |
 | `NODE_TLS_REJECT_UNAUTHORIZED=0` in dev        | Required for local development behind corporate SSL inspection             |
-| Homepage as async Server Component             | Queries DB for featured outfit; avoids client-side loading flicker          |
+| Homepage as async Server Component             | Queries DB for featured outfit; avoids client-side loading flicker         |
 | CSS `@keyframes` for scrolling brand strip     | Pure CSS animation, no JS overhead, infinite loop                          |
 | Brand strip bg inside container (not section)  | Prevents background from bleeding full page width                          |
 
@@ -391,12 +391,26 @@ Environment Variables (on Vercel dashboard):
 **Deploy workflow:**
 
 ```bash
-# Make changes locally
-git add .
-git commit -m "description of change"
-git -c http.sslVerify=false push github main   # Corporate proxy workaround
-# Vercel auto-deploys in ~1-2 minutes
+# Development (testing — production untouched):
+git push origin v1                                   # Push to Foundry v1 branch
+# On local PC:
+git pull origin v1
+git -c http.sslVerify=false push github develop      # Vercel preview URL
+
+# Release (when ready for production):
+# 1. PR in Foundry: v1 → master → merge
+# 2. On local PC:
+git checkout master && git pull origin master
+git -c http.sslVerify=false push github main         # Vercel production updates
+git tag v1.0.0 && git push origin v1.0.0             # Tag the release
 ```
+
+**Branch mapping:**
+
+| Foundry  | →   | GitHub    | →   | Vercel                 |
+| -------- | --- | --------- | --- | ---------------------- |
+| `master` | →   | `main`    | →   | Production (live site) |
+| `v1`     | →   | `develop` | →   | Preview URL (testing)  |
 
 **Zero code changes between dev and production.** Only environment variables differ.
 

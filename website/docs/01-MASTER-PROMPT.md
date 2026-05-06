@@ -266,6 +266,31 @@ Environment variables control deployment-specific settings (`.env.local` for dev
 
 ---
 
+## VERSION CONTROL & BRANCHING
+
+### Branch Strategy
+
+| Branch | Purpose | Deploys To |
+|--------|---------|------------|
+| `master` | Production (stable, frozen at v0.5.1) | Vercel production: `stylelink-phi.vercel.app` |
+| `v1` | Development (all new work) | Vercel preview URL (testing only) |
+
+### Rules
+
+1. **All code changes happen on `v1`** — NEVER commit to `master` directly
+2. **Documentation updates happen alongside code on `v1`**
+3. **CHANGELOG entries** go under `[Unreleased - v1.0.0]` until merged to `master`
+4. **To release:** PR in Foundry (`v1 → master`) → merge → push to GitHub `main` → tag
+
+### Foundry ↔ GitHub ↔ Vercel Mapping
+
+```
+Foundry master  →  GitHub main     →  Vercel PRODUCTION (users see this)
+Foundry v1      →  GitHub develop  →  Vercel PREVIEW (only you see this)
+```
+
+---
+
 ## FINAL INSTRUCTION
 
 You are not building a demo. You are building a product that a real creator will use to earn real affiliate income. Every detail matters. The UI must be beautiful. The code must be clean. The experience must be effortless.
@@ -273,3 +298,4 @@ You are not building a demo. You are building a product that a real creator will
 When in doubt, do less — but do it perfectly.
 
 **Always read this document and the Architecture Document before making any changes.**
+**Always confirm you are on the `v1` branch before writing code.**

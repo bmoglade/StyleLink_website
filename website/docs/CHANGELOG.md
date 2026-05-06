@@ -1,7 +1,10 @@
-# StyleLink — Changelog
+ude do# Influra — Changelog
 
 > All notable changes to this project are documented here.
 > Format: [version] - date - summary
+>
+> **Branching:** Production = `master` branch (v0.5.1). Development = `v1` branch.
+> New entries on `v1` go under `[Unreleased - v1.0.0]`. When merged → rename to `[1.0.0] - date`.
 
 ---
 
@@ -199,6 +202,7 @@ All internal links open in **same tab**:
 ### Google OAuth Setup Required
 
 To enable Google login, complete these steps:
+
 1. Google Cloud Console → Create OAuth 2.0 credentials
 2. Set redirect URI: `https://<SUPABASE_URL>/auth/v1/callback`
 3. Supabase Dashboard → Authentication → Providers → Google → Enable
@@ -274,14 +278,14 @@ CREATE TRIGGER trg_single_featured_outfit
 
 ### New Files
 
-| File | Purpose |
-|------|---------|
-| `website/lib/queries.ts` | Server-side DB queries (getFeaturedOutfit) |
-| `website/lib/landing-mockup.ts` | Static fallback data for homepage |
-| `website/supabase/migrations/002_featured_outfit.sql` | Migration: add is_featured column + trigger |
-| `website/public/images/platforms/` | Folder for e-commerce store logo PNGs |
-| `website/public/images/landing/` | Folder for static landing page images (fallback) |
-| `website/public/images/landing/README.md` | Instructions for image specs |
+| File                                                  | Purpose                                          |
+| ----------------------------------------------------- | ------------------------------------------------ |
+| `website/lib/queries.ts`                              | Server-side DB queries (getFeaturedOutfit)       |
+| `website/lib/landing-mockup.ts`                       | Static fallback data for homepage                |
+| `website/supabase/migrations/002_featured_outfit.sql` | Migration: add is_featured column + trigger      |
+| `website/public/images/platforms/`                    | Folder for e-commerce store logo PNGs            |
+| `website/public/images/landing/`                      | Folder for static landing page images (fallback) |
+| `website/public/images/landing/README.md`             | Instructions for image specs                     |
 
 ### How to Use (Admin Flow)
 
@@ -338,6 +342,7 @@ CREATE TRIGGER trg_single_featured_outfit
 ### Platform Logos
 
 To add logos for the new platforms, save PNGs to:
+
 ```
 website/public/images/platforms/
   ├── tatacliq.png
@@ -348,10 +353,7 @@ website/public/images/platforms/
 
 ---
 
-## [Unreleased] - Changes in Progress
-
 > Add entries here as new features/fixes are implemented.
-> Move to a versioned section when a batch of changes is deployed.
 
 ### Added
 
