@@ -12,26 +12,38 @@
    * 2%  Deep Wine       — Hover states, profile details
    */
   :root {
-    --color-background: #0B0B0F;
-    --color-surface: #161618;
+    /* ─── Core palette ─── */
+    --color-background: #0A0C14;
+    --color-surface: #12141E;
+    --color-surface-elevated: #1A1C28;
     --color-primary-dark: #F4EDE4;
-    --color-gold-accent: #D6B25E;
+    --color-gold-accent: #C9A96E;
+    --color-gold-accent-hover: #B8944F;
     --color-text-primary: #F4EDE4;
-    --color-text-secondary: #9A9490;
-    --color-border: #2A2A2E;
+    --color-text-secondary: #8A8680;
+    --color-border: #252730;
+    --color-border-light: #1E2028;
 
     /* Deep wine accent for hover/details */
     --color-wine: #4A2E35;
 
-    /* Product card accent (dark theme) */
-    --color-product-card-bg: #161618;
-    --color-product-card-border: #2A2A2E;
-    --color-product-card-hover: #D6B25E;
+    /* ─── Product card (dark theme) ─── */
+    --color-product-card-bg: #12141E;
+    --color-product-card-border: #252730;
+    --color-product-card-hover: #C9A96E;
 
-    /* Shop button on product cards */
-    --color-shop-btn-bg: #D6B25E;
-    --color-shop-btn-text: #0B0B0F;
-    --color-shop-btn-hover-bg: #C4A24E;
+    /* ─── Shop button on product cards ─── */
+    --color-shop-btn-bg: #C9A96E;
+    --color-shop-btn-text: #0A0C14;
+    --color-shop-btn-hover-bg: #B8944F;
+
+    /* ─── Section backgrounds (for variation) ─── */
+    --color-section-alt: #0E1019;
+    --color-section-darker: #080A10;
+
+    /* ─── Gold glow effect ─── */
+    --color-gold-glow: rgba(201, 169, 110, 0.15);
+    --color-gold-glow-strong: rgba(201, 169, 110, 0.3);
   }
 
   /* Smooth scrolling */
@@ -57,7 +69,7 @@
   }
   .card-hover:hover {
     transform: translateY(-4px);
-    box-shadow: 0 12px 40px rgba(214, 178, 94, 0.08);
+    box-shadow: 0 12px 40px rgba(201, 169, 110, 0.08);
   }
 
   /* Image hover zoom inside cards */
@@ -81,6 +93,40 @@
   /* Infinite horizontal scroll for brand logo strip */
   .animate-scroll-x {
     animation: scroll-x 20s linear infinite;
+  }
+
+  /* Gold glow border effect — used on premium cards */
+  .gold-border-glow {
+    border: 1px solid var(--color-border);
+    box-shadow: 0 0 20px var(--color-gold-glow), inset 0 1px 0 var(--color-gold-glow);
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+  }
+  .gold-border-glow:hover {
+    border-color: var(--color-gold-accent);
+    box-shadow: 0 0 30px var(--color-gold-glow-strong), inset 0 1px 0 var(--color-gold-glow-strong);
+  }
+
+  /* Section with subtle gold accent line at top */
+  .section-gold-top {
+    border-top: 1px solid var(--color-border);
+    position: relative;
+  }
+  .section-gold-top::before {
+    content: "";
+    position: absolute;
+    top: -1px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 2px;
+    background: var(--color-gold-accent);
+  }
+
+  /* Glass morphism card effect */
+  .glass-card {
+    background: rgba(18, 20, 30, 0.8);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--color-border);
   }
 }
 

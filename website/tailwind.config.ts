@@ -11,11 +11,18 @@ const config: Config = {
       colors: {
         background: "var(--color-background)",
         surface: "var(--color-surface)",
+        "surface-elevated": "var(--color-surface-elevated)",
         "primary-dark": "var(--color-primary-dark)",
         "gold-accent": "var(--color-gold-accent)",
+        "gold-accent-hover": "var(--color-gold-accent-hover)",
         "text-primary": "var(--color-text-primary)",
         "text-secondary": "var(--color-text-secondary)",
         border: "var(--color-border)",
+        "border-light": "var(--color-border-light)",
+        "section-alt": "var(--color-section-alt)",
+        "section-darker": "var(--color-section-darker)",
+        "gold-glow": "var(--color-gold-glow)",
+        "gold-glow-strong": "var(--color-gold-glow-strong)",
         // Platform badge colors (kept as static — these are brand-specific)
         "platform-amazon": "#FF9900",
         "platform-flipkart": "#2874F0",

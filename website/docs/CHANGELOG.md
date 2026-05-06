@@ -353,23 +353,68 @@ website/public/images/platforms/
 
 ---
 
-> Add entries here as new features/fixes are implemented.
+## [Unreleased - v1.0.0] - Complete Homepage Redesign (Dark Luxury)
+
+> **Branch:** `v1`
+> All new work goes here. When ready for production, merge `v1 → master`.
 
 ### Added
 
-- (none yet)
+- **6-section dark luxury landing page** — Complete homepage redesign matching new brand direction:
+  1. Hero: "Monetize Your Taste" + 6-image photo collage grid (admin-managed placeholders)
+  2. For Creators: "Turn Your Style Into Income" + dashboard mockup with stats
+  3. For Shoppers: "Shop Complete Looks. Instantly." + outfit mockup with floating product tags
+  4. How It Works: 3-step process cards with icons + stats bar (3x, 1-Click, 100%)
+  5. Pricing: 3 tiers (Starter ₹0, Pro ₹999/mo, Enterprise Custom) — visual only, no payment
+  6. Footer CTA: "Ready to Monetize Your Style?" + join button + social proof avatars
+- **New Header layout** — Center-aligned logo with halo icon, left nav (About us | Shop | Creators), right auth buttons. Sticky with backdrop blur.
+- **New Footer** — 4-column layout (Brand + Platform + Company + Support), social icons, platform logo badges, copyright bar
+- **Dark theme CSS variables** — Complete palette overhaul:
+  - `--color-background: #0A0C14` (deep navy)
+  - `--color-surface: #12141E`, `--color-surface-elevated: #1A1C28`
+  - `--color-gold-accent: #C9A96E` (refined gold)
+  - Section alternation: `--color-section-alt`, `--color-section-darker`
+  - Gold glow effects: `--color-gold-glow`, `--color-gold-glow-strong`
+- **New CSS utility classes:**
+  - `.gold-border-glow` — gold shadow border effect for premium cards
+  - `.section-gold-top` — subtle gold accent line at top of sections
+  - `.glass-card` — glassmorphism effect for floating elements
+- **Tailwind config updates** — New color tokens: `surface-elevated`, `gold-accent-hover`, `border-light`, `section-alt`, `section-darker`, `gold-glow`, `gold-glow-strong`
+- **Image placeholder system** — `<ImagePlaceholder slot="name" />` component with `data-slot` attributes, ready for DB-driven admin image management
+- **Pricing section** — Visual-only pricing cards (Starter/Pro/Enterprise). All CTAs link to `/signup`. Monthly/Yearly toggle is decorative.
+- **How It Works** — Process cards with SVG icons (storefront, link, bag) + numbered badges + platform logos
+- **For Shoppers** — Phone-like outfit mockup with floating `<ProductTag>` labels showing prices/platforms
+- **Dashboard mockup** in For Creators section — shows earnings (₹24,500), clicks (342), conversion (18%), bar chart, outfit preview
 
 ### Changed
 
-- (none yet)
-
-### Fixed
-
-- (none yet)
+- **Homepage completely rebuilt** — Old v0.5.1 layout (hero + brand strip + info) replaced with 6-section dark landing page
+- **Header** — From simple "Logo left / buttons right" to "Nav left | Logo center (with halo) | Buttons right". Now sticky with backdrop blur.
+- **Footer** — From 2-column minimal to 4-column rich layout with social icons and platform badges
+- **Color system** — Background from `#0B0B0F` to `#0A0C14`, gold from `#D6B25E` to `#C9A96E`, added elevation layers
+- **Card hover shadow** — Updated to use new gold-accent rgba value
 
 ### Removed
 
-- (none yet)
+- **Old homepage sections** — Featured outfit card, scrolling brand logo strip, "How it works" simple list, "Earnings potential" section
+- **`getFeaturedOutfit()` usage on homepage** — Homepage no longer queries outfits table (will use `landing_images` table instead)
+- **`landingMockup` import on homepage** — Static fallback data no longer used on homepage (files kept for reference)
+
+### Database Migrations Required
+
+```sql
+-- Run in Supabase SQL Editor (upcoming — for admin image management)
+ALTER TABLE creators ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT false;
+UPDATE creators SET is_admin = true WHERE auth_id = (SELECT id FROM auth.users WHERE email = 'admin@influra.com');
+```
+
+### Still To Build (v1.0 scope)
+
+- [ ] `landing_images` table + migration
+- [ ] Admin dashboard page: `/dashboard/landing-images`
+- [ ] Connect image placeholders to DB (replace static `<ImagePlaceholder>` with real images)
+- [ ] Admin check in sidebar (`is_admin` flag + hardcoded email fallback)
+- [ ] Mobile responsive testing for new homepage
 
 ---
 
