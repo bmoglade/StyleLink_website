@@ -54,7 +54,7 @@ export default async function HomePage() {
                 <div className="mt-8">
                   <Link
                     href="/signup"
-                    className="inline-block bg-gold-accent px-8 py-3.5 text-sm font-bold uppercase tracking-wider text-background hover:bg-gold-accent-hover transition-colors duration-200 rounded-full"
+                    className="inline-block bg-background border border-white/20 px-8 py-3.5 text-sm font-bold uppercase tracking-wider text-white hover:border-gold-accent hover:text-gold-accent transition-colors duration-200 rounded-full"
                   >
                     Join {siteConfig.name}
                   </Link>

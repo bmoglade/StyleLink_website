@@ -310,6 +310,66 @@ const { data } = await supabase.from("outfits").select("*, products(*)");  // �
 
 ---
 
+## ⚠️ Critical Rules — Check BEFORE Editing
+
+> **READ THIS SECTION BEFORE making any component or layout changes.**
+> These rules prevent the most common errors encountered in this project.
+
+### Server vs Client Component Rules
+
+**The #1 source of build errors in this project.** Before editing any component, CHECK:
+
+```
+RULE: A component that uses `next/headers`, `cookies()`, or is `async` 
+      CANNOT be imported into a file that has "use client" at the top.
+```
+
+| Component | Type | Used In | Can It Be `async`? |
+|-----------|------|---------|-------------------|
+| `Header.tsx` | Server | `page.tsx` (server pages) | ✅ Yes |
+| `Footer.tsx` | Regular (not async) | Both server + client pages (`login`, `signup`) | ❌ NO — would break client pages |
+| `DashboardSidebar.tsx` | Client (`"use client"`) | `dashboard/layout.tsx` | ❌ NO — it's a client component |
+| `AuthHeader.tsx` | Regular | Client pages (`login`, `signup`) | ❌ NO — imported in client context |
+
+**Before making a component `async` or importing `supabase-server.ts`, ask:**
+1. Is this component used in any `"use client"` page? → Check `login/page.tsx`, `signup/page.tsx`, `dashboard/` pages
+2. If YES → **cannot use** `next/headers`, `cookies()`, `createServerSupabaseClient()`, or `async`
+3. If you need DB data in such a component → use the **client** Supabase (`createClient()`) with `useEffect`
+
+**Example of what breaks:**
+```typescript
+// Footer.tsx
+import { createServerSupabaseClient } from "@/lib/supabase-server"; // ← uses next/headers
+export async function Footer() { ... }  // ← async
+
+// login/page.tsx
+"use client";
+import { Footer } from "@/components/layout/Footer";  // ❌ CRASH: next/headers in client context
+```
+
+**Example of the correct pattern:**
+```typescript
+// Footer.tsx — keep it non-async, no server imports
+export function Footer() { ... }  // ✅ Works everywhere
+
+// If you need DB data in Footer → use a client sub-component with useEffect
+```
+
+### Layout / CSS Rules
+
+1. **Never use negative margins for layout offset** (e.g., `-mt-12`) — causes overlapping on different screen sizes. Use flex columns with proper gap + margin-top on the column instead.
+2. **Always use `object-cover`** on image containers — ensures any size image fills the placeholder without distortion.
+3. **Tilted elements**: Use small rotations only (1-3 degrees). Larger rotations cause overflow/clipping issues.
+4. **Test on mobile viewport** before committing any layout change.
+
+### Windows Development Rules
+
+1. **Folder casing must match Git exactly** — Windows is case-insensitive but webpack is not. If Git says `website/` but your folder is `Website/`, you'll get "multiple modules with names that only differ in casing" errors.
+2. **Fix:** Rename the folder to match Git, then delete `.next/` and `node_modules/`, then `pnpm install`.
+3. **Path in terminal must use correct case** — `cd website` not `cd Website`.
+
+---
+
 ## Database Operations
 
 ### Adding a New Table
@@ -392,6 +452,9 @@ No manual steps needed. Vercel watches the `main` branch on GitHub.
 | Event handlers in Server Component     | `onError`/`onMouseEnter` in `page.tsx`       | Remove handlers from Server Components; add `"use client"` to interactive components |
 | Admin user creation via SQL fails      | `crypt()` unreliable in some Supabase setups | Sign up via website `/signup` instead of raw SQL                                     |
 | Brand strip bg bleeds full page width  | `bg-surface` was on `<section>` (full-width) | Move bg/border to inner `container-content` div                                      |
+| Footer/Header import in client pages crashes | `async` component importing `next/headers` used inside `"use client"` page | See "Server vs Client Component Rules" below |
+| Windows folder casing error (webpack)  | Folder on disk has different case than Git (`Website` vs `website`) | Rename folder to match Git exactly. Delete `.next` + `node_modules`, reinstall |
+| CSS collage images overlap vertically  | Negative margins (`-mt-12`) in grid layout   | Use flex columns with proper gap instead of negative margins                          |
 
 ---
 
