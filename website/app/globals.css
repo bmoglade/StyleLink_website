@@ -46,6 +46,11 @@
     --color-gold-glow-strong: rgba(201, 169, 110, 0.3);
   }
 
+  /* Global rounded buttons */
+  :root {
+    --btn-radius: 9999px;
+  }
+
   /* Smooth scrolling */
   html {
     scroll-behavior: smooth;

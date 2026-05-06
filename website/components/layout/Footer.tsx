@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { siteConfig, platformLogos } from "@/lib/config";
+import { createServerSupabaseClient } from "@/lib/supabase-server";
 
 /**
  * Site Footer — v1.0 Redesign
@@ -9,7 +10,19 @@ import { siteConfig, platformLogos } from "@/lib/config";
  * Platform logo badges at bottom-right
  * Copyright bar at bottom
  */
-export function Footer() {
+export async function Footer() {
+  // Fetch logo from DB
+  let logoUrl: string | null = null;
+  try {
+    const supabase = createServerSupabaseClient();
+    const { data } = await supabase
+      .from("landing_images")
+      .select("image_url")
+      .eq("slot", "site-logo")
+      .single();
+    if (data) logoUrl = data.image_url;
+  } catch {}
+
   // Platform logos for the badge row
   const platforms = Object.entries(platformLogos)
     .filter(([name, src]) => src && name !== "Other")
@@ -22,20 +35,21 @@ export function Footer() {
 
           {/* Column 1: Brand */}
           <div>
-            {/* Logo with halo */}
+            {/* Logo from DB or fallback */}
             <div className="flex flex-col items-start">
-              <svg
-                width="20"
-                height="10"
-                viewBox="0 0 24 12"
-                fill="none"
-                className="mb-0.5 opacity-80"
-              >
-                <ellipse cx="12" cy="6" rx="10" ry="5" stroke="#C9A96E" strokeWidth="1.5" fill="none" />
-              </svg>
-              <span className="font-display text-lg font-bold tracking-wide text-text-primary">
-                {siteConfig.name.toUpperCase()}
-              </span>
+              {logoUrl ? (
+                /* eslint-disable-next-line @next/next/no-img-element */
+                <img src={logoUrl} alt={siteConfig.name} className="h-8 w-auto object-contain" />
+              ) : (
+                <>
+                  <svg width="20" height="10" viewBox="0 0 24 12" fill="none" className="mb-0.5 opacity-80">
+                    <ellipse cx="12" cy="6" rx="10" ry="5" stroke="#C9A96E" strokeWidth="1.5" fill="none" />
+                  </svg>
+                  <span className="font-display text-lg font-bold tracking-[0.15em] text-text-primary">
+                    {siteConfig.name.toUpperCase()}
+                  </span>
+                </>
+              )}
             </div>
             <p className="mt-3 text-sm text-text-secondary leading-relaxed">
               One link. Complete looks.<br />Zero friction.

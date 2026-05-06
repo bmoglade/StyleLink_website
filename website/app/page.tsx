@@ -36,60 +36,62 @@ export default async function HomePage() {
             SECTION 1: HERO
             "Monetize Your Taste" + photo collage grid (right)
             ═══════════════════════════════════════════════════════════ */}
-        <section className="py-16 sm:py-20 lg:py-28">
+        <section className="py-16 sm:py-20 lg:py-24">
           <div className="container-content">
-            <div className="flex flex-col gap-10 lg:flex-row lg:items-center lg:gap-16">
+            <div className="flex flex-col gap-10 lg:flex-row lg:items-start lg:gap-12">
 
               {/* Left — Headline + CTA */}
-              <div className="lg:w-[40%] text-center lg:text-left">
-                <p className="text-xs uppercase tracking-[0.2em] text-gold-accent font-medium mb-4">
+              <div className="lg:w-[35%] text-center lg:text-left lg:pt-8">
+                <p className="text-[11px] uppercase tracking-[0.25em] text-gold-accent font-medium mb-5">
                   India&apos;s #1 Creator Platform
                 </p>
-                <h1 className="font-display text-4xl font-bold text-text-primary sm:text-5xl lg:text-6xl xl:text-7xl leading-[1.1]">
+                <h1 className="font-display text-5xl font-bold text-gold-accent sm:text-6xl lg:text-7xl leading-[1.05]">
                   Monetize<br />Your Taste
                 </h1>
-                <p className="mt-6 text-base text-text-secondary leading-relaxed max-w-sm mx-auto lg:mx-0">
+                <p className="mt-6 text-[15px] text-white/80 leading-relaxed max-w-xs mx-auto lg:mx-0">
                   Create, influence, and earn —<br />all in one place.
                 </p>
                 <div className="mt-8">
                   <Link
                     href="/signup"
-                    className="inline-block bg-gold-accent px-8 py-3.5 text-sm font-semibold uppercase tracking-wider text-background hover:bg-gold-accent-hover transition-colors duration-200 rounded-sm"
+                    className="inline-block bg-gold-accent px-8 py-3.5 text-sm font-bold uppercase tracking-wider text-background hover:bg-gold-accent-hover transition-colors duration-200 rounded-full"
                   >
                     Join {siteConfig.name}
                   </Link>
                 </div>
-                <p className="mt-12 text-sm text-text-secondary italic">
-                  A luxury creator platform designed to turn influence into income.
-                </p>
               </div>
 
-              {/* Right — Photo Collage Grid (6 image placeholders) */}
-              <div className="lg:w-[60%]">
+              {/* Right — Photo Collage Grid (6 tilted images) */}
+              <div className="lg:w-[65%]">
                 <div className="grid grid-cols-3 gap-3 sm:gap-4">
-                  {/* Row 1 — 3 images */}
-                  <div className="aspect-[3/4] rounded-lg overflow-hidden bg-surface-elevated border border-border">
+                  {/* Row 1 — 3 images (slight rotations for collage feel) */}
+                  <div className="aspect-[3/4] rounded-xl overflow-hidden bg-surface-elevated border border-border/50 transform -rotate-2 hover:rotate-0 transition-transform duration-300 shadow-lg">
                     <LandingImg slot="hero-1" images={images} />
                   </div>
-                  <div className="aspect-[3/4] rounded-lg overflow-hidden bg-surface-elevated border border-border mt-6">
+                  <div className="aspect-[3/4] rounded-xl overflow-hidden bg-surface-elevated border border-border/50 transform rotate-1 mt-8 hover:rotate-0 transition-transform duration-300 shadow-lg">
                     <LandingImg slot="hero-2" images={images} />
                   </div>
-                  <div className="aspect-[3/4] rounded-lg overflow-hidden bg-surface-elevated border border-border">
+                  <div className="aspect-[3/4] rounded-xl overflow-hidden bg-surface-elevated border border-border/50 transform -rotate-1 hover:rotate-0 transition-transform duration-300 shadow-lg">
                     <LandingImg slot="hero-3" images={images} />
                   </div>
-                  {/* Row 2 — 3 images (offset) */}
-                  <div className="aspect-[3/4] rounded-lg overflow-hidden bg-surface-elevated border border-border -mt-4">
+                  {/* Row 2 — 3 images (offset + rotated) */}
+                  <div className="aspect-[3/4] rounded-xl overflow-hidden bg-surface-elevated border border-border/50 transform rotate-2 -mt-6 hover:rotate-0 transition-transform duration-300 shadow-lg">
                     <LandingImg slot="hero-4" images={images} />
                   </div>
-                  <div className="aspect-[3/4] rounded-lg overflow-hidden bg-surface-elevated border border-border -mt-10">
+                  <div className="aspect-[3/4] rounded-xl overflow-hidden bg-surface-elevated border border-border/50 transform -rotate-1 -mt-12 hover:rotate-0 transition-transform duration-300 shadow-lg">
                     <LandingImg slot="hero-5" images={images} />
                   </div>
-                  <div className="aspect-[3/4] rounded-lg overflow-hidden bg-surface-elevated border border-border -mt-4">
+                  <div className="aspect-[3/4] rounded-xl overflow-hidden bg-surface-elevated border border-border/50 transform rotate-1 -mt-6 hover:rotate-0 transition-transform duration-300 shadow-lg">
                     <LandingImg slot="hero-6" images={images} />
                   </div>
                 </div>
               </div>
             </div>
+
+            {/* Tagline — bottom center */}
+            <p className="mt-16 text-center text-[15px] text-white/60 italic font-body tracking-wide">
+              A luxury creator platform designed to turn influence into income.
+            </p>
           </div>
         </section>
 
@@ -133,13 +135,13 @@ export default async function HomePage() {
                 <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
                   <Link
                     href="/signup"
-                    className="inline-block bg-gold-accent px-6 py-3 text-sm font-semibold text-background hover:bg-gold-accent-hover transition-colors duration-200 rounded-sm text-center"
+                    className="inline-block bg-gold-accent px-6 py-3 text-sm font-semibold text-background hover:bg-gold-accent-hover transition-colors duration-200 rounded-full text-center"
                   >
                     Apply to Join
                   </Link>
                   <Link
                     href="/#how-it-works"
-                    className="inline-block border border-border px-6 py-3 text-sm font-medium text-text-primary hover:border-gold-accent hover:text-gold-accent transition-colors duration-200 rounded-sm text-center"
+                    className="inline-block border border-border px-6 py-3 text-sm font-medium text-text-primary hover:border-gold-accent hover:text-gold-accent transition-colors duration-200 rounded-full text-center"
                   >
                     See How It Works
                   </Link>
@@ -291,7 +293,7 @@ export default async function HomePage() {
                 <div className="mt-8">
                   <Link
                     href="/signup"
-                    className="inline-block border border-gold-accent px-6 py-3 text-sm font-semibold text-gold-accent hover:bg-gold-accent hover:text-background transition-colors duration-200 rounded-sm"
+                    className="inline-block border border-gold-accent px-6 py-3 text-sm font-semibold text-gold-accent hover:bg-gold-accent hover:text-background transition-colors duration-200 rounded-full"
                   >
                     Explore Looks
                   </Link>
@@ -482,7 +484,7 @@ export default async function HomePage() {
               <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3 max-w-md mx-auto">
                 <Link
                   href="/signup"
-                  className="w-full sm:w-auto inline-block bg-gold-accent px-8 py-3.5 text-sm font-semibold uppercase tracking-wider text-background hover:bg-gold-accent-hover transition-colors duration-200 rounded-sm text-center"
+                  className="w-full sm:w-auto inline-block bg-gold-accent px-8 py-3.5 text-sm font-semibold uppercase tracking-wider text-background hover:bg-gold-accent-hover transition-colors duration-200 rounded-full text-center"
                 >
                   Join {siteConfig.name}
                 </Link>
@@ -525,6 +527,11 @@ export default async function HomePage() {
  * Reads from the `images` map fetched at page level.
  * The `slot` prop matches the slot name in the landing_images DB table.
  */
+/**
+ * Landing Image — Shows admin-uploaded image or a placeholder icon.
+ * Images always fill the container (object-cover) so any size image works.
+ * The `slot` prop matches the slot name in the landing_images DB table.
+ */
 function LandingImg({ slot, images, className = "" }: { slot: string; images: Record<string, LandingImage>; className?: string }) {
   const img = images[slot];
   if (img) {
@@ -534,6 +541,7 @@ function LandingImg({ slot, images, className = "" }: { slot: string; images: Re
         src={img.image_url}
         alt={img.alt_text || slot}
         className={`h-full w-full object-cover ${className}`}
+        loading="lazy"
       />
     );
   }
@@ -673,7 +681,7 @@ function PricingCard({ tier, badge, price, period, features, cta, ctaHref, highl
       {/* CTA */}
       <Link
         href={ctaHref}
-        className={`mt-6 block text-center py-3 text-sm font-semibold rounded-sm transition-colors duration-200 ${
+        className={`mt-6 block text-center py-3 text-sm font-semibold rounded-full transition-colors duration-200 ${
           highlighted
             ? "bg-gold-accent text-background hover:bg-gold-accent-hover"
             : "border border-border text-text-primary hover:border-gold-accent hover:text-gold-accent"

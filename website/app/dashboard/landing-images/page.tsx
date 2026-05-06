@@ -13,9 +13,17 @@ const ADMIN_EMAILS = ["admin@influra.com"];
  */
 const SLOT_CONFIG = [
   {
+    section: "branding",
+    title: "Site Logo",
+    description: "Logo displayed in header and footer across all pages. Upload a high-quality PNG with transparent background. Recommended: 200×50px or similar wide format.",
+    slots: [
+      { slot: "site-logo", label: "Site Logo (header + footer)" },
+    ],
+  },
+  {
     section: "hero",
     title: "Hero Section — Photo Collage",
-    description: "6 fashion images displayed in a collage grid. Recommended: portrait 3:4 ratio.",
+    description: "6 fashion images displayed in a tilted collage grid. Recommended: portrait 3:4 ratio.",
     slots: [
       { slot: "hero-1", label: "Image 1 (top-left)" },
       { slot: "hero-2", label: "Image 2 (top-center)" },
