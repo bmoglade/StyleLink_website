@@ -106,59 +106,84 @@ export default async function HomePage() {
             SECTION 2: HOW IT WORKS
             3-step process cards + stats bar
             ═══════════════════════════════════════════════════════════ */}
-        <section id="how-it-works" className="py-16 sm:py-20 lg:py-24 bg-section-alt section-gold-top">
+        <section id="how-it-works" className="py-20 sm:py-24 lg:py-28 bg-section-alt">
           <div className="container-content">
             {/* Section header */}
-            <div className="text-center mb-12">
-              <p className="text-xs uppercase tracking-[0.2em] text-gold-accent font-medium mb-3">
+            <div className="text-center mb-14">
+              <p className="text-[11px] uppercase tracking-[0.3em] text-gold-accent font-medium mb-4">
                 The Process
               </p>
-              <h2 className="font-display text-3xl font-bold text-text-primary sm:text-4xl">
+              <h2 className="font-display text-3xl font-bold text-white sm:text-4xl lg:text-[42px]">
                 How {siteConfig.name} Works
               </h2>
-              <div className="w-16 h-0.5 bg-gold-accent mx-auto mt-4" />
-              <p className="mt-4 text-sm text-text-secondary">
+              <div className="w-20 h-[3px] bg-gold-accent mx-auto mt-5" />
+              <p className="mt-5 text-[15px] text-white/50 font-body">
                 From post to purchase in three seamless steps.
               </p>
             </div>
 
-            {/* 3-step cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-              <StepCard
-                number="01"
-                icon="storefront"
-                title="Create Your Storefront"
-                description="Set up your Influra profile in minutes. Upload outfit photos and build your personal fashion storefront."
-              />
-              <StepCard
-                number="02"
-                icon="link"
-                title="Tag Complete Outfits"
-                description="Tag every item in your look with smart affiliate links from Amazon, Flipkart, Myntra, Meesho, and Ajio."
-              />
-              <StepCard
-                number="03"
-                icon="bag"
-                title="Earn Every Time"
-                description="Your followers shop the complete look with one click. You earn commission on every purchase — tracked in one dashboard."
-              />
-            </div>
-
-            {/* Platform logos between steps and stats */}
-            <div className="flex items-center justify-center gap-3 mt-8">
-              {Object.entries(platformLogos).filter(([n, s]) => s && n !== "Other").slice(0, 5).map(([name, src]) => (
-                <div key={name} className="h-9 w-9 rounded-full bg-surface-elevated flex items-center justify-center border border-border">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={src!} alt={name} className="h-5 w-5 object-contain" />
+            {/* 3-step cards with arrows between them */}
+            <div className="max-w-5xl mx-auto">
+              <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr_auto_1fr] items-start gap-4 md:gap-0">
+                {/* Card 1 */}
+                <StepCard
+                  number="01"
+                  icon="storefront"
+                  title="Create Your Storefront"
+                  description="Set up your Influra profile in minutes. Upload outfit photos and build your personal fashion storefront."
+                />
+                {/* Arrow 1→2 */}
+                <div className="hidden md:flex items-center justify-center h-full pt-16">
+                  <span className="text-white/20 text-lg">→</span>
                 </div>
-              ))}
+                {/* Card 2 — with platform logos inside */}
+                <div className="relative">
+                  <StepCard
+                    number="02"
+                    icon="link"
+                    title="Tag Complete Outfits"
+                    description="Tag every item in your look with smart affiliate links from Amazon, Flipkart, Myntra, Meesho, and Ajio."
+                  />
+                  {/* Platform logos inside card 2 */}
+                  <div className="flex items-center justify-center gap-2 mt-3">
+                    {Object.entries(platformLogos).filter(([n, s]) => s && n !== "Other").slice(0, 5).map(([name, src]) => (
+                      <div key={name} className="h-7 w-7 rounded-md bg-surface flex items-center justify-center border border-border/50">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={src!} alt={name} className="h-4 w-4 object-contain" />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                {/* Arrow 2→3 */}
+                <div className="hidden md:flex items-center justify-center h-full pt-16">
+                  <span className="text-white/20 text-lg">→</span>
+                </div>
+                {/* Card 3 */}
+                <StepCard
+                  number="03"
+                  icon="bag"
+                  title="Earn Every Time"
+                  description="Your followers shop the complete look with one click. You earn commission on every purchase — tracked in one dashboard."
+                />
+              </div>
             </div>
 
-            {/* Stats bar */}
-            <div className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-3xl mx-auto border-t border-border pt-10">
-              <StatItem value="3x" label="Higher Conversion Rate" />
-              <StatItem value="1-Click" label="Outfit Publishing" />
-              <StatItem value="100%" label="Commission Tracking" />
+            {/* Stats bar — bordered box at bottom */}
+            <div className="mt-14 max-w-4xl mx-auto border border-border rounded-lg">
+              <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-border">
+                <div className="py-8 px-6 text-center">
+                  <p className="font-display text-3xl font-bold text-white sm:text-4xl">3x</p>
+                  <p className="mt-1.5 text-sm text-white/50 font-body">Higher Conversion Rate</p>
+                </div>
+                <div className="py-8 px-6 text-center">
+                  <p className="font-display text-3xl font-bold text-white sm:text-4xl">1-Click</p>
+                  <p className="mt-1.5 text-sm text-white/50 font-body">Outfit Publishing</p>
+                </div>
+                <div className="py-8 px-6 text-center">
+                  <p className="font-display text-3xl font-bold text-white sm:text-4xl">100%</p>
+                  <p className="mt-1.5 text-sm text-white/50 font-body">Commission Tracking</p>
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -593,19 +618,19 @@ function StepCard({ number, icon, title, description }: {
 }) {
   const icons = {
     storefront: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
         <polyline points="9,22 9,12 15,12 15,22" />
       </svg>
     ),
     link: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
         <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
       </svg>
     ),
     bag: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
         <line x1="3" y1="6" x2="21" y2="6" />
         <path d="M16 10a4 4 0 0 1-8 0" />
@@ -614,32 +639,22 @@ function StepCard({ number, icon, title, description }: {
   };
 
   return (
-    <div className="gold-border-glow rounded-lg p-6 bg-surface text-center relative">
-      {/* Number badge */}
-      <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gold-accent text-background text-xs font-bold w-7 h-7 rounded-full flex items-center justify-center">
+    <div className="border border-gold-accent/30 rounded-lg p-7 bg-surface-elevated/50 text-center relative">
+      {/* Number badge — gold circle at top */}
+      <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gold-accent text-background text-xs font-bold w-8 h-8 rounded-full flex items-center justify-center shadow-md">
         {number}
       </div>
       {/* Icon */}
-      <div className="mt-4 mb-4 text-gold-accent flex justify-center">
+      <div className="mt-5 mb-5 text-gold-accent flex justify-center">
         {icons[icon]}
       </div>
-      <h3 className="font-display text-base font-semibold text-text-primary">{title}</h3>
-      <p className="mt-2 text-sm text-text-secondary leading-relaxed">{description}</p>
+      <h3 className="font-display text-[15px] font-semibold text-white">{title}</h3>
+      <p className="mt-3 text-[13px] text-white/50 leading-relaxed font-body">{description}</p>
     </div>
   );
 }
 
-/**
- * Stat Item — used in stats bar below "How It Works"
- */
-function StatItem({ value, label }: { value: string; label: string }) {
-  return (
-    <div className="text-center">
-      <p className="font-display text-3xl font-bold text-text-primary sm:text-4xl">{value}</p>
-      <p className="mt-1 text-sm text-text-secondary">{label}</p>
-    </div>
-  );
-}
+/* StatItem removed — stats now inline in the section */
 
 /**
  * Pricing Card — visual only, CTAs link to /signup
