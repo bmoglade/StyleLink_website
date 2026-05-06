@@ -7,10 +7,18 @@ import { createClient } from "@/lib/supabase";
 import { siteConfig } from "@/lib/config";
 import { cn } from "@/lib/utils";
 
+/** Hardcoded admin emails — always have admin access */
+const ADMIN_EMAILS = ["admin@influra.com"];
+
 const navItems = [
   { href: "/dashboard", label: "Overview", icon: "📊" },
   { href: "/dashboard/outfits/new", label: "New Outfit", icon: "➕" },
   { href: "/dashboard/settings", label: "Settings", icon: "⚙️" },
+
+];
+
+const adminNavItems = [
+  { href: "/dashboard/landing-images", label: "Landing Page Images", icon: "🖼️" },
 ];
 
 /**
@@ -24,21 +32,28 @@ const navItems = [
 export function DashboardSidebar() {
   const pathname = usePathname();
   const [username, setUsername] = useState<string | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   useEffect(() => {
-    async function fetchUsername() {
+    async function fetchCreatorInfo() {
       const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
       const { data: creator } = await supabase
         .from("creators")
-        .select("username")
+        .select("username, is_admin")
         .eq("auth_id", user.id)
         .single();
-      if (creator) setUsername(creator.username);
+      if (creator) {
+        setUsername(creator.username);
+        // Admin = hardcoded email list OR is_admin flag in DB
+        setIsAdmin(
+          ADMIN_EMAILS.includes(user.email || "") || creator.is_admin === true
+        );
+      }
     }
-    fetchUsername();
+    fetchCreatorInfo();
   }, []);
 
   // Close mobile sidebar on route change
@@ -148,6 +163,36 @@ export function DashboardSidebar() {
               </li>
             )}
           </ul>
+
+          {/* Admin section — only visible to admins */}
+          {isAdmin && (
+            <div className="mt-6 pt-4 border-t border-border">
+              <p className="px-3 mb-2 text-[10px] uppercase tracking-wider text-gold-accent font-semibold">
+                Admin
+              </p>
+              <ul className="space-y-1">
+                {adminNavItems.map((item) => {
+                  const isActive = pathname.startsWith(item.href);
+                  return (
+                    <li key={item.href}>
+                      <Link
+                        href={item.href}
+                        className={cn(
+                          "flex items-center gap-3 px-3 py-2.5 text-sm font-medium transition-colors duration-200",
+                          isActive
+                            ? "bg-background text-gold-accent"
+                            : "text-text-secondary hover:bg-background hover:text-text-primary"
+                        )}
+                      >
+                        <span>{item.icon}</span>
+                        {item.label}
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          )}
         </nav>
 
         {/* Bottom actions — Logout prominent */}

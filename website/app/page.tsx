@@ -2,6 +2,8 @@ import Link from "next/link";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { siteConfig, platformColors, platformLogos } from "@/lib/config";
+import { getLandingImages } from "@/lib/queries";
+import type { LandingImage } from "@/lib/types";
 
 /**
  * Homepage — Influra v1.0
@@ -16,11 +18,15 @@ import { siteConfig, platformColors, platformLogos } from "@/lib/config";
  * 6. FOOTER CTA — "Ready to Monetize?" + email → /signup
  * 7. Footer — 4-column layout
  *
- * Images are placeholder slots — will be powered by landing_images table
- * so admin can update them from the dashboard.
+ * Images are loaded from the `landing_images` table.
+ * Admin uploads images via /dashboard/landing-images.
+ * If no image exists for a slot, a placeholder icon is shown.
  */
 
 export default async function HomePage() {
+  // Fetch all admin-uploaded landing page images
+  const images = await getLandingImages();
+
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <Header />
@@ -63,23 +69,23 @@ export default async function HomePage() {
                 <div className="grid grid-cols-3 gap-3 sm:gap-4">
                   {/* Row 1 — 3 images */}
                   <div className="aspect-[3/4] rounded-lg overflow-hidden bg-surface-elevated border border-border">
-                    <ImagePlaceholder slot="hero-1" />
+                    <LandingImg slot="hero-1" images={images} />
                   </div>
                   <div className="aspect-[3/4] rounded-lg overflow-hidden bg-surface-elevated border border-border mt-6">
-                    <ImagePlaceholder slot="hero-2" />
+                    <LandingImg slot="hero-2" images={images} />
                   </div>
                   <div className="aspect-[3/4] rounded-lg overflow-hidden bg-surface-elevated border border-border">
-                    <ImagePlaceholder slot="hero-3" />
+                    <LandingImg slot="hero-3" images={images} />
                   </div>
                   {/* Row 2 — 3 images (offset) */}
                   <div className="aspect-[3/4] rounded-lg overflow-hidden bg-surface-elevated border border-border -mt-4">
-                    <ImagePlaceholder slot="hero-4" />
+                    <LandingImg slot="hero-4" images={images} />
                   </div>
                   <div className="aspect-[3/4] rounded-lg overflow-hidden bg-surface-elevated border border-border -mt-10">
-                    <ImagePlaceholder slot="hero-5" />
+                    <LandingImg slot="hero-5" images={images} />
                   </div>
                   <div className="aspect-[3/4] rounded-lg overflow-hidden bg-surface-elevated border border-border -mt-4">
-                    <ImagePlaceholder slot="hero-6" />
+                    <LandingImg slot="hero-6" images={images} />
                   </div>
                 </div>
               </div>
@@ -154,7 +160,7 @@ export default async function HomePage() {
                   <div className="flex items-center justify-between mb-5">
                     <div className="flex items-center gap-3">
                       <div className="h-9 w-9 rounded-full bg-surface-elevated border border-border overflow-hidden">
-                        <ImagePlaceholder slot="creator-profile" />
+                        <LandingImg slot="creator-profile" images={images} />
                       </div>
                       <div>
                         <p className="text-sm font-medium text-text-primary">Priya Sharma</p>
@@ -198,7 +204,7 @@ export default async function HomePage() {
                     <div className="bg-surface-elevated rounded-md p-3 border border-border-light">
                       <p className="text-xs text-text-secondary mb-2">Sample outfit</p>
                       <div className="h-16 w-full rounded-sm overflow-hidden bg-background border border-border">
-                        <ImagePlaceholder slot="creator-outfit" />
+                        <LandingImg slot="creator-outfit" images={images} />
                       </div>
                     </div>
                   </div>
@@ -221,7 +227,7 @@ export default async function HomePage() {
                 <div className="relative">
                   {/* Main outfit image (phone-like frame) */}
                   <div className="w-56 sm:w-64 mx-auto lg:mx-0 aspect-[3/4] rounded-2xl overflow-hidden border-2 border-border bg-surface-elevated shadow-2xl">
-                    <ImagePlaceholder slot="shopper-main" />
+                    <LandingImg slot="shopper-main" images={images} />
                   </div>
                   {/* Floating product tags */}
                   <div className="absolute top-8 right-4 sm:right-8 lg:right-auto lg:left-56 space-y-2">
@@ -238,7 +244,7 @@ export default async function HomePage() {
                 <div className="mt-6 grid grid-cols-4 gap-2 max-w-xs mx-auto lg:mx-0">
                   {[1, 2, 3, 4, 5, 6].map((i) => (
                     <div key={i} className="aspect-square rounded-md overflow-hidden bg-surface-elevated border border-border">
-                      <ImagePlaceholder slot={`shopper-grid-${i}`} />
+                      <LandingImg slot={`shopper-grid-${i}`} images={images} />
                     </div>
                   ))}
                 </div>
@@ -492,7 +498,7 @@ export default async function HomePage() {
                       key={i}
                       className="h-8 w-8 rounded-full border-2 border-background bg-surface-elevated overflow-hidden"
                     >
-                      <ImagePlaceholder slot={`cta-avatar-${i}`} />
+                      <LandingImg slot={`cta-avatar-${i}`} images={images} />
                     </div>
                   ))}
                 </div>
@@ -515,10 +521,23 @@ export default async function HomePage() {
    ═══════════════════════════════════════════════════════════ */
 
 /**
- * Image Placeholder — Shows a subtle icon until admin uploads an image.
- * Will later be replaced with DB-driven images from landing_images table.
+ * Landing Image — Shows admin-uploaded image or a placeholder icon.
+ * Reads from the `images` map fetched at page level.
+ * The `slot` prop matches the slot name in the landing_images DB table.
  */
-function ImagePlaceholder({ slot }: { slot: string }) {
+function LandingImg({ slot, images, className = "" }: { slot: string; images: Record<string, LandingImage>; className?: string }) {
+  const img = images[slot];
+  if (img) {
+    return (
+      /* eslint-disable-next-line @next/next/no-img-element */
+      <img
+        src={img.image_url}
+        alt={img.alt_text || slot}
+        className={`h-full w-full object-cover ${className}`}
+      />
+    );
+  }
+  // Placeholder when no image uploaded yet
   return (
     <div className="flex h-full w-full items-center justify-center text-text-secondary/20" data-slot={slot}>
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="0.8" strokeLinecap="round" strokeLinejoin="round">

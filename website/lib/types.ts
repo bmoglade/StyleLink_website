@@ -16,6 +16,7 @@ export interface Creator {
   youtube_handle: string | null;
   facebook_handle: string | null;
   pinterest_handle: string | null;
+  is_admin: boolean;
   created_at: string;
 }
 
@@ -110,4 +111,29 @@ export interface ProfileFormData {
   youtube_handle: string;
   facebook_handle: string;
   pinterest_handle: string;
+}
+
+/**
+ * Landing page image management
+ */
+
+export interface LandingImage {
+  id: string;
+  section: string;       // "hero", "creators", "shoppers", "cta"
+  slot: string;          // "hero-1", "creator-profile", etc.
+  image_url: string;
+  alt_text: string;
+  display_order: number;
+  metadata: Record<string, any>;
+  created_at: string;
+  updated_at: string;
+}
+
+/** All slots organized by section for the admin page */
+export interface LandingImageSlotConfig {
+  section: string;
+  slot: string;
+  label: string;
+  description: string;
+  aspectRatio: string;  // e.g., "3/4", "1/1"
 }
