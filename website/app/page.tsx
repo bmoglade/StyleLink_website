@@ -10,12 +10,12 @@ import type { LandingImage } from "@/lib/types";
  * ========================
  * Full-page dark luxury landing page with 6 stacked sections:
  *
- * 1. HERO — "Monetize Your Taste" + fashion photo collage (admin-managed images)
- * 2. FOR CREATORS — "Turn Your Style Into Income" + dashboard mockup
- * 3. FOR SHOPPERS — "Shop Complete Looks" + phone/outfit mockup
- * 4. HOW IT WORKS — 3-step process + stats bar
+ * 1. HERO — "Monetize Your Taste" + fashion photo collage
+ * 2. HOW IT WORKS — 3-step process + stats bar
+ * 3. FOR CREATORS — "Turn Your Style Into Income" + dashboard mockup
+ * 4. FOR SHOPPERS — "Shop Complete Looks" + phone/outfit mockup
  * 5. PRICING — 3 tiers (visual only, no payment)
- * 6. FOOTER CTA — "Ready to Monetize?" + email → /signup
+ * 6. FOOTER CTA — "Ready to Monetize?" + join button
  * 7. Footer — 4-column layout
  *
  * Images are loaded from the `landing_images` table.
@@ -61,9 +61,7 @@ export default async function HomePage() {
                 </div>
               </div>
 
-              {/* Right — Photo Collage Grid (6 tilted images, 3 columns)
-                  Layout matches mockup: staggered vertically, all slightly tilted,
-                  middle column offset down, no overlapping. */}
+              {/* Right — Photo Collage Grid (6 tilted images, 3 columns) */}
               <div className="lg:w-[65%]">
                 <div className="grid grid-cols-3 gap-5 sm:gap-6">
                   {/* Column 1: two images stacked */}
@@ -105,10 +103,71 @@ export default async function HomePage() {
         </section>
 
         {/* ═══════════════════════════════════════════════════════════
-            SECTION 2: FOR CREATORS
+            SECTION 2: HOW IT WORKS
+            3-step process cards + stats bar
+            ═══════════════════════════════════════════════════════════ */}
+        <section id="how-it-works" className="py-16 sm:py-20 lg:py-24 bg-section-alt section-gold-top">
+          <div className="container-content">
+            {/* Section header */}
+            <div className="text-center mb-12">
+              <p className="text-xs uppercase tracking-[0.2em] text-gold-accent font-medium mb-3">
+                The Process
+              </p>
+              <h2 className="font-display text-3xl font-bold text-text-primary sm:text-4xl">
+                How {siteConfig.name} Works
+              </h2>
+              <div className="w-16 h-0.5 bg-gold-accent mx-auto mt-4" />
+              <p className="mt-4 text-sm text-text-secondary">
+                From post to purchase in three seamless steps.
+              </p>
+            </div>
+
+            {/* 3-step cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+              <StepCard
+                number="01"
+                icon="storefront"
+                title="Create Your Storefront"
+                description="Set up your Influra profile in minutes. Upload outfit photos and build your personal fashion storefront."
+              />
+              <StepCard
+                number="02"
+                icon="link"
+                title="Tag Complete Outfits"
+                description="Tag every item in your look with smart affiliate links from Amazon, Flipkart, Myntra, Meesho, and Ajio."
+              />
+              <StepCard
+                number="03"
+                icon="bag"
+                title="Earn Every Time"
+                description="Your followers shop the complete look with one click. You earn commission on every purchase — tracked in one dashboard."
+              />
+            </div>
+
+            {/* Platform logos between steps and stats */}
+            <div className="flex items-center justify-center gap-3 mt-8">
+              {Object.entries(platformLogos).filter(([n, s]) => s && n !== "Other").slice(0, 5).map(([name, src]) => (
+                <div key={name} className="h-9 w-9 rounded-full bg-surface-elevated flex items-center justify-center border border-border">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={src!} alt={name} className="h-5 w-5 object-contain" />
+                </div>
+              ))}
+            </div>
+
+            {/* Stats bar */}
+            <div className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-3xl mx-auto border-t border-border pt-10">
+              <StatItem value="3x" label="Higher Conversion Rate" />
+              <StatItem value="1-Click" label="Outfit Publishing" />
+              <StatItem value="100%" label="Commission Tracking" />
+            </div>
+          </div>
+        </section>
+
+        {/* ═══════════════════════════════════════════════════════════
+            SECTION 3: FOR CREATORS
             "Turn Your Style Into Income" + Dashboard mockup (right)
             ═══════════════════════════════════════════════════════════ */}
-        <section id="creators" className="py-16 sm:py-20 lg:py-24 bg-section-alt">
+        <section id="creators" className="py-16 sm:py-20 lg:py-24">
           <div className="container-content">
             <div className="flex flex-col gap-10 lg:flex-row lg:items-center lg:gap-16">
 
@@ -226,10 +285,10 @@ export default async function HomePage() {
         </section>
 
         {/* ═══════════════════════════════════════════════════════════
-            SECTION 3: FOR SHOPPERS
+            SECTION 4: FOR SHOPPERS
             "Shop Complete Looks. Instantly." + outfit mockup (left)
             ═══════════════════════════════════════════════════════════ */}
-        <section id="shoppers" className="py-16 sm:py-20 lg:py-24">
+        <section id="shoppers" className="py-16 sm:py-20 lg:py-24 bg-section-alt">
           <div className="container-content">
             <div className="flex flex-col-reverse gap-10 lg:flex-row lg:items-center lg:gap-16">
 
@@ -311,67 +370,6 @@ export default async function HomePage() {
                   50,000+ shoppable outfits
                 </p>
               </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ═══════════════════════════════════════════════════════════
-            SECTION 4: HOW IT WORKS
-            3-step process cards + stats bar
-            ═══════════════════════════════════════════════════════════ */}
-        <section id="how-it-works" className="py-16 sm:py-20 lg:py-24 bg-section-alt section-gold-top">
-          <div className="container-content">
-            {/* Section header */}
-            <div className="text-center mb-12">
-              <p className="text-xs uppercase tracking-[0.2em] text-gold-accent font-medium mb-3">
-                The Process
-              </p>
-              <h2 className="font-display text-3xl font-bold text-text-primary sm:text-4xl">
-                How {siteConfig.name} Works
-              </h2>
-              <div className="w-16 h-0.5 bg-gold-accent mx-auto mt-4" />
-              <p className="mt-4 text-sm text-text-secondary">
-                From post to purchase in three seamless steps.
-              </p>
-            </div>
-
-            {/* 3-step cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-              <StepCard
-                number="01"
-                icon="storefront"
-                title="Create Your Storefront"
-                description="Set up your Influra profile in minutes. Upload outfit photos and build your personal fashion storefront."
-              />
-              <StepCard
-                number="02"
-                icon="link"
-                title="Tag Complete Outfits"
-                description="Tag every item in your look with smart affiliate links from Amazon, Flipkart, Myntra, Meesho, and Ajio."
-              />
-              <StepCard
-                number="03"
-                icon="bag"
-                title="Earn Every Time"
-                description="Your followers shop the complete look with one click. You earn commission on every purchase — tracked in one dashboard."
-              />
-            </div>
-
-            {/* Platform logos between steps and stats */}
-            <div className="flex items-center justify-center gap-3 mt-8">
-              {Object.entries(platformLogos).filter(([n, s]) => s && n !== "Other").slice(0, 5).map(([name, src]) => (
-                <div key={name} className="h-9 w-9 rounded-full bg-surface-elevated flex items-center justify-center border border-border">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={src!} alt={name} className="h-5 w-5 object-contain" />
-                </div>
-              ))}
-            </div>
-
-            {/* Stats bar */}
-            <div className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-3xl mx-auto border-t border-border pt-10">
-              <StatItem value="3x" label="Higher Conversion Rate" />
-              <StatItem value="1-Click" label="Outfit Publishing" />
-              <StatItem value="100%" label="Commission Tracking" />
             </div>
           </div>
         </section>
@@ -468,7 +466,7 @@ export default async function HomePage() {
 
         {/* ═══════════════════════════════════════════════════════════
             SECTION 6: FOOTER CTA
-            "Ready to Monetize Your Style?" + email input
+            "Ready to Monetize Your Style?" + join button
             ═══════════════════════════════════════════════════════════ */}
         <section className="py-16 sm:py-20 lg:py-24 bg-section-alt section-gold-top">
           <div className="container-content">
@@ -489,7 +487,7 @@ export default async function HomePage() {
               <p className="mt-4 text-base text-text-secondary">
                 Join thousands of creators earning from their fashion influence.
               </p>
-              {/* Email + CTA (links to signup) */}
+              {/* CTA (links to signup) */}
               <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3 max-w-md mx-auto">
                 <Link
                   href="/signup"
@@ -531,11 +529,6 @@ export default async function HomePage() {
    COMPONENTS (local to homepage)
    ═══════════════════════════════════════════════════════════ */
 
-/**
- * Landing Image — Shows admin-uploaded image or a placeholder icon.
- * Reads from the `images` map fetched at page level.
- * The `slot` prop matches the slot name in the landing_images DB table.
- */
 /**
  * Landing Image — Shows admin-uploaded image or a placeholder icon.
  * Images always fill the container (object-cover) so any size image works.
