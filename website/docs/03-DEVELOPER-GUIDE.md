@@ -88,14 +88,79 @@ NODE_TLS_REJECT_UNAUTHORIZED=0 pnpm dev
 
 ### Adding a New Feature — Checklist
 
-1. ☐ Read `01-MASTER-PROMPT.md` — is it in scope?
-2. ☐ Check `02-ARCHITECTURE.md` — where does it fit?
-3. ☐ Create the page in `app/` folder
-4. ☐ Create components in `components/` folder
-5. ☐ Add types to `lib/types.ts` if needed
-6. ☐ Update database schema if needed (new migration file)
-7. ☐ Update this guide if adding new patterns
-8. ☐ Test on mobile viewport
+1. ☐ Confirm you are on the `v1` branch (NEVER commit to `master`)
+2. ☐ Read `01-MASTER-PROMPT.md` — is it in scope?
+3. ☐ Check `02-ARCHITECTURE.md` — where does it fit?
+4. ☐ Create the page in `app/` folder
+5. ☐ Create components in `components/` folder
+6. ☐ Add types to `lib/types.ts` if needed
+7. ☐ Update database schema if needed (new migration file)
+8. ☐ **Update documentation** (see Documentation Maintenance below)
+9. ☐ Test on mobile viewport
+10. ☐ Commit code + docs together in the same commit
+
+---
+
+## Documentation Maintenance
+
+> **Rule: Every code change on `v1` must include the relevant doc updates in the same commit.**
+> You should never have to ask "did you update the docs?" — it happens automatically.
+
+### Which Docs Exist and What They Cover
+
+| Document                     | Purpose                                                                                  | Lives In        |
+| ---------------------------- | ---------------------------------------------------------------------------------------- | --------------- |
+| `00-SESSION-START-PROMPT.md` | Context for new AI sessions — branching info, current status, deploy commands            | `website/docs/` |
+| `01-MASTER-PROMPT.md`        | Product definition, tech stack, constraints, completed features, design system           | `website/docs/` |
+| `02-ARCHITECTURE.md`         | System diagram, route map, data flows, DB schema, folder structure, technical decisions  | `website/docs/` |
+| `03-DEVELOPER-GUIDE.md`      | Setup instructions, common tasks, patterns, troubleshooting, config reference, branching | `website/docs/` |
+| `CHANGELOG.md`               | Every change ever made, organized by version                                             | `website/docs/` |
+
+### When To Update Each Doc
+
+| You just...                                       | Update these                                                                    |
+| ------------------------------------------------- | ------------------------------------------------------------------------------- |
+| Added a new page/route                            | `02-ARCHITECTURE` (route map + folder structure) + `CHANGELOG`                  |
+| Added a new component                             | `02-ARCHITECTURE` (folder structure) + `CHANGELOG`                              |
+| Added/changed a DB table or column                | `02-ARCHITECTURE` (DB schema section) + new migration file + `CHANGELOG`        |
+| Changed the design system (colors, fonts, layout) | `01-MASTER-PROMPT` (design system section) + `CHANGELOG`                        |
+| Added a new platform or category                  | `03-DEVELOPER-GUIDE` (configurable elements table) + `CHANGELOG`                |
+| Found & fixed a new bug pattern                   | `03-DEVELOPER-GUIDE` (troubleshooting table) + `CHANGELOG`                      |
+| Added a new config option                         | `03-DEVELOPER-GUIDE` (quick reference table) + `CHANGELOG`                      |
+| Made a technical architecture decision            | `02-ARCHITECTURE` (key technical decisions table) + `CHANGELOG`                 |
+| Changed deploy process or branching               | `02-ARCHITECTURE` (deployment) + `03-DEVELOPER-GUIDE` (branching) + `CHANGELOG` |
+| Completed a major feature                         | `01-MASTER-PROMPT` (features list) + `CHANGELOG`                                |
+| Made ANY code change at all                       | `CHANGELOG` (always — under `[Unreleased - v1.0.0]`)                            |
+
+### CHANGELOG Rules
+
+- All entries go under `[Unreleased - v1.0.0]` while on the `v1` branch
+- Use sections: `### Added`, `### Changed`, `### Fixed`, `### Removed`, `### Database Migrations Required`
+- When `v1` merges to `master`: rename `[Unreleased - v1.0.0]` → `[1.0.0] - YYYY-MM-DD`
+- Create a fresh `[Unreleased]` section for the next version
+
+### What Happens At Release Time
+
+```
+BEFORE merge (on v1):
+  01-MASTER-PROMPT.md    → has "v1.0 — COMPLETED" with all new features listed
+  02-ARCHITECTURE.md     → reflects the current system (routes, schema, folder structure)
+  03-DEVELOPER-GUIDE.md  → has all new patterns, configs, troubleshooting entries
+  CHANGELOG.md           → has [Unreleased - v1.0.0] with every change
+
+AFTER merge to master:
+  CHANGELOG.md           → rename [Unreleased - v1.0.0] → [1.0.0] - 2026-XX-XX
+  00-SESSION-START-PROMPT → update status to "v1.0.0 — Production"
+  Everything else        → already correct (came with the merge)
+```
+
+### Documentation Quality Standards
+
+- **Be specific** — "Added `is_featured` column to outfits table" not "updated database"
+- **Include file paths** — "New file: `components/layout/LogoutButton.tsx`"
+- **Explain why** — In troubleshooting, include the cause AND the fix
+- **Keep tables updated** — Route map, folder structure, and config tables must match actual code
+- **No stale docs** — If you remove a feature, remove it from the docs too
 
 ---
 
