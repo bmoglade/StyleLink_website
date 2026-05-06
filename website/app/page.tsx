@@ -61,28 +61,37 @@ export default async function HomePage() {
                 </div>
               </div>
 
-              {/* Right — Photo Collage Grid (6 tilted images) */}
+              {/* Right — Photo Collage Grid (6 tilted images, 3 columns)
+                  Layout matches mockup: staggered vertically, all slightly tilted,
+                  middle column offset down, no overlapping. */}
               <div className="lg:w-[65%]">
-                <div className="grid grid-cols-3 gap-3 sm:gap-4">
-                  {/* Row 1 — 3 images (slight rotations for collage feel) */}
-                  <div className="aspect-[3/4] rounded-xl overflow-hidden bg-surface-elevated border border-border/50 transform -rotate-2 hover:rotate-0 transition-transform duration-300 shadow-lg">
-                    <LandingImg slot="hero-1" images={images} />
+                <div className="grid grid-cols-3 gap-5 sm:gap-6">
+                  {/* Column 1: two images stacked */}
+                  <div className="flex flex-col gap-5">
+                    <div className="aspect-[3/4] rounded-xl overflow-hidden bg-surface-elevated border border-white/10 transform -rotate-2 hover:rotate-0 transition-transform duration-300 shadow-lg">
+                      <LandingImg slot="hero-1" images={images} />
+                    </div>
+                    <div className="aspect-[3/4] rounded-xl overflow-hidden bg-surface-elevated border border-white/10 transform rotate-2 hover:rotate-0 transition-transform duration-300 shadow-lg">
+                      <LandingImg slot="hero-4" images={images} />
+                    </div>
                   </div>
-                  <div className="aspect-[3/4] rounded-xl overflow-hidden bg-surface-elevated border border-border/50 transform rotate-1 mt-8 hover:rotate-0 transition-transform duration-300 shadow-lg">
-                    <LandingImg slot="hero-2" images={images} />
+                  {/* Column 2: two images stacked, offset down */}
+                  <div className="flex flex-col gap-5 mt-10">
+                    <div className="aspect-[3/4] rounded-xl overflow-hidden bg-surface-elevated border border-white/10 transform rotate-2 hover:rotate-0 transition-transform duration-300 shadow-lg">
+                      <LandingImg slot="hero-2" images={images} />
+                    </div>
+                    <div className="aspect-[3/4] rounded-xl overflow-hidden bg-surface-elevated border border-white/10 transform -rotate-2 hover:rotate-0 transition-transform duration-300 shadow-lg">
+                      <LandingImg slot="hero-5" images={images} />
+                    </div>
                   </div>
-                  <div className="aspect-[3/4] rounded-xl overflow-hidden bg-surface-elevated border border-border/50 transform -rotate-1 hover:rotate-0 transition-transform duration-300 shadow-lg">
-                    <LandingImg slot="hero-3" images={images} />
-                  </div>
-                  {/* Row 2 — 3 images (offset + rotated) */}
-                  <div className="aspect-[3/4] rounded-xl overflow-hidden bg-surface-elevated border border-border/50 transform rotate-2 -mt-6 hover:rotate-0 transition-transform duration-300 shadow-lg">
-                    <LandingImg slot="hero-4" images={images} />
-                  </div>
-                  <div className="aspect-[3/4] rounded-xl overflow-hidden bg-surface-elevated border border-border/50 transform -rotate-1 -mt-12 hover:rotate-0 transition-transform duration-300 shadow-lg">
-                    <LandingImg slot="hero-5" images={images} />
-                  </div>
-                  <div className="aspect-[3/4] rounded-xl overflow-hidden bg-surface-elevated border border-border/50 transform rotate-1 -mt-6 hover:rotate-0 transition-transform duration-300 shadow-lg">
-                    <LandingImg slot="hero-6" images={images} />
+                  {/* Column 3: two images stacked */}
+                  <div className="flex flex-col gap-5">
+                    <div className="aspect-[3/4] rounded-xl overflow-hidden bg-surface-elevated border border-white/10 transform rotate-3 hover:rotate-0 transition-transform duration-300 shadow-lg">
+                      <LandingImg slot="hero-3" images={images} />
+                    </div>
+                    <div className="aspect-[3/4] rounded-xl overflow-hidden bg-surface-elevated border border-white/10 transform -rotate-1 hover:rotate-0 transition-transform duration-300 shadow-lg">
+                      <LandingImg slot="hero-6" images={images} />
+                    </div>
                   </div>
                 </div>
               </div>
